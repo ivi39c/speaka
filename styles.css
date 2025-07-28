@@ -979,9 +979,48 @@ body {
     margin-bottom: 6px;
 }
 
+.form-input:invalid {
+    border-color: #ef4444;
+}
+
+.form-input:valid {
+    border-color: #10b981;
+}
+
+.form-input.error {
+    border-color: #ef4444;
+    background-color: #fef2f2;
+}
+
+.form-input.success {
+    border-color: #10b981;
+    background-color: #f0fdf4;
+}
+
+.error-message {
+    color: #ef4444;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    display: block;
+}
+
+.form-group {
+    position: relative;
+}
+
+/* 輸入提示樣式 */
+.input-hint {
+    color: #64748b;
+    font-size: 0.8rem;
+    margin-top: 4px;
+    display: block;
+}
+
+/* 必填欄位標記樣式 */
 .form-label.required::after {
     content: " *";
     color: #ef4444;
+    font-weight: bold;
 }
 
 .form-input {
