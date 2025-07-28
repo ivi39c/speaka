@@ -1,36 +1,986 @@
-<!-- FAQ 區塊 -->
-<div class="faq-section fade-in">
-    <h3>常見問題</h3>
-    <div class="faq-item">
-        <div class="faq-question">Q: 如何開始使用 Speaka？</div>
-        <div class="faq-answer">選擇方案完成付款後，聯絡官方 LINE 進行服務開通，我們會協助您將機器人加入群組。</div>
-    </div>
-    <div class="faq-item">
-        <div class="faq-question">Q: 支援哪些付款方式？</div>
-        <div class="faq-answer">支援 LINE Pay、信用卡、銀行轉帳等多種付款方式，企業客戶可開立發票。</div>
-    </div>
-    <div class="faq-item">
-        <div class="faq-question">Q: 可以隨時取消訂閱嗎？</div>
-        <div class="faq-answer">可以，月繳方案可隨時取消，其他方案依照合約條款執行，不滿意可享比例退費。</div>
-    </div>
-    <div class="faq-item">
-        <div class="faq-question">Q: 翻譯品質如何保證？</div>
-        <div class="faq-answer">採用 Google 翻譯核心技術，並持續優化演算法，確保翻譯準確度與流暢度。</div>
-    </div>
-</div>
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訂閱 Speaka | 專業多語系翻譯機器人</title>
+    <meta name="description" content="選擇最適合的 Speaka 翻譯機器人訂閱方案，月繳、季繳、半年、年繳多種選擇。">
+    
+    <!-- 載入共用樣式 -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body style="background: #f8fafc; min-height: 100vh;">
+    <!-- 導航列 -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="index.html" class="logo">Speaka</a>
+                <a href="index.html" class="back-btn">
+                    <span>←</span>
+                    <span>返回首頁</span>
+                </a>
+            </div>
+        </div>
+    </nav>
 
-<!-- 底部 CTA -->
-<div class="bottom-cta fade-in">
-    <h3>還有其他問題？</h3>
-    <p>我們的客服團隊隨時為您服務</p>
-    <div class="contact-buttons">
-        <a href="mailto:talkeasenow@gmail.com" class="contact-btn">
-            <span>📧</span>
-            <span>Email 諮詢</span>
-        </a>
-        <a href="https://line.me/ti/p/@537etdoz" class="contact-btn" target="_blank">
-            <span>💬</span>
-            <span>LINE 客服</span>
-        </a>
-    </div>
-</div>
+    <!-- 主要內容 -->
+    <main style="padding: 120px 0 60px;">
+        <div class="subscription-container">
+            <!-- 頁面標題 -->
+            <div class="subscription-header">
+                <h1>訂閱 Speaka</h1>
+                <p>開始您的多語系翻譯之旅</p>
+            </div>
+
+            <!-- 信任指標 -->
+            <div class="trust-indicators fade-in">
+                <div class="trust-item">
+                    <span class="trust-icon">🔒</span>
+                    <span class="trust-text">安全可靠</span>
+                </div>
+                <div class="trust-item">
+                    <span class="trust-icon">⚡</span>
+                    <span class="trust-text">即時翻譯</span>
+                </div>
+                <div class="trust-item">
+                    <span class="trust-icon">🎯</span>
+                    <span class="trust-text">精準度高</span>
+                </div>
+                <div class="trust-item">
+                    <span class="trust-icon">🚀</span>
+                    <span class="trust-text">簡單易用</span>
+                </div>
+            </div>
+
+            <!-- 訂閱表單卡片 -->
+            <div class="subscription-card">
+                <form id="subscriptionForm">
+                    <!-- 群組數量選擇 -->
+                    <div class="groups-section">
+                        <h3 class="section-title">選擇群組數量</h3>
+                        <div class="groups-input-container">
+                            <label class="groups-label" for="groupCount">需要翻譯的群組數量：</label>
+                            <input 
+                                type="number" 
+                                id="groupCount" 
+                                class="groups-input" 
+                                min="1" 
+                                max="999" 
+                                value="1" 
+                                placeholder="輸入群組數量"
+                            >
+                            <span class="groups-label">個群組</span>
+                        </div>
+                    </div>
+
+                    <!-- 計費週期選擇 -->
+                    <div class="billing-section">
+                        <h3 class="section-title">選擇計費週期</h3>
+                        <div class="billing-options">
+                            <div class="billing-option">
+                                <input type="radio" id="monthly" name="billingPeriod" value="monthly" class="billing-radio" checked>
+                                <label for="monthly" class="billing-label">
+                                    <span class="billing-period">月繳</span>
+                                    <span class="billing-price">NT$ 199</span>
+                                </label>
+                            </div>
+                            <div class="billing-option">
+                                <input type="radio" id="quarterly" name="billingPeriod" value="quarterly" class="billing-radio">
+                                <label for="quarterly" class="billing-label">
+                                    <span class="billing-period">季繳</span>
+                                    <div>
+                                        <span class="billing-discount">省 3%</span>
+                                        <div class="billing-price">NT$ 579</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="billing-option">
+                                <input type="radio" id="halfyearly" name="billingPeriod" value="halfyearly" class="billing-radio">
+                                <label for="halfyearly" class="billing-label">
+                                    <span class="billing-period">半年繳</span>
+                                    <div>
+                                        <span class="billing-discount">省 5%</span>
+                                        <div class="billing-price">NT$ 1,199</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="billing-option">
+                                <input type="radio" id="yearly" name="billingPeriod" value="yearly" class="billing-radio">
+                                <label for="yearly" class="billing-label">
+                                    <span class="billing-period">年繳</span>
+                                    <div>
+                                        <span class="billing-discount">省 15%</span>
+                                        <div class="billing-price">NT$ 2,030</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 價格顯示 -->
+                    <div class="price-display">
+                        <div class="price-breakdown">
+                            <div class="price-line">
+                                <span>單價：</span>
+                                <span class="price-amount" id="unitPrice">NT$ 199 / 群組 / 月</span>
+                            </div>
+                            <div class="price-line">
+                                <span>群組數量：</span>
+                                <span id="groupQuantity">1 個</span>
+                            </div>
+                            <div class="price-line">
+                                <span>小計：</span>
+                                <span class="price-amount" id="subtotal">NT$ 199</span>
+                            </div>
+                            <div class="price-line total">
+                                <span>總計：</span>
+                                <span class="price-amount" id="totalPrice">NT$ 199</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 支付方式選擇 -->
+                    <div class="payment-section">
+                        <h3 class="section-title">選擇支付方式</h3>
+                        <div class="payment-methods">
+                            <div class="payment-option selected" data-method="linepay">
+                                <input type="radio" name="paymentMethod" value="linepay" class="payment-radio" checked>
+                                <span class="payment-icon">💳</span>
+                                <div class="payment-info">
+                                    <div class="payment-name">LINE Pay</div>
+                                    <div class="payment-desc">快速安全的行動支付</div>
+                                </div>
+                            </div>
+                            <div class="payment-option" data-method="credit">
+                                <input type="radio" name="paymentMethod" value="credit" class="payment-radio">
+                                <span class="payment-icon">💳</span>
+                                <div class="payment-info">
+                                    <div class="payment-name">信用卡</div>
+                                    <div class="payment-desc">Visa、MasterCard、JCB</div>
+                                </div>
+                            </div>
+                            <div class="payment-option" data-method="transfer">
+                                <input type="radio" name="paymentMethod" value="transfer" class="payment-radio">
+                                <span class="payment-icon">🏦</span>
+                                <div class="payment-info">
+                                    <div class="payment-name">銀行轉帳</div>
+                                    <div class="payment-desc">ATM 或網路銀行轉帳</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 帳單資訊 -->
+                    <div class="billing-info-section">
+                        <h3 class="section-title">帳單資訊</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="contactName" class="form-label required">聯絡人姓名</label>
+                                <input type="text" id="contactName" name="contactName" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="form-label required">電子郵件</label>
+                                <input type="email" id="email" name="email" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone" class="form-label required">聯絡電話</label>
+                                <input type="tel" id="phone" name="phone" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="invoiceType" class="form-label required">發票類型</label>
+                                <select id="invoiceType" name="invoiceType" class="form-select" required>
+                                    <option value="">請選擇發票類型</option>
+                                    <option value="personal">個人發票</option>
+                                    <option value="company">公司發票</option>
+                                    <option value="donation">捐贈發票</option>
+                                </select>
+                            </div>
+                            
+                            <!-- 公司發票相關欄位 -->
+                            <div class="form-group company-field" style="display: none;">
+                                <label for="companyName" class="form-label">公司名稱</label>
+                                <input type="text" id="companyName" name="companyName" class="form-input">
+                            </div>
+                            <div class="form-group company-field" style="display: none;">
+                                <label for="taxId" class="form-label">統一編號</label>
+                                <input type="text" id="taxId" name="taxId" class="form-input" pattern="[0-9]{8}" maxlength="8">
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="address" class="form-label">地址</label>
+                                <input type="text" id="address" name="address" class="form-input" placeholder="發票寄送地址（選填）">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 服務條款 -->
+                    <div class="terms-section">
+                        <div class="terms-checkbox">
+                            <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+                            <label for="agreeTerms" class="terms-text">
+                                我已閱讀並同意 <a href="#" target="_blank">服務條款</a> 和 <a href="#" target="_blank">隱私政策</a>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 提交按鈕 -->
+                    <div class="submit-section">
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            確認訂閱
+                        </button>
+                        
+                        <div class="security-note">
+                            <p>🔒 您的個人資訊將會被安全加密處理</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- FAQ 區塊 -->
+            <div class="faq-section fade-in">
+                <h3>常見問題</h3>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 如何開始使用 Speaka？</div>
+                    <div class="faq-answer">選擇方案完成付款後，聯絡官方 LINE 進行服務開通，我們會協助您將機器人加入群組。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 支援哪些付款方式？</div>
+                    <div class="faq-answer">支援 LINE Pay、信用卡、銀行轉帳等多種付款方式，企業客戶可開立發票。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 可以隨時取消訂閱嗎？</div>
+                    <div class="faq-answer">可以，月繳方案可隨時取消，其他方案依照合約條款執行，不滿意可享比例退費。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 翻譯品質如何保證？</div>
+                    <div class="faq-answer">採用 Google 翻譯核心技術，並持續優化演算法，確保翻譯準確度與流暢度。</div>
+                </div>
+            </div>
+
+            <!-- 底部 CTA -->
+            <div class="bottom-cta fade-in">
+                <h3>還有其他問題？</h3>
+                <p>我們的客服團隊隨時為您服務</p>
+                <div class="contact-buttons">
+                    <a href="mailto:talkeasenow@gmail.com" class="contact-btn">
+                        <span>📧</span>
+                        <span>Email 諮詢</span>
+                    </a>
+                    <a href="https://line.me/ti/p/@537etdoz" class="contact-btn" target="_blank">
+                        <span>💬</span>
+                        <span>LINE 客服</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 載入共用腳本 -->
+    <script src="scripts.js"></script>
+</body>
+</html>
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            color: #64748b;
+        }
+
+        .price-line.total {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            padding-top: 16px;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 16px;
+        }
+
+        .price-amount {
+            color: #2563eb;
+            font-weight: 600;
+        }
+
+        /* 支付方式選擇 */
+        .payment-section {
+            margin-bottom: 32px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .payment-methods {
+            display: grid;
+            gap: 12px;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-option:hover {
+            border-color: #2563eb;
+            background: #f8fafc;
+        }
+
+        .payment-option.selected {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        .payment-radio {
+            margin-right: 12px;
+            accent-color: #2563eb;
+        }
+
+        .payment-icon {
+            font-size: 1.5rem;
+            margin-right: 12px;
+        }
+
+        .payment-info {
+            flex: 1;
+        }
+
+        .payment-name {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .payment-desc {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        /* 帳單資訊表單 */
+        .billing-info-section {
+            margin-bottom: 32px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 6px;
+        }
+
+        .form-label.required::after {
+            content: " *";
+            color: #ef4444;
+        }
+
+        .form-input {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-select {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* 服務條款 */
+        .terms-section {
+            margin-bottom: 32px;
+        }
+
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .terms-checkbox input[type="checkbox"] {
+            margin-top: 4px;
+            accent-color: #2563eb;
+        }
+
+        .terms-text {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .terms-text a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .terms-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* 提交按鈕 */
+        .submit-section {
+            text-align: center;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            padding: 16px 48px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 200px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 安全提示 */
+        .security-note {
+            margin-top: 20px;
+            padding: 16px;
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .security-note p {
+            color: #0369a1;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .subscription-container {
+                padding: 20px 15px;
+            }
+
+            .subscription-card {
+                padding: 24px 20px;
+            }
+
+            .subscription-header h1 {
+                font-size: 2rem;
+            }
+
+            .groups-input-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main-content {
+                padding: 100px 0 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 導航列 -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="index.html" class="logo">Speaka</a>
+                <a href="index.html" class="back-btn">
+                    <span>←</span>
+                    <span>返回首頁</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要內容 -->
+    <main class="main-content">
+        <div class="subscription-container">
+            <!-- 頁面標題 -->
+            <div class="subscription-header">
+                <h1>訂閱 Speaka</h1>
+                <p>開始您的多語系翻譯之旅</p>
+            </div>
+
+            <!-- 訂閱表單卡片 -->
+            <div class="subscription-card">
+                <form id="subscriptionForm">
+                    <!-- 群組數量選擇 -->
+                    <div class="groups-section">
+                        <h3 class="section-title">選擇群組數量</h3>
+                        <div class="groups-input-container">
+                            <label class="groups-label" for="groupCount">需要翻譯的群組數量：</label>
+                            <input 
+                                type="number" 
+                                id="groupCount" 
+                                class="groups-input" 
+                                min="1" 
+                                max="999" 
+                                value="1" 
+                                placeholder="輸入群組數量"
+                            >
+                            <span class="groups-label">個群組</span>
+                        </div>
+                    </div>
+
+                    <!-- 計費週期選擇 -->
+                    <div class="billing-section">
+                        <h3 class="section-title">選擇計費週期</h3>
+                        <div class="billing-options">
+                            <div class="billing-option">
+                                <input type="radio" id="monthly" name="billingPeriod" value="monthly" class="billing-radio" checked>
+                                <label for="monthly" class="billing-label">
+                                    <span class="billing-period">月繳</span>
+                                    <span class="billing-price">NT$ 199</span>
+                                </label>
+                            </div>
+                            <div class="billing-option">
+                                <input type="radio" id="quarterly" name="billingPeriod" value="quarterly" class="billing-radio">
+                                <label for="quarterly" class="billing-label">
+                                    <span class="billing-period">季繳</span>
+                                    <div>
+                                        <span class="billing-discount">省 3%</span>
+                                        <div class="billing-price">NT$ 579</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="billing-option">
+                                <input type="radio" id="halfyearly" name="billingPeriod" value="halfyearly" class="billing-radio">
+                                <label for="halfyearly" class="billing-label">
+                                    <span class="billing-period">半年繳</span>
+                                    <div>
+                                        <span class="billing-discount">省 5%</span>
+                                        <div class="billing-price">NT$ 1,199</div>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="billing-option">
+                                <input type="radio" id="yearly" name="billingPeriod" value="yearly" class="billing-radio">
+                                <label for="yearly" class="billing-label">
+                                    <span class="billing-period">年繳</span>
+                                    <div>
+                                        <span class="billing-discount">省 15%</span>
+                                        <div class="billing-price">NT$ 2,030</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 價格顯示 -->
+                    <div class="price-display">
+                        <div class="price-breakdown">
+                            <div class="price-line">
+                                <span>單價：</span>
+                                <span class="price-amount" id="unitPrice">NT$ 199 / 群組 / 月</span>
+                            </div>
+                            <div class="price-line">
+                                <span>群組數量：</span>
+                                <span id="groupQuantity">1 個</span>
+                            </div>
+                            <div class="price-line">
+                                <span>小計：</span>
+                                <span class="price-amount" id="subtotal">NT$ 199</span>
+                            </div>
+                            <div class="price-line total">
+                                <span>總計：</span>
+                                <span class="price-amount" id="totalPrice">NT$ 199</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 支付方式選擇 -->
+                    <div class="payment-section">
+                        <h3 class="section-title">選擇支付方式</h3>
+                        <div class="payment-methods">
+                            <div class="payment-option selected" data-method="linepay">
+                                <input type="radio" name="paymentMethod" value="linepay" class="payment-radio" checked>
+                                <span class="payment-icon">💳</span>
+                                <div class="payment-info">
+                                    <div class="payment-name">LINE Pay</div>
+                                    <div class="payment-desc">快速安全的行動支付</div>
+                                </div>
+                            </div>
+                            <div class="payment-option" data-method="credit">
+                                <input type="radio" name="paymentMethod" value="credit" class="payment-radio">
+                                <span class="payment-icon">💳</span>
+                                <div class="payment-info">
+                                    <div class="payment-name">信用卡</div>
+                                    <div class="payment-desc">Visa、MasterCard、JCB</div>
+                                </div>
+                            </div>
+                            <div class="payment-option" data-method="transfer">
+                                <input type="radio" name="paymentMethod" value="transfer" class="payment-radio">
+                                <span class="payment-icon">🏦</span>
+                                <div class="payment-info">
+                                    <div class="payment-name">銀行轉帳</div>
+                                    <div class="payment-desc">ATM 或網路銀行轉帳</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 帳單資訊 -->
+                    <div class="billing-info-section">
+                        <h3 class="section-title">帳單資訊</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="contactName" class="form-label required">聯絡人姓名</label>
+                                <input type="text" id="contactName" name="contactName" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="form-label required">電子郵件</label>
+                                <input type="email" id="email" name="email" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone" class="form-label required">聯絡電話</label>
+                                <input type="tel" id="phone" name="phone" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="invoiceType" class="form-label required">發票類型</label>
+                                <select id="invoiceType" name="invoiceType" class="form-select" required>
+                                    <option value="">請選擇發票類型</option>
+                                    <option value="personal">個人發票</option>
+                                    <option value="company">公司發票</option>
+                                    <option value="donation">捐贈發票</option>
+                                </select>
+                            </div>
+                            
+                            <!-- 公司發票相關欄位 -->
+                            <div class="form-group company-field" style="display: none;">
+                                <label for="companyName" class="form-label">公司名稱</label>
+                                <input type="text" id="companyName" name="companyName" class="form-input">
+                            </div>
+                            <div class="form-group company-field" style="display: none;">
+                                <label for="taxId" class="form-label">統一編號</label>
+                                <input type="text" id="taxId" name="taxId" class="form-input" pattern="[0-9]{8}" maxlength="8">
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="address" class="form-label">地址</label>
+                                <input type="text" id="address" name="address" class="form-input" placeholder="發票寄送地址（選填）">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 服務條款 -->
+                    <div class="terms-section">
+                        <div class="terms-checkbox">
+                            <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+                            <label for="agreeTerms" class="terms-text">
+                                我已閱讀並同意 <a href="#" target="_blank">服務條款</a> 和 <a href="#" target="_blank">隱私政策</a>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 提交按鈕 -->
+                    <div class="submit-section">
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            確認訂閱
+                        </button>
+                        
+                        <div class="security-note">
+                            <p>🔒 您的個人資訊將會被安全加密處理</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- FAQ 區塊 -->
+            <div class="faq-section fade-in">
+                <h3>常見問題</h3>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 如何開始使用 Speaka？</div>
+                    <div class="faq-answer">選擇方案完成付款後，聯絡官方 LINE 進行服務開通，我們會協助您將機器人加入群組。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 支援哪些付款方式？</div>
+                    <div class="faq-answer">支援 LINE Pay、信用卡、銀行轉帳等多種付款方式，企業客戶可開立發票。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 可以隨時取消訂閱嗎？</div>
+                    <div class="faq-answer">可以，月繳方案可隨時取消，其他方案依照合約條款執行，不滿意可享比例退費。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 翻譯品質如何保證？</div>
+                    <div class="faq-answer">採用 Google 翻譯核心技術，並持續優化演算法，確保翻譯準確度與流暢度。</div>
+                </div>
+            </div>
+
+            <!-- 底部 CTA -->
+            <div class="bottom-cta fade-in">
+                <h3>還有其他問題？</h3>
+                <p>我們的客服團隊隨時為您服務</p>
+                <div class="contact-buttons">
+                    <a href="mailto:talkeasenow@gmail.com" class="contact-btn">
+                        <span>📧</span>
+                        <span>Email 諮詢</span>
+                    </a>
+                    <a href="https://line.me/ti/p/@537etdoz" class="contact-btn" target="_blank">
+                        <span>💬</span>
+                        <span>LINE 客服</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 載入共用腳本 -->
+    <script src="scripts.js"></script>
+    
+    <!-- 頁面特定腳本 -->
+    <script>
+        // 價格計算
+        const prices = {
+            monthly: 199,
+            quarterly: 579,
+            halfyearly: 1199,
+            yearly: 2030
+        };
+
+        const periodNames = {
+            monthly: '月',
+            quarterly: '季',
+            halfyearly: '半年',
+            yearly: '年'
+        };
+
+        function updatePrice() {
+            const groupCount = parseInt(document.getElementById('groupCount').value) || 1;
+            const selectedPeriod = document.querySelector('input[name="billingPeriod"]:checked').value;
+            const unitPrice = prices[selectedPeriod];
+            const total = unitPrice * groupCount;
+
+            document.getElementById('unitPrice').textContent = `NT$ ${unitPrice.toLocaleString()} / 群組 / ${periodNames[selectedPeriod]}`;
+            document.getElementById('groupQuantity').textContent = `${groupCount} 個`;
+            document.getElementById('subtotal').textContent = `NT$ ${total.toLocaleString()}`;
+            document.getElementById('totalPrice').textContent = `NT$ ${total.toLocaleString()}`;
+        }
+
+        // 群組數量變更
+        document.getElementById('groupCount').addEventListener('input', updatePrice);
+
+        // 計費週期變更
+        document.querySelectorAll('input[name="billingPeriod"]').forEach(radio => {
+            radio.addEventListener('change', updatePrice);
+        });
+
+        // 支付方式選擇
+        document.querySelectorAll('.payment-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                this.querySelector('input[type="radio"]').checked = true;
+            });
+        });
+
+        // 發票類型變更
+        document.getElementById('invoiceType').addEventListener('change', function() {
+            const companyFields = document.querySelectorAll('.company-field');
+            const companyName = document.getElementById('companyName');
+            const taxId = document.getElementById('taxId');
+            
+            if (this.value === 'company') {
+                companyFields.forEach(field => {
+                    field.style.display = 'flex';
+                });
+                companyName.required = true;
+                taxId.required = true;
+            } else {
+                companyFields.forEach(field => {
+                    field.style.display = 'none';
+                });
+                companyName.required = false;
+                taxId.required = false;
+                companyName.value = '';
+                taxId.value = '';
+            }
+        });
+
+        // 表單提交
+        document.getElementById('subscriptionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 收集表單數據
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // 添加價格資訊
+            data.groupCount = document.getElementById('groupCount').value;
+            data.totalAmount = document.getElementById('totalPrice').textContent;
+            
+            // 顯示確認彈窗
+            SpeakaModal.showSubscriptionConfirm(data);
+        });
+
+        // 統一編號格式驗證
+        document.getElementById('taxId').addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').substring(0, 8);
+        });
+
+        // 初始化價格
+        updatePrice();
+    </script>
+</body>
+</html></span>
+                </div>
+                <div class="trust-item">
+                    <span class="trust-icon">🎯</span>
+                    <span class="trust-text">精準度高</span>
+                </div>
+                <div class="trust-item">
+                    <span class="trust-icon">🚀</span>
+                    <span class="trust-text">簡單易用</span>
+                </div>
+            </div>
+
+            <!-- 價格方案 -->
+            <div class="pricing-section">
+                <div class="pricing-grid">
+                    <div class="pricing-card fade-in">
+                        <h3 class="plan-period">月繳方案</h3>
+                        <div class="plan-price">
+                            <span class="currency">NT$</span>199
+                            <span class="unit">/群組/月</span>
+                        </div>
+                        <p class="plan-average">彈性試用，隨時調整</p>
+                        <ul class="plan-features">
+                            <li>多語系即時翻譯</li>
+                            <li>無訊息數量限制</li>
+                            <li>每群獨立翻譯</li>
+                            <li>LINE 平台專用</li>
+                            <li>基礎客服支援</li>
+                            <li>7天免費試用</li>
+                        </ul>
+                        <a href="#payment" class="plan-button">選擇月繳方案</a>
+                    </div>
+
+                    <div class="pricing-card fade-in">
+                        <h3 class="plan-period">半年方案</h3>
+                        <div class="plan-price">
+                            <span class="currency">NT$</span>1,199
+                            <span class="unit">/群組/半年</span>
+                        </div>
+                        <p class="plan-average">平均 NT$200/月</p>
+                        <div class="plan-discount">省下 5% 費用</div>
+                        <ul class="plan-features">
+                            <li>包含月繳方案所有功能</li>
+                            <li>6個月服務保障</li>
+                            <li>優先客服支援</li>
+                            <li>提前體驗新功能</li>
+                        </ul>
+                        <a href="#payment" class="plan-button">選擇半年方案</a>
+                    </div>
+
+                    <div class="pricing-card featured fade-in">
+                        <h3 class="plan-period">年繳方案</h3>
+                        <div class="plan-price">
+                            <span class="currency">NT$</span>2,030
+                            <span class="unit">/群組/年</span>
+                        </div>
+                        <p class="plan-average">平均 NT$169/月</p>
+                        <div class="plan-discount">省下 15% 費用</div>
+                        <ul class="plan-features">
+                            <li>包含半年方案所有功能</li>
+                            <li>優先體驗新功能</li>
+                            <li>12個月服務保障</li>
+                            <li>專屬客戶經理</li>
+                            <li>免費版本升級</li>
+                        </ul>
+                        <a href="#payment" class="plan-button">選擇年繳方案</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 企業方案 -->
+            <div class="enterprise-section fade-in">
+                <h3>🏢 企業大量方案</h3>
+                <p>500+ 群組享有專案合約優惠價格，專屬技術支援與客製化服務</p>
+                <a href="#contact" class="enterprise-btn">洽詢企業方案</a>
+            </div>
+
+            <!-- FAQ 區塊 -->
+            <div class="faq-section fade-in">
+                <h3>常見問題</h3>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 如何開始使用 Speaka？</div>
+                    <div class="faq-answer">選擇方案完成付款後，聯絡官方 LINE 進行服務開通，即可將機器人加入群組。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 支援哪些付款方式？</div>
+                    <div class="faq-answer">支援 LINE Pay、信用卡、銀行轉帳等多種付款方式，企業客戶可開立發票。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 可以隨時取消訂閱嗎？</div>
+                    <div class="faq-answer">可以，月繳方案可隨時取消，其他方案依照合約條款執行，不滿意可享比例退費。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 翻譯品質如何保證？</div>
+                    <div class="faq-answer">採用 Google 翻譯核心技術，並持續優化演算法，確保翻譯準確度與流暢度。</div>
+                </div>
+            </div>
+
+            <!-- 底部 CTA -->
+            <div class="bottom-cta fade-in">
+                <h3>還有其他問題？</h3>
+                <p>我們的客服團隊隨時為您服務</p>
+                <div class="contact-buttons">
+                    <a href="mailto:talkeasenow@gmail.com" class="contact-btn">
+                        <span>📧</span>
+                        <span>Email 諮詢</span>
+                    </a>
+                    <a href="https://line.me/ti/p/@537etdoz" class="contact-btn" target="_blank">
+                        <span>💬</span>
+                        <span>LINE 客服</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 載入共用腳本 -->
+    <script src="scripts.js"></script>
+</body>
+</html>
