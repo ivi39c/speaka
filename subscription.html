@@ -150,14 +150,17 @@
                             <div class="form-group">
                                 <label for="contactName" class="form-label required">聯絡人姓名</label>
                                 <input type="text" id="contactName" name="contactName" class="form-input" required>
+                                <div class="input-hint">請輸入真實姓名，2-20個字符</div>
                             </div>
                             <div class="form-group">
                                 <label for="email" class="form-label required">電子郵件</label>
                                 <input type="email" id="email" name="email" class="form-input" required>
+                                <div class="input-hint">用於接收訂閱確認和重要通知</div>
                             </div>
                             <div class="form-group">
                                 <label for="phone" class="form-label required">聯絡電話</label>
                                 <input type="tel" id="phone" name="phone" class="form-input" required>
+                                <div class="input-hint">格式：09xxxxxxxx 或 02-xxxxxxxx</div>
                             </div>
                             <div class="form-group">
                                 <label for="invoiceType" class="form-label required">發票類型</label>
@@ -173,15 +176,18 @@
                             <div class="form-group company-field" style="display: none;">
                                 <label for="companyName" class="form-label">公司名稱</label>
                                 <input type="text" id="companyName" name="companyName" class="form-input">
+                                <div class="input-hint">請輸入完整的公司名稱</div>
                             </div>
                             <div class="form-group company-field" style="display: none;">
                                 <label for="taxId" class="form-label">統一編號</label>
                                 <input type="text" id="taxId" name="taxId" class="form-input" pattern="[0-9]{8}" maxlength="8">
+                                <div class="input-hint">8位數字，系統會自動驗證格式</div>
                             </div>
                             
                             <div class="form-group full-width">
                                 <label for="address" class="form-label">地址</label>
                                 <input type="text" id="address" name="address" class="form-input" placeholder="發票寄送地址（選填）">
+                                <div class="input-hint">如需紙本發票寄送請填寫</div>
                             </div>
                         </div>
                     </div>
@@ -211,7 +217,7 @@
                 <h3>常見問題</h3>
                 <div class="faq-item">
                     <div class="faq-question">Q: 如何開始使用 Speaka？</div>
-                    <div class="faq-answer">選擇方案完成付款後，聯絡官方 LINE 進行服務開通，我們會協助您將機器人加入群組。</div>
+                    <div class="faq-answer">選擇方案完成付款後，聯絡官方 LINE 進行服務開通，即可將機器人加入群組。</div>
                 </div>
                 <div class="faq-item">
                     <div class="faq-question">Q: 支援哪些付款方式？</div>
