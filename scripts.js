@@ -649,6 +649,188 @@ const Performance = {
     }
 };
 
+// ===== 訂閱頁面功能模組 =====
+const SubscriptionPage = {
+    // 價格計算
+    prices: {
+        monthly: 199,
+        quarterly: 579,
+        halfyearly: 1199,
+        yearly: 2030
+    },
+
+    periodNames: {
+        monthly: '月',
+        quarterly: '季',
+        halfyearly: '半年',
+        yearly: '年'
+    },
+
+    // 初始化訂閱頁面
+    init() {
+        if (!this.isSubscriptionPage()) return;
+        
+        this.initPriceCalculation();
+        this.initPaymentMethods();
+        this.initInvoiceType();
+        this.initFormValidation();
+        this.initFormSubmission();
+        this.updatePrice(); // 初始化價格顯示
+    },
+
+    // 檢查是否為訂閱頁面
+    isSubscriptionPage() {
+        return document.getElementById('subscriptionForm') !== null;
+    },
+
+    // 初始化價格計算
+    initPriceCalculation() {
+        const groupCountInput = document.getElementById('groupCount');
+        const billingRadios = document.querySelectorAll('input[name="billingPeriod"]');
+
+        if (groupCountInput) {
+            groupCountInput.addEventListener('input', () => this.updatePrice());
+        }
+
+        billingRadios.forEach(radio => {
+            radio.addEventListener('change', () => this.updatePrice());
+        });
+    },
+
+    // 更新價格顯示
+    updatePrice() {
+        const groupCount = parseInt(document.getElementById('groupCount')?.value) || 1;
+        const selectedPeriod = document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
+        const unitPrice = this.prices[selectedPeriod];
+        const total = unitPrice * groupCount;
+
+        // 更新顯示
+        const unitPriceEl = document.getElementById('unitPrice');
+        const groupQuantityEl = document.getElementById('groupQuantity');
+        const subtotalEl = document.getElementById('subtotal');
+        const totalPriceEl = document.getElementById('totalPrice');
+
+        if (unitPriceEl) {
+            unitPriceEl.textContent = `NT$ ${unitPrice.toLocaleString()} / 群組 / ${this.periodNames[selectedPeriod]}`;
+        }
+        if (groupQuantityEl) {
+            groupQuantityEl.textContent = `${groupCount} 個`;
+        }
+        if (subtotalEl) {
+            subtotalEl.textContent = `NT$ ${total.toLocaleString()}`;
+        }
+        if (totalPriceEl) {
+            totalPriceEl.textContent = `NT$ ${total.toLocaleString()}`;
+        }
+    },
+
+    // 初始化支付方式選擇
+    initPaymentMethods() {
+        document.querySelectorAll('.payment-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                const radio = this.querySelector('input[type="radio"]');
+                if (radio) radio.checked = true;
+            });
+        });
+    },
+
+    // 初始化發票類型
+    initInvoiceType() {
+        const invoiceTypeSelect = document.getElementById('invoiceType');
+        if (!invoiceTypeSelect) return;
+
+        invoiceTypeSelect.addEventListener('change', function() {
+            const companyFields = document.querySelectorAll('.company-field');
+            const companyName = document.getElementById('companyName');
+            const taxId = document.getElementById('taxId');
+            
+            if (this.value === 'company') {
+                companyFields.forEach(field => {
+                    field.style.display = 'flex';
+                });
+                if (companyName) companyName.required = true;
+                if (taxId) taxId.required = true;
+            } else {
+                companyFields.forEach(field => {
+                    field.style.display = 'none';
+                });
+                if (companyName) {
+                    companyName.required = false;
+                    companyName.value = '';
+                }
+                if (taxId) {
+                    taxId.required = false;
+                    taxId.value = '';
+                }
+            }
+        });
+    },
+
+    // 初始化表單驗證
+    initFormValidation() {
+        // 統一編號格式驗證
+        const taxIdInput = document.getElementById('taxId');
+        if (taxIdInput) {
+            taxIdInput.addEventListener('input', function() {
+                this.value = this.value.replace(/\D/g, '').substring(0, 8);
+            });
+        }
+    },
+
+    // 初始化表單提交
+    initFormSubmission() {
+        const form = document.getElementById('subscriptionForm');
+        if (!form) return;
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // 收集表單數據
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData);
+            
+            // 添加價格資訊
+            data.groupCount = document.getElementById('groupCount')?.value || '1';
+            data.totalAmount = document.getElementById('totalPrice')?.textContent || 'NT$ 199';
+            
+            // 顯示確認彈窗
+            SpeakaModal.showSubscriptionConfirm(data);
+        });
+    }
+};
+
+// ===== 主初始化函數更新 =====
+function runInitialization() {
+    try {
+        // 初始化所有模組
+        SpeakaCore.init();
+        ButtonEffects.init();
+        ContactHandlers.init();
+        FormHandlers.init();
+        SubscriptionPage.init(); // 新增訂閱頁面初始化
+        Performance.init();
+        
+        console.log('Speaka 初始化完成');
+    } catch (error) {
+        console.error('Speaka 初始化失敗:', error);
+    }
+}
+
+// ===== 全域對象導出更新 =====
+window.Speaka = {
+    Core: SpeakaCore,
+    ButtonEffects: ButtonEffects,
+    ContactHandlers: ContactHandlers,
+    Modal: SpeakaModal,
+    FormHandlers: FormHandlers,
+    SubscriptionPage: SubscriptionPage,
+    Utils: Utils,
+    Performance: Performance,
+    init: initSpeaka
+};
+
 // ===== 主初始化函數 =====
 function initSpeaka() {
     // 確保DOM已載入
@@ -660,33 +842,6 @@ function initSpeaka() {
         runInitialization();
     }
 }
-
-function runInitialization() {
-    try {
-        // 初始化所有模組
-        SpeakaCore.init();
-        ButtonEffects.init();
-        ContactHandlers.init();
-        FormHandlers.init();
-        Performance.init();
-        
-        console.log('Speaka 初始化完成');
-    } catch (error) {
-        console.error('Speaka 初始化失敗:', error);
-    }
-}
-
-// ===== 全域對象導出 =====
-window.Speaka = {
-    Core: SpeakaCore,
-    ButtonEffects: ButtonEffects,
-    ContactHandlers: ContactHandlers,
-    Modal: SpeakaModal,
-    FormHandlers: FormHandlers,
-    Utils: Utils,
-    Performance: Performance,
-    init: initSpeaka
-};
 
 // 自動初始化
 initSpeaka();
