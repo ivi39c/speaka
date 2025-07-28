@@ -102,8 +102,20 @@
 
         .billing-options {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 12px;
+        }
+
+        @media (max-width: 1024px) {
+            .billing-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .billing-options {
+                grid-template-columns: 1fr;
+            }
         }
 
         .billing-option {
@@ -393,10 +405,6 @@
                 font-size: 2rem;
             }
 
-            .billing-options {
-                grid-template-columns: 1fr;
-            }
-
             .groups-input-container {
                 flex-direction: column;
                 align-items: stretch;
@@ -404,6 +412,10 @@
 
             .form-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .main-content {
+                padding: 100px 0 40px;
             }
         }
     </style>
@@ -613,6 +625,43 @@
                         </div>
                     </div>
                 </form>
+            </div>
+
+            <!-- FAQ 區塊 -->
+            <div class="faq-section fade-in">
+                <h3>常見問題</h3>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 如何開始使用 Speaka？</div>
+                    <div class="faq-answer">選擇方案完成付款後，聯絡官方 LINE 進行服務開通，我們會協助您將機器人加入群組。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 支援哪些付款方式？</div>
+                    <div class="faq-answer">支援 LINE Pay、信用卡、銀行轉帳等多種付款方式，企業客戶可開立發票。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 可以隨時取消訂閱嗎？</div>
+                    <div class="faq-answer">可以，月繳方案可隨時取消，其他方案依照合約條款執行，不滿意可享比例退費。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Q: 翻譯品質如何保證？</div>
+                    <div class="faq-answer">採用 Google 翻譯核心技術，並持續優化演算法，確保翻譯準確度與流暢度。</div>
+                </div>
+            </div>
+
+            <!-- 底部 CTA -->
+            <div class="bottom-cta fade-in">
+                <h3>還有其他問題？</h3>
+                <p>我們的客服團隊隨時為您服務</p>
+                <div class="contact-buttons">
+                    <a href="mailto:talkeasenow@gmail.com" class="contact-btn">
+                        <span>📧</span>
+                        <span>Email 諮詢</span>
+                    </a>
+                    <a href="https://line.me/ti/p/@537etdoz" class="contact-btn" target="_blank">
+                        <span>💬</span>
+                        <span>LINE 客服</span>
+                    </a>
+                </div>
             </div>
         </div>
     </main>
