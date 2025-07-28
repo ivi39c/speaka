@@ -1063,10 +1063,25 @@ body {
 .terms-text a {
     color: #2563eb;
     text-decoration: none;
+    cursor: pointer;
+    font-weight: 500;
 }
 
 .terms-text a:hover {
     text-decoration: underline;
+    color: #1d4ed8;
+}
+
+.terms-link {
+    color: #2563eb !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    font-weight: 500 !important;
+}
+
+.terms-link:hover {
+    text-decoration: underline !important;
+    color: #1d4ed8 !important;
 }
 
 .submit-section {
