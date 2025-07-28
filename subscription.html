@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>訂閱 Speaka | 專業多語系翻譯機器人</title>
-    <meta name="description" content="選擇最適合的 Speaka 翻譯機器人訂閱方案，月繳、季繳、半年、年繳多種選擇。">
     
-    <!-- 載入共用樣式 -->
+    <!-- 引用 CSS 文件 -->
     <link rel="stylesheet" href="styles.css">
 </head>
-<body style="background: #f8fafc; min-height: 100vh;">
+<body>
     <!-- 導航列 -->
     <nav class="navbar">
         <div class="container">
@@ -30,26 +29,6 @@
             <div class="subscription-header">
                 <h1>訂閱 Speaka</h1>
                 <p>開始您的多語系翻譯之旅</p>
-            </div>
-
-            <!-- 信任指標 -->
-            <div class="trust-indicators fade-in">
-                <div class="trust-item">
-                    <span class="trust-icon">🔒</span>
-                    <span class="trust-text">安全可靠</span>
-                </div>
-                <div class="trust-item">
-                    <span class="trust-icon">⚡</span>
-                    <span class="trust-text">即時翻譯</span>
-                </div>
-                <div class="trust-item">
-                    <span class="trust-icon">🎯</span>
-                    <span class="trust-text">精準度高</span>
-                </div>
-                <div class="trust-item">
-                    <span class="trust-icon">🚀</span>
-                    <span class="trust-text">簡單易用</span>
-                </div>
             </div>
 
             <!-- 訂閱表單卡片 -->
@@ -143,7 +122,7 @@
                     <div class="payment-section">
                         <h3 class="section-title">選擇支付方式</h3>
                         <div class="payment-methods">
-                            <div class="payment-option selected" data-method="linepay">
+                            <div class="payment-option selected">
                                 <input type="radio" name="paymentMethod" value="linepay" class="payment-radio" checked>
                                 <span class="payment-icon">💳</span>
                                 <div class="payment-info">
@@ -151,7 +130,7 @@
                                     <div class="payment-desc">快速安全的行動支付</div>
                                 </div>
                             </div>
-                            <div class="payment-option" data-method="credit">
+                            <div class="payment-option">
                                 <input type="radio" name="paymentMethod" value="credit" class="payment-radio">
                                 <span class="payment-icon">💳</span>
                                 <div class="payment-info">
@@ -159,7 +138,7 @@
                                     <div class="payment-desc">Visa、MasterCard、JCB</div>
                                 </div>
                             </div>
-                            <div class="payment-option" data-method="transfer">
+                            <div class="payment-option">
                                 <input type="radio" name="paymentMethod" value="transfer" class="payment-radio">
                                 <span class="payment-icon">🏦</span>
                                 <div class="payment-info">
@@ -225,10 +204,7 @@
 
                     <!-- 提交按鈕 -->
                     <div class="submit-section">
-                        <button type="submit" class="submit-btn" id="submitBtn">
-                            確認訂閱
-                        </button>
-                        
+                        <button type="submit" class="submit-btn">確認訂閱</button>
                         <div class="security-note">
                             <p>🔒 您的個人資訊將會被安全加密處理</p>
                         </div>
@@ -237,7 +213,7 @@
             </div>
 
             <!-- FAQ 區塊 -->
-            <div class="faq-section fade-in">
+            <div class="faq-section">
                 <h3>常見問題</h3>
                 <div class="faq-item">
                     <div class="faq-question">Q: 如何開始使用 Speaka？</div>
@@ -258,7 +234,7 @@
             </div>
 
             <!-- 底部 CTA -->
-            <div class="bottom-cta fade-in">
+            <div class="bottom-cta">
                 <h3>還有其他問題？</h3>
                 <p>我們的客服團隊隨時為您服務</p>
                 <div class="contact-buttons">
@@ -275,250 +251,7 @@
         </div>
     </main>
 
-    <!-- 載入共用腳本 -->
+    <!-- 引用 JS 文件 -->
     <script src="scripts.js"></script>
 </body>
 </html>
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            color: #64748b;
-        }
-
-        .price-line.total {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #1e293b;
-            padding-top: 16px;
-            border-top: 1px solid #e2e8f0;
-            margin-top: 16px;
-        }
-
-        .price-amount {
-            color: #2563eb;
-            font-weight: 600;
-        }
-
-        /* 支付方式選擇 */
-        .payment-section {
-            margin-bottom: 32px;
-            padding-bottom: 32px;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .payment-methods {
-            display: grid;
-            gap: 12px;
-        }
-
-        .payment-option {
-            display: flex;
-            align-items: center;
-            padding: 16px 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .payment-option:hover {
-            border-color: #2563eb;
-            background: #f8fafc;
-        }
-
-        .payment-option.selected {
-            border-color: #2563eb;
-            background: #eff6ff;
-        }
-
-        .payment-radio {
-            margin-right: 12px;
-            accent-color: #2563eb;
-        }
-
-        .payment-icon {
-            font-size: 1.5rem;
-            margin-right: 12px;
-        }
-
-        .payment-info {
-            flex: 1;
-        }
-
-        .payment-name {
-            font-weight: 600;
-            color: #1e293b;
-            margin-bottom: 4px;
-        }
-
-        .payment-desc {
-            font-size: 0.9rem;
-            color: #64748b;
-        }
-
-        /* 帳單資訊表單 */
-        .billing-info-section {
-            margin-bottom: 32px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .form-label {
-            font-weight: 500;
-            color: #374151;
-            margin-bottom: 6px;
-        }
-
-        .form-label.required::after {
-            content: " *";
-            color: #ef4444;
-        }
-
-        .form-input {
-            padding: 12px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        .form-select {
-            padding: 12px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 1rem;
-            background-color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .form-select:focus {
-            outline: none;
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
-
-        /* 服務條款 */
-        .terms-section {
-            margin-bottom: 32px;
-        }
-
-        .terms-checkbox {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .terms-checkbox input[type="checkbox"] {
-            margin-top: 4px;
-            accent-color: #2563eb;
-        }
-
-        .terms-text {
-            color: #64748b;
-            line-height: 1.6;
-        }
-
-        .terms-text a {
-            color: #2563eb;
-            text-decoration: none;
-        }
-
-        .terms-text a:hover {
-            text-decoration: underline;
-        }
-
-        /* 提交按鈕 */
-        .submit-section {
-            text-align: center;
-        }
-
-        .submit-btn {
-            background: linear-gradient(135deg, #2563eb, #3b82f6);
-            color: white;
-            padding: 16px 48px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 200px;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
-        }
-
-        .submit-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* 安全提示 */
-        .security-note {
-            margin-top: 20px;
-            padding: 16px;
-            background: #f0f9ff;
-            border: 1px solid #bae6fd;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .security-note p {
-            color: #0369a1;
-            margin: 0;
-            font-size: 0.9rem;
-        }
-
-        /* 響應式設計 */
-        @media (max-width: 768px) {
-            .subscription-container {
-                padding: 20px 15px;
-            }
-
-            .subscription-card {
-                padding: 24px 20px;
-            }
-
-            .subscription-header h1 {
-                font-size: 2rem;
-            }
-
-            .groups-input-container {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .main-content {
-                padding: 100px 0 40px;
-            }
-        }
-    </style>
-</head>
-
