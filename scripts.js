@@ -252,32 +252,200 @@ const SpeakaModal = {
             yearly: '年繳'
         };
 
-        let message = `確認訂閱資訊：\n\n`;
-        message += `群組數量：${data.groupCount} 個\n`;
-        message += `計費週期：${periodNames[data.billingPeriod] || data.billingPeriod}\n`;
-        message += `支付方式：${paymentMethods[data.paymentMethod]}\n`;
-        message += `總金額：${data.totalAmount}\n`;
-        message += `聯絡人：${data.contactName}\n`;
-        message += `電子郵件：${data.email}\n`;
-        message += `發票類型：${invoiceTypes[data.invoiceType]}\n`;
-        
-        if (data.companyName) {
-            message += `公司名稱：${data.companyName}\n`;
-            message += `統一編號：${data.taxId}\n`;
-        }
-        
-        message += `\n確認後將跳轉至付款頁面`;
-
         if (this.isModernBrowser()) {
-            this.showCustomModal('確認訂閱', message, [
-                { text: '確認付款', action: () => this.processPayment(data) },
-                { text: '修改資料', action: () => {} },
-            ]);
+            this.showSubscriptionModal(data, paymentMethods, invoiceTypes, periodNames);
         } else {
+            // 降級方案 - 使用簡單的 alert
+            let message = `確認訂閱資訊：\n\n`;
+            message += `群組數量：${data.groupCount} 個\n`;
+            message += `計費週期：${periodNames[data.billingPeriod] || data.billingPeriod}\n`;
+            message += `支付方式：${paymentMethods[data.paymentMethod]}\n`;
+            message += `總金額：${data.totalAmount}\n`;
+            message += `聯絡人：${data.contactName}\n`;
+            message += `電子郵件：${data.email}\n`;
+            message += `發票類型：${invoiceTypes[data.invoiceType]}\n`;
+            
+            if (data.companyName) {
+                message += `公司名稱：${data.companyName}\n`;
+                message += `統一編號：${data.taxId}\n`;
+            }
+            
+            message += `\n確認後將跳轉至付款頁面`;
+
             if (confirm(message)) {
                 this.processPayment(data);
             }
         }
+    },
+
+    // 顯示專門的訂閱確認彈窗
+    showSubscriptionModal(data, paymentMethods, invoiceTypes, periodNames) {
+        // 創建遮罩
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        `;
+
+        // 創建彈窗
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            background: white;
+            border-radius: 20px;
+            padding: 0;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        `;
+
+        // 創建彈窗內容
+        modal.innerHTML = `
+            <div style="padding: 30px 30px 0; text-align: center; border-bottom: 1px solid #f1f5f9;">
+                <h3 style="color: #1e293b; font-size: 1.5rem; margin-bottom: 10px; font-weight: 600;">確認訂閱</h3>
+                <p style="color: #64748b; margin-bottom: 20px;">請確認以下訂閱資訊</p>
+            </div>
+            
+            <div style="padding: 25px 30px;">
+                <!-- 訂閱資訊表格 -->
+                <div style="background: #f8fafc; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                    <h4 style="color: #374151; font-size: 1rem; font-weight: 600; margin-bottom: 15px; display: flex; align-items: center;">
+                        <span style="margin-right: 8px;">📋</span> 訂閱資訊
+                    </h4>
+                    <div style="display: grid; gap: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #64748b;">群組數量</span>
+                            <span style="color: #1e293b; font-weight: 500;">${data.groupCount} 個</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #64748b;">計費週期</span>
+                            <span style="color: #1e293b; font-weight: 500;">${periodNames[data.billingPeriod] || data.billingPeriod}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #64748b;">支付方式</span>
+                            <span style="color: #1e293b; font-weight: 500;">${paymentMethods[data.paymentMethod]}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px solid #e2e8f0; margin-top: 8px;">
+                            <span style="color: #2563eb; font-weight: 600;">總金額</span>
+                            <span style="color: #2563eb; font-weight: 700; font-size: 1.2rem;">${data.totalAmount}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 聯絡資訊 -->
+                <div style="background: #f0f9ff; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
+                    <h4 style="color: #374151; font-size: 1rem; font-weight: 600; margin-bottom: 15px; display: flex; align-items: center;">
+                        <span style="margin-right: 8px;">👤</span> 聯絡資訊
+                    </h4>
+                    <div style="display: grid; gap: 8px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #64748b;">聯絡人</span>
+                            <span style="color: #1e293b; font-weight: 500;">${data.contactName}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #64748b;">電子郵件</span>
+                            <span style="color: #1e293b; font-weight: 500;">${data.email}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #64748b;">發票類型</span>
+                            <span style="color: #1e293b; font-weight: 500;">${invoiceTypes[data.invoiceType]}</span>
+                        </div>
+                        ${data.companyName ? `
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #64748b;">公司名稱</span>
+                            <span style="color: #1e293b; font-weight: 500;">${data.companyName}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: #64748b;">統一編號</span>
+                            <span style="color: #1e293b; font-weight: 500;">${data.taxId}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+
+                <!-- 提示訊息 -->
+                <div style="background: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px; padding: 12px; margin-bottom: 25px; text-align: center;">
+                    <p style="color: #92400e; margin: 0; font-size: 0.9rem;">
+                        確認後將為您準備付款頁面，請聯絡客服完成付款流程
+                    </p>
+                </div>
+
+                <!-- 按鈕組 -->
+                <div style="display: flex; gap: 12px;">
+                    <button id="confirmPayment" style="
+                        flex: 1;
+                        background: linear-gradient(135deg, #2563eb, #3b82f6);
+                        color: white;
+                        border: none;
+                        padding: 14px 20px;
+                        border-radius: 10px;
+                        font-weight: 600;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    ">確認付款</button>
+                    <button id="modifyData" style="
+                        flex: 1;
+                        background: white;
+                        color: #2563eb;
+                        border: 2px solid #2563eb;
+                        padding: 14px 20px;
+                        border-radius: 10px;
+                        font-weight: 600;
+                        font-size: 1rem;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    ">修改資料</button>
+                </div>
+            </div>
+        `;
+
+        // 添加到頁面
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+
+        // 動畫效果
+        setTimeout(() => {
+            modal.style.transform = 'scale(1)';
+        }, 10);
+
+        // 按鈕事件
+        modal.querySelector('#confirmPayment').addEventListener('click', () => {
+            this.processPayment(data);
+            this.closeModal(overlay);
+        });
+
+        modal.querySelector('#modifyData').addEventListener('click', () => {
+            this.closeModal(overlay);
+        });
+
+        // 點擊遮罩關閉
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                this.closeModal(overlay);
+            }
+        });
+
+        // ESC 鍵關閉
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                this.closeModal(overlay);
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
     },
 
     // 處理付款
