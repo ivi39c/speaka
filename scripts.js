@@ -1320,14 +1320,37 @@ const SubscriptionPage = {
             SpeakaModal.showSubscriptionConfirm(data);
         });
 
-        // 服務條款和隱私政策連結
+        // 服務條款和隱私政策連結事件
+        this.initTermsLinks();
+    },
+
+    // 初始化服務條款連結
+    initTermsLinks() {
+        // 使用事件委派，確保動態內容也能觸發
         document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('terms-link')) {
+            // 檢查是否點擊的是服務條款或隱私政策連結
+            if (e.target.tagName === 'A' && e.target.classList.contains('terms-link')) {
                 e.preventDefault();
+                console.log('點擊了條款連結:', e.target.getAttribute('data-type')); // 調試用
+                
                 const type = e.target.getAttribute('data-type');
                 if (type === 'terms') {
                     SpeakaModal.showTermsOfService();
                 } else if (type === 'privacy') {
+                    SpeakaModal.showPrivacyPolicy();
+                }
+            }
+            
+            // 備用方案：根據文字內容判斷
+            if (e.target.tagName === 'A') {
+                const text = e.target.textContent.trim();
+                if (text === '服務條款') {
+                    e.preventDefault();
+                    console.log('觸發服務條款彈窗'); // 調試用
+                    SpeakaModal.showTermsOfService();
+                } else if (text === '隱私政策') {
+                    e.preventDefault();
+                    console.log('觸發隱私政策彈窗'); // 調試用
                     SpeakaModal.showPrivacyPolicy();
                 }
             }
@@ -1352,7 +1375,38 @@ function runInitialization() {
     }
 }
 
-// ===== 全域對象導出更新 =====
+// ===== 調試和測試函數 =====
+const DebugHelpers = {
+    // 測試服務條款彈窗
+    testTerms() {
+        if (window.Speaka && window.Speaka.Modal) {
+            window.Speaka.Modal.showTermsOfService();
+        } else {
+            console.error('Speaka Modal 未初始化');
+        }
+    },
+
+    // 測試隱私政策彈窗
+    testPrivacy() {
+        if (window.Speaka && window.Speaka.Modal) {
+            window.Speaka.Modal.showPrivacyPolicy();
+        } else {
+            console.error('Speaka Modal 未初始化');
+        }
+    },
+
+    // 檢查事件綁定
+    checkEventBinding() {
+        const links = document.querySelectorAll('.terms-link');
+        console.log('找到條款連結數量:', links.length);
+        links.forEach((link, index) => {
+            console.log(`連結 ${index + 1}:`, link.textContent, 'data-type:', link.getAttribute('data-type'));
+        });
+    }
+};
+
+// 將調試函數添加到全域
+window.DebugSpeaka = DebugHelpers;
 window.Speaka = {
     Core: SpeakaCore,
     ButtonEffects: ButtonEffects,
