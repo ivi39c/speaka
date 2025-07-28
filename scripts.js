@@ -1433,3 +1433,36 @@ function initSpeaka() {
 
 // 自動初始化
 initSpeaka();
+
+// 調試用：確保 SpeakaModal 在全域可用
+window.SpeakaModal = SpeakaModal;
+
+// 提供全域方法以防直接呼叫
+window.showPrivacyPolicy = function() {
+    console.log('嘗試顯示隱私政策彈窗');
+    if (SpeakaModal && typeof SpeakaModal.showPrivacyPolicy === 'function') {
+        SpeakaModal.showPrivacyPolicy();
+    } else {
+        console.error('SpeakaModal.showPrivacyPolicy 不可用');
+        // 延遲再試一次
+        setTimeout(() => {
+            if (SpeakaModal && typeof SpeakaModal.showPrivacyPolicy === 'function') {
+                SpeakaModal.showPrivacyPolicy();
+            }
+        }, 100);
+    }
+};
+
+window.showTermsOfService = function() {
+    console.log('嘗試顯示服務條款彈窗');
+    if (SpeakaModal && typeof SpeakaModal.showTermsOfService === 'function') {
+        SpeakaModal.showTermsOfService();
+    } else {
+        console.error('SpeakaModal.showTermsOfService 不可用');
+    }
+};
+
+// 調試：檢查初始化狀態
+console.log('SpeakaModal 是否存在:', !!SpeakaModal);
+console.log('showPrivacyPolicy 是否存在:', typeof SpeakaModal.showPrivacyPolicy === 'function');
+console.log('showTermsOfService 是否存在:', typeof SpeakaModal.showTermsOfService === 'function');
