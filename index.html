@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speaka v1 - 專業越南語翻譯機器人 | LINE 群組即時翻譯</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            scroll-behavior: smooth;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 導航列 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px 0;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 28px;
+            font-weight: bold;
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .logo::before {
+            content: '🤖';
+            margin-right: 8px;
+            font-size: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #2563eb;
+        }
+
+        .nav-cta {
+            background: #2563eb;
+            color: white !important;
+            padding: 12px 24px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .nav-cta:hover {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        /* 主頁區塊 */
+        .hero {
+            padding: 120px 0 80px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="%232563eb" opacity="0.1"/></svg>') repeat;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateX(0) translateY(0); }
+            100% { transform: translateX(-100px) translateY(-100px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero h1 .highlight {
+            color: #2563eb;
+            position: relative;
+        }
+
+        .hero h1 .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, #2563eb, #3b82f6);
+            border-radius: 2px;
+        }
+
+        .hero .subtitle {
+            font-size: 1.4rem;
+            color: #64748b;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 40px;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #2563eb;
+            border-color: #2563eb;
+        }
+
+        .btn-secondary:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        .hero-demo {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .chat-demo {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .chat-message {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            gap: 12px;
+        }
+
+        .chat-message.chinese {
+            justify-content: flex-end;
+        }
+
+        .chat-message.chinese .message-bubble {
+            background: #2563eb;
+            color: white;
+        }
+
+        .chat-message.vietnamese .message-bubble {
+            background: white;
+            color: #333;
+            border: 1px solid #e2e8f0;
+        }
+
+        .message-bubble {
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 70%;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .message-flag {
+            font-size: 1.2rem;
+            margin-top: 2px;
+        }
+
+        /* 翻譯模組比較區塊 */
+        .translation-comparison {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .comparison-table {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 40px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8fafc;
+        }
+
+        .original-text {
+            font-weight: 600;
+            color: #1e293b;
+            background: #f1f5f9;
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #2563eb;
+        }
+
+        .google-result {
+            color: #059669;
+            font-weight: 500;
+            background: #ecfdf5;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .other-result {
+            color: #dc2626;
+            background: #fef2f2;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .correct-answer {
+            color: #2563eb;
+            font-weight: 600;
+            background: #eff6ff;
+            padding: 8px;
+            border-radius: 6px;
+            border-left: 3px solid #2563eb;
+        }
+
+        /* 功能特色區塊 */
+        .features {
+            padding: 80px 0;
+            background: #f8fafc;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.8rem;
+            color: #1e293b;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .section-title p {
+            font-size: 1.2rem;
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px solid #f1f5f9;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.15);
+            border-color: #2563eb;
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 2rem;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-card h3 {
+            font-size: 1.6rem;
+            color: #1e293b;
+            margin-bottom: 16px;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
+
+        .feature-card p {
+            color: #64748b;
+            line-height: 1.7;
+            font-size: 1.05rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 未來發展規劃區塊 */
+        .roadmap {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+
+        .roadmap-timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .roadmap-item {
+            background: white;
+            padding: 35px 30px;
+            border-radius: 16px;
+            border-left: 5px solid #2563eb;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .roadmap-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(37, 99, 235, 0.2);
+        }
+
+        .roadmap-status {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-current {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .status-coming {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .roadmap-item h3 {
+            color: #1e293b;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .roadmap-item p {
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .roadmap-features {
+            list-style: none;
+        }
+
+        .roadmap-features li {
+            padding: 5px 0;
+            color: #475569;
+            position: relative;
+            padding-left: 20px;
+            font-size: 0.95rem;
+        }
+
+        .roadmap-features li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        /* 目標客群區塊 */
+        .target-audience {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .audience-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .audience-card {
+            background: white;
+            padding: 35px 25px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-top: 4px solid #2563eb;
+        }
+
+        .audience-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(37, 99, 235, 0.15);
+        }
+
+        .audience-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .audience-card h3 {
+            font-size: 1.4rem;
+            color: #1e293b;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .audience-card p {
+            color: #64748b;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* 價格方案區塊 */
+        .pricing {
+            padding: 80px 0;
+            background: #f8fafc;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
+        }
+
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            border: 2px solid #f1f5f9;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+            border-color: #2563eb;
+        }
+
+        .pricing-card.featured {
+            border-color: #2563eb;
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2);
+        }
+
+        .pricing-card.featured::before {
+            content: '🎉 最優惠';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            padding: 8px 25px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .plan-period {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 15px;
+        }
+
+        .plan-price {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: 8px;
+        }
+
+        .plan-price .currency {
+            font-size: 1.4rem;
+            vertical-align: top;
+        }
+
+        .plan-price .unit {
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 400;
+        }
+
+        .plan-average {
+            color: #64748b;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .plan-discount {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 25px;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .plan-features li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 30px;
+            color: #475569;
+            font-size: 0.95rem;
+        }
+
+        .plan-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #10b981;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .plan-button {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .pricing-card.featured .plan-button {
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+        }
+
+        .pricing-card.featured .plan-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        }
+
+        .pricing-card:not(.featured) .plan-button {
+            background: #f8fafc;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+        }
+
+        .pricing-card:not(.featured) .plan-button:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* 使用流程區塊 */
+        .how-to-use {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .step-card {
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-card:not(:last-child) .step-number::after {
+            content: '';
+            position: absolute;
+            right: -40px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, #2563eb, transparent);
+            z-index: -1;
+        }
+
+        .step-card h3 {
+            font-size: 1.3rem;
+            color: #1e293b;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .step-card p {
+            color: #64748b;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* CTA 區塊 */
+        .cta {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="white" opacity="0.1"/><circle cx="80" cy="40" r="3" fill="white" opacity="0.05"/><circle cx="40" cy="80" r="2" fill="white" opacity="0.1"/></svg>') repeat;
+            animation: float 15s infinite linear reverse;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta h2 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .cta p {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta .btn {
+            background: white;
+            color: #2563eb;
+            font-size: 1.2rem;
+            padding: 18px 40px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .contact-info {
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            padding: 12px 20px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .contact-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .pricing-card.featured {
+                transform: none;
+            }
+
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+
+            .cta h2 {
+                font-size: 2.2rem;
+            }
+
+            .step-card:not(:last-child) .step-number::after {
+                display: none;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .features-grid,
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-table {
+                overflow-x: auto;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                min-width: 120px;
+                padding: 10px 8px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* 滾動動畫 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .slide-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .slide-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- 導航列 -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="#" class="logo">Speaka</a>
+                <ul class="nav-links">
+                    <li><a href="#features">功能特色</a></li>
+                    <li><a href="#comparison">翻譯精準度</a></li>
+                    <li><a href="#roadmap">發展規劃</a></li>
+                    <li><a href="#pricing">訂閱方案</a></li>
+                    <li><a href="#contact" class="nav-cta">立即開始</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主頁區塊 -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content fade-in">
+                <h1>專業<span class="highlight">越南語翻譯</span>機器人</h1>
+                <p class="subtitle">LINE 群組即時翻譯解決方案</p>
+                <p>專為群組溝通打造的即時翻譯機器人，採用 Google 翻譯核心技術<br>
+                一鍵安裝、自動啟用，適合仲介業、外籍勞工溝通、跨語管理需求</p>
+                <div class="hero-buttons">
+                    <a href="#contact" class="btn btn-primary">🚀 立即試用</a>
+                    <a href="#comparison" class="btn btn-secondary">📊 查看精準度</a>
+                </div>
+            </div>
+            
+            <div class="hero-demo fade-in">
+                <div class="chat-demo">
+                    <div class="chat-message chinese">
+                        <div class="message-bubble">今天工作辛苦了，記得按時吃飯</div>
+                        <span class="message-flag">🇹🇼</span>
+                    </div>
+                    <div class="chat-message vietnamese">
+                        <span class="message-flag">🇻🇳</span>
+                        <div class="message-bubble">Hôm nay làm việc vất vả rồi, nhớ ăn cơm đúng giờ nhé</div>
+                    </div>
+                    <div class="chat-message chinese">
+                        <div class="message-bubble">明天休假，大家好好休息</div>
+                        <span class="message-flag">🇹🇼</span>
+                    </div>
+                    <div class="chat-message vietnamese">
+                        <span class="message-flag">🇻🇳</span>
+                        <div class="message-bubble">Ngày mai nghỉ, mọi người nghỉ ngơi thật tốt nhé</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 翻譯模組比較區塊 -->
+    <section id="comparison" class="translation-comparison">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>翻譯精準度比較</h2>
+                <p>Speaka 採用 Google 翻譯核心技術，在語意理解和慣用語翻譯方面表現優異</p>
+            </div>
+            
+            <div class="comparison-table fade-in">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>原文</th>
+                            <th>Google 翻譯<br>(Speaka 使用)</th>
+                            <th>微軟翻譯</th>
+                            <th>ChatGPT 翻譯</th>
+                            <th>正確答案</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><div class="original-text">Vậy tôi sẽ gọi 2 người con trai</div></td>
+                            <td><div class="google-result">所以我會叫兩個兒子</div></td>
+                            <td><div class="other-result">所以我要給我的兩個兒子打電話</div></td>
+                            <td><div class="other-result">那我就叫兩個男孩</div></td>
+                            <td><div class="correct-answer">那我就叫兩個男生來</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="original-text">Hay hơi mập về việc khai báo nhập cảnh</div></td>
+                            <td><div class="google-result">或是關於移民申報的一點小胖子</div></td>
+                            <td><div class="other-result">或者關於條目聲明有點胖</div></td>
+                            <td><div class="other-result">關於填報入境申報有點麻煩</div></td>
+                            <td><div class="correct-answer">請問有關入境申報的事</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="original-text">Anh ta đang bắt cá hai tay giữa hai cô gái</div></td>
+                            <td><div class="google-result">他對兩個女孩不忠</div></td>
+                            <td><div class="other-result">他在兩個女孩之間用雙手釣魚</div></td>
+                            <td><div class="other-result">他在兩個女孩之間腳踏兩條船</div></td>
+                            <td><div class="correct-answer">他正在同跟兩個女生曖昧</div></td>
+                        </tr>
+                        <tr>
+                            <td><div class="original-text">你是一個很機車的人</div></td>
+                            <td><div class="other-result">You are a very motorbike person.</div></td>
+                            <td><div class="other-result">You are a very locomotive person</div></td>
+                            <td><div class="google-result">You are a very difficult person.</div></td>
+                            <td><div class="correct-answer">You are such an annoying person.</div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="margin-top: 40px; text-align: center;">
+                <div style="background: #eff6ff; padding: 25px; border-radius: 15px; border-left: 4px solid #2563eb; max-width: 800px; margin: 0 auto;">
+                    <h3 style="color: #1e293b; margin-bottom: 15px;">🎯 為什麼選擇 Google 翻譯技術？</h3>
+                    <p style="color: #64748b; line-height: 1.6;">
+                        Google 翻譯在處理越南語到中文的語意轉換上具有明顯優勢，特別是在慣用語、俚語和口語化表達方面。
+                        雖然在某些特定語境下仍有改進空間，但整體而言提供了最適合日常溝通的翻譯品質。
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 功能特色區塊 -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>為什麼選擇 Speaka？</h2>
+                <p>專業的越南語翻譯解決方案，讓跨語溝通變得簡單高效</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card slide-in-left">
+                    <div class="feature-icon">⚡</div>
+                    <h3>中越雙向即時翻譯</h3>
+                    <p>採用 Google 翻譯核心技術，支援繁體中文與越南語之間的即時雙向翻譯，語意理解更準確</p>
+                </div>
+                <div class="feature-card slide-in-right">
+                    <div class="feature-icon">🎯</div>
+                    <h3>一鍵安裝極簡設定</h3>
+                    <p>邀請機器人加入群組即可使用，無需繁複設定，讓您專注於溝通本身</p>
+                </div>
+                <div class="feature-card slide-in-left">
+                    <div class="feature-icon">🔒</div>
+                    <h3>每群獨立安全翻譯</h3>
+                    <p>每個群組獨立翻譯處理，確保訊息不混亂、不卡頓，保護隱私安全</p>
+                </div>
+                <div class="feature-card slide-in-right">
+                    <div class="feature-icon">🚀</div>
+                    <h3>無訊息數量限制</h3>
+                    <p>不限制翻譯訊息數量，讓您盡情溝通，不必擔心額外費用</p>
+                </div>
+                <div class="feature-card slide-in-left">
+                    <div class="feature-icon">💪</div>
+                    <h3>高頻環境穩定運行</h3>
+                    <p>即使在高頻訊息環境下依然穩定運行，確保重要溝通不中斷</p>
+                </div>
+                <div class="feature-card slide-in-right">
+                    <div class="feature-icon">🎖️</div>
+                    <h3>專業企業級服務</h3>
+                    <p>提供企業級的翻譯品質與客戶服務，讓您的跨語管理更加專業</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 未來發展規劃區塊 -->
+    <section id="roadmap" class="roadmap">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>產品發展藍圖</h2>
+                <p>持續擴展語言支援與智能化功能，打造更完整的翻譯生態系統</p>
+            </div>
+            <div class="roadmap-timeline">
+                <div class="roadmap-item fade-in">
+                    <div class="roadmap-status status-current">目前版本</div>
+                    <h3>Speaka v1.0 - 越南語專版</h3>
+                    <p>專精越南語翻譯的 LINE 群組機器人，提供穩定可靠的中越雙向翻譯服務。</p>
+                    <ul class="roadmap-features">
+                        <li>中文 ↔ 越南語即時翻譯</li>
+                        <li>Google 翻譯核心技術</li>
+                        <li>LINE 平台原生支援</li>
+                        <li>企業級穩定性保證</li>
+                        <li>群組獨立翻譯機制</li>
+                    </ul>
+                </div>
+
+                <div class="roadmap-item fade-in">
+                    <div class="roadmap-status status-coming">開發中</div>
+                    <h3>Speaka v2.0 - 多語言擴展</h3>
+                    <p>擴展支援更多東南亞語言，滿足不同企業的多元化溝通需求。</p>
+                    <ul class="roadmap-features">
+                        <li>新增印尼語支援</li>
+                        <li>新增泰語支援</li>
+                        <li>新增英語支援</li>
+                        <li>語言切換功能</li>
+                        <li>多語言群組管理</li>
+                    </ul>
+                </div>
+
+                <div class="roadmap-item fade-in">
+                    <div class="roadmap-status status-coming">規劃中</div>
+                    <h3>Speaka v3.0 - AI 智能升級</h3>
+                    <p>整合 GPT AI 翻譯技術，提供更智能、更精準的語意理解與翻譯能力。</p>
+                    <ul class="roadmap-features">
+                        <li>GPT AI 翻譯模組</li>
+                        <li>語境智能理解</li>
+                        <li>專業術語學習</li>
+                        <li>翻譯品質自動優化</li>
+                        <li>個人化翻譯偏好</li>
+                    </ul>
+                </div>
+
+                <div class="roadmap-item fade-in">
+                    <div class="roadmap-status status-coming">未來願景</div>
+                    <h3>Speaka Enterprise - 企業解決方案</h3>
+                    <p>打造完整的企業級跨語溝通平台，支援更多平台與進階管理功能。</p>
+                    <ul class="roadmap-features">
+                        <li>支援 Slack、Teams 等平台</li>
+                        <li>企業專屬詞彙庫</li>
+                        <li>翻譯品質分析報表</li>
+                        <li>API 整合服務</li>
+                        <li>私有化部署選項</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 目標客群區塊 -->
+    <section id="target" class="target-audience">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>誰最適合使用 Speaka？</h2>
+                <p>專為需要越南語溝通的企業和個人量身打造</p>
+            </div>
+            <div class="audience-grid">
+                <div class="audience-card fade-in">
+                    <span class="audience-icon">🏢</span>
+                    <h3>人力仲介業</h3>
+                    <p>與越南籍移工、求職者溝通，提升服務品質與工作效率，建立良好的雇主關係</p>
+                </div>
+                <div class="audience-card fade-in">
+                    <span class="audience-icon">🏭</span>
+                    <h3>製造業管理</h3>
+                    <p>工廠現場管理越南籍員工，即時傳達工作指示，確保生產安全與品質</p>
+                </div>
+                <div class="audience-card fade-in">
+                    <span class="audience-icon">🏗️</span>
+                    <h3>建築營造業</h3>
+                    <p>工地現場與越南籍工人溝通，確保工程安全規範的有效傳達與執行</p>
+                </div>
+                <div class="audience-card fade-in">
+                    <span class="audience-icon">🍽️</span>
+                    <h3>餐飲服務業</h3>
+                    <p>餐廳、飯店業與越南籍員工的日常工作溝通，提升服務品質與團隊合作</p>
+                </div>
+                <div class="audience-card fade-in">
+                    <span class="audience-icon">🏥</span>
+                    <h3>照護機構</h3>
+                    <p>長照機構、醫院與越南籍看護員溝通，確保照護品質與病患安全</p>
+                </div>
+                <div class="audience-card fade-in">
+                    <span class="audience-icon">🌐</span>
+                    <h3>跨國企業</h3>
+                    <p>與越南分公司、合作夥伴的商務溝通，促進國際業務發展</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 價格方案區塊 -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>選擇最適合的訂閱方案</h2>
+                <p>彈性的計費方式，滿足不同規模企業的需求</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card fade-in">
+                    <h3 class="plan-period">月繳方案</h3>
+                    <div class="plan-price">
+                        <span class="currency">NT$</span>199
+                        <span class="unit">/群組/月</span>
+                    </div>
+                    <p class="plan-average">彈性試用，隨時調整</p>
+                    <ul class="plan-features">
+                        <li>中越雙向即時翻譯</li>
+                        <li>Google 翻譯核心技術</li>
+                        <li>無訊息數量限制</li>
+                        <li>每群獨立翻譯</li>
+                        <li>LINE 平台專用</li>
+                        <li>基礎客服支援</li>
+                        <li>隨時可取消</li>
+                    </ul>
+                    <a href="#contact" class="plan-button">立即開始</a>
+                </div>
+
+                <div class="pricing-card fade-in">
+                    <h3 class="plan-period">季繳方案</h3>
+                    <div class="plan-price">
+                        <span class="currency">NT$</span>599
+                        <span class="unit">/群組/季</span>
+                    </div>
+                    <p class="plan-average">平均 NT$190/月</p>
+                    <div class="plan-discount">省下 5% 費用</div>
+                    <ul class="plan-features">
+                        <li>包含月繳方案所有功能</li>
+                        <li>優先客服支援</li>
+                        <li>使用報告分析</li>
+                        <li>批量群組管理</li>
+                        <li>3個月穩定服務</li>
+                    </ul>
+                    <a href="#contact" class="plan-button">選擇季繳</a>
+                </div>
+
+                <div class="pricing-card fade-in">
+                    <h3 class="plan-period">半年方案</h3>
+                    <div class="plan-price">
+                        <span class="currency">NT$</span>1,199
+                        <span class="unit">/群組/半年</span>
+                    </div>
+                    <p class="plan-average">平均 NT$200/月</p>
+                    <div class="plan-discount">省下 5% 費用</div>
+                    <ul class="plan-features">
+                        <li>包含季繳方案所有功能</li>
+                        <li>專屬客戶經理</li>
+                        <li>自訂翻譯詞彙</li>
+                        <li>企業發票服務</li>
+                        <li>6個月服務保障</li>
+                    </ul>
+                    <a href="#contact" class="plan-button">選擇半年</a>
+                </div>
+
+                <div class="pricing-card featured fade-in">
+                    <h3 class="plan-period">年繳方案</h3>
+                    <div class="plan-price">
+                        <span class="currency">NT$</span>2,030
+                        <span class="unit">/群組/年</span>
+                    </div>
+                    <p class="plan-average">平均 NT$169/月</p>
+                    <div class="plan-discount">省下 15% 費用</div>
+                    <ul class="plan-features">
+                        <li>包含半年方案所有功能</li>
+                        <li>專業技術支援</li>
+                        <li>客製化整合服務</li>
+                        <li>優先新功能體驗</li>
+                        <li>年度使用統計報告</li>
+                        <li>12個月服務保障</li>
+                    </ul>
+                    <a href="#contact" class="plan-button">選擇年繳</a>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px; padding: 25px; background: white; border-radius: 15px; border: 2px solid #2563eb;">
+                <h3 style="color: #2563eb; margin-bottom: 10px;">🏢 企業大量方案</h3>
+                <p style="color: #64748b; margin-bottom: 15px;">500+ 群組享有專案合約優惠價格</p>
+                <a href="#contact" class="btn btn-primary" style="display: inline-block;">洽詢企業方案</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 使用流程區塊 -->
+    <section id="how-to" class="how-to-use">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>開始使用 Speaka</h2>
+                <p>簡單三步驟，立即享受專業翻譯服務</p>
+            </div>
+            <div class="steps-container">
+                <div class="step-card fade-in">
+                    <div class="step-number">1</div>
+                    <h3>聯絡我們</h3>
+                    <p>透過 LINE 或 Email 聯絡我們，取得專屬的機器人安裝連結</p>
+                </div>
+                <div class="step-card fade-in">
+                    <div class="step-number">2</div>
+                    <h3>加入群組</h3>
+                    <p>將 Speaka 翻譯機器人邀請加入您的 LINE 群組</p>
+                </div>
+                <div class="step-card fade-in">
+                    <div class="step-number">3</div>
+                    <h3>開始翻譯</h3>
+                    <p>自動翻譯立即啟用，無需額外設定，開始享受無障礙溝通</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 支付方式與服務保障 -->
+    <section class="features" style="background: white;">
+        <div class="container">
+            <div class="section-title fade-in">
+                <h2>支付方式與服務保障</h2>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <div style="background: #f8fafc; padding: 30px; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); border: 1px solid #e2e8f0;">
+                    <h3 style="color: #2563eb; margin-bottom: 20px;">💳 多元支付方式</h3>
+                    <ul style="list-style: none; color: #64748b;">
+                        <li style="padding: 8px 0;">• LINE Pay 快速付款</li>
+                        <li style="padding: 8px 0;">• 信用卡安全交易</li>
+                        <li style="padding: 8px 0;">• 銀行轉帳</li>
+                        <li style="padding: 8px 0;">• 企業發票開立</li>
+                        <li style="padding: 8px 0;">• PayPal 海外支付</li>
+                    </ul>
+                </div>
+                <div style="background: #f8fafc; padding: 30px; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); border: 1px solid #e2e8f0;">
+                    <h3 style="color: #2563eb; margin-bottom: 20px;">🛡️ 服務保障</h3>
+                    <ul style="list-style: none; color: #64748b;">
+                        <li style="padding: 8px 0;">• 24小時技術支援</li>
+                        <li style="padding: 8px 0;">• 服務穩定性保證</li>
+                        <li style="padding: 8px 0;">• 不滿意比例退費</li>
+                        <li style="padding: 8px 0;">• 合法合規運營</li>
+                        <li style="padding: 8px 0;">• 資料隱私保護</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA 區塊 -->
+    <section id="contact" class="cta">
+        <div class="container">
+            <div class="cta-content fade-in">
+                <h2>準備開始無障礙溝通？</h2>
+                <p>立即聯絡我們，讓 Speaka 成為您跨語溝通的最佳夥伴</p>
+                <a href="mailto:talkeasenow@gmail.com" class="btn">🚀 立即開始使用</a>
+                
+                <div class="contact-info">
+                    <a href="mailto:talkeasenow@gmail.com" class="contact-item">
+                        <span>📧</span>
+                        <span>talkeasenow@gmail.com</span>
+                    </a>
+                    <a href="https://line.me/ti/p/@537etdoz" class="contact-item" target="_blank">
+                        <span>💬</span>
+                        <span>LINE: @537etdoz</span>
+                    </a>
+                </div>
+                
+                <div style="margin-top: 40px; padding: 25px; background: rgba(255,255,255,0.1); border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);">
+                    <h3 style="margin-bottom: 15px;">🎁 分享好友賺回饋</h3>
+                    <p style="opacity: 0.9;">推薦朋友使用 Speaka，雙方都能享有專屬優惠！</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // 滾動時導航列效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.boxShadow = 'none';
+            }
+        });
+
+        // 平滑滾動
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerOffset = 80;
+                    const elementPosition = target.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // 滾動動畫效果
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // 觀察所有需要動畫的元素
+        document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
+            observer.observe(el);
+        });
+
+        // 按鈕點擊效果
+        document.querySelectorAll('.btn, .plan-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                // 創建波紋效果
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255, 255, 255, 0.5)';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'ripple 0.6s linear';
+                ripple.style.pointerEvents = 'none';
+                
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // 添加波紋動畫CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // 價格卡片特殊效果
+        document.querySelectorAll('.pricing-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                if (!this.classList.contains('featured')) {
+                    this.style.borderColor = '#2563eb';
+                    this.style.transform = 'translateY(-5px)';
+                }
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('featured')) {
+                    this.style.borderColor = '#f1f5f9';
+                    this.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        // 頁面載入動畫
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // 聯絡按鈕特殊處理
+        document.querySelectorAll('a[href^="mailto:"], a[href^="https://line.me"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // 不阻止默認行為，讓郵件和LINE連結正常工作
+                console.log('聯絡方式被點擊:', this.href);
+            });
+        });
+    </script>
+</body>
+</html>
