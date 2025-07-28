@@ -231,6 +231,81 @@ const SpeakaModal = {
         }
     },
 
+    // 顯示訂閱確認
+    showSubscriptionConfirm(data) {
+        const paymentMethods = {
+            linepay: 'LINE Pay',
+            credit: '信用卡',
+            transfer: '銀行轉帳'
+        };
+
+        const invoiceTypes = {
+            personal: '個人發票',
+            company: '公司發票',
+            donation: '捐贈發票'
+        };
+
+        const periodNames = {
+            monthly: '月繳',
+            quarterly: '季繳',
+            halfyearly: '半年繳',
+            yearly: '年繳'
+        };
+
+        let message = `確認訂閱資訊：\n\n`;
+        message += `群組數量：${data.groupCount} 個\n`;
+        message += `計費週期：${periodNames[data.billingPeriod] || data.billingPeriod}\n`;
+        message += `支付方式：${paymentMethods[data.paymentMethod]}\n`;
+        message += `總金額：${data.totalAmount}\n`;
+        message += `聯絡人：${data.contactName}\n`;
+        message += `電子郵件：${data.email}\n`;
+        message += `發票類型：${invoiceTypes[data.invoiceType]}\n`;
+        
+        if (data.companyName) {
+            message += `公司名稱：${data.companyName}\n`;
+            message += `統一編號：${data.taxId}\n`;
+        }
+        
+        message += `\n確認後將跳轉至付款頁面`;
+
+        if (this.isModernBrowser()) {
+            this.showCustomModal('確認訂閱', message, [
+                { text: '確認付款', action: () => this.processPayment(data) },
+                { text: '修改資料', action: () => {} },
+            ]);
+        } else {
+            if (confirm(message)) {
+                this.processPayment(data);
+            }
+        }
+    },
+
+    // 處理付款
+    processPayment(data) {
+        const paymentMethods = {
+            linepay: 'LINE Pay',
+            credit: '信用卡',
+            transfer: '銀行轉帳'
+        };
+
+        // 模擬跳轉到付款頁面
+        const message = `正在為您準備付款頁面...\n\n` +
+                       `付款金額：${data.totalAmount}\n` +
+                       `付款方式：${paymentMethods[data.paymentMethod]}\n\n` +
+                       `請聯絡客服完成付款流程：\n` +
+                       `LINE: @537etdoz\n` +
+                       `Email: talkeasenow@gmail.com`;
+
+        if (this.isModernBrowser()) {
+            this.showCustomModal('付款處理', message, [
+                { text: 'LINE 聯絡', action: () => window.open('https://line.me/ti/p/@537etdoz', '_blank') },
+                { text: 'Email 聯絡', action: () => window.open('mailto:talkeasenow@gmail.com', '_blank') }
+            ]);
+        } else {
+            alert(message);
+        }
+    },
+
     // 檢查是否為現代瀏覽器
     isModernBrowser() {
         return typeof document.createElement === 'function' && 
