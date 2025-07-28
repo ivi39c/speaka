@@ -1322,12 +1322,14 @@ const SubscriptionPage = {
 
         // 服務條款和隱私政策連結
         document.addEventListener('click', (e) => {
-            if (e.target.textContent === '服務條款') {
+            if (e.target.classList.contains('terms-link')) {
                 e.preventDefault();
-                SpeakaModal.showTermsOfService();
-            } else if (e.target.textContent === '隱私政策') {
-                e.preventDefault();
-                SpeakaModal.showPrivacyPolicy();
+                const type = e.target.getAttribute('data-type');
+                if (type === 'terms') {
+                    SpeakaModal.showTermsOfService();
+                } else if (type === 'privacy') {
+                    SpeakaModal.showPrivacyPolicy();
+                }
             }
         });
     }
