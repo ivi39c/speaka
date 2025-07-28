@@ -943,8 +943,349 @@ const SubscriptionPage = {
         if (taxIdInput) {
             taxIdInput.addEventListener('input', function() {
                 this.value = this.value.replace(/\D/g, '').substring(0, 8);
+                this.validateTaxId();
             });
+
+            // 添加統一編號驗證方法
+            taxIdInput.validateTaxId = function() {
+                const value = this.value;
+                const errorMsg = this.nextElementSibling;
+                
+                if (value.length === 8) {
+                    if (this.isValidTaxId(value)) {
+                        this.style.borderColor = '#10b981';
+                        if (errorMsg && errorMsg.classList.contains('error-message')) {
+                            errorMsg.remove();
+                        }
+                        return true;
+                    } else {
+                        this.style.borderColor = '#ef4444';
+                        this.showError('統一編號格式不正確');
+                        return false;
+                    }
+                } else if (value.length > 0) {
+                    this.style.borderColor = '#ef4444';
+                    this.showError('統一編號必須為8位數字');
+                    return false;
+                }
+                return true;
+            };
+
+            // 統一編號檢查演算法
+            taxIdInput.isValidTaxId = function(taxId) {
+                if (!/^\d{8}$/.test(taxId)) return false;
+                
+                const weights = [1, 2, 1, 2, 1, 2, 4, 1];
+                let sum = 0;
+                
+                for (let i = 0; i < 8; i++) {
+                    let product = parseInt(taxId[i]) * weights[i];
+                    sum += Math.floor(product / 10) + (product % 10);
+                }
+                
+                return sum % 10 === 0;
+            };
         }
+
+        // 電話號碼驗證
+        const phoneInput = document.getElementById('phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function() {
+                // 只允許數字、連字號、括號、空格和加號
+                this.value = this.value.replace(/[^\d\-\(\)\s\+]/g, '');
+                this.validatePhone();
+            });
+
+            phoneInput.validatePhone = function() {
+                const value = this.value.replace(/[\s\-\(\)]/g, '');
+                const errorMsg = this.nextElementSibling;
+                
+                // 台灣手機格式：09開頭10位數 或 市話格式
+                const mobilePattern = /^09\d{8}$/;
+                const landlinePattern = /^0[2-8]\d{7,8}$/;
+                const internationalPattern = /^\+\d{8,15}$/;
+                
+                if (mobilePattern.test(value) || landlinePattern.test(value) || internationalPattern.test(value)) {
+                    this.style.borderColor = '#10b981';
+                    if (errorMsg && errorMsg.classList.contains('error-message')) {
+                        errorMsg.remove();
+                    }
+                    return true;
+                } else if (value.length > 0) {
+                    this.style.borderColor = '#ef4444';
+                    this.showError('請輸入正確的電話號碼格式');
+                    return false;
+                }
+                return true;
+            };
+        }
+
+        // Email 驗證
+        const emailInput = document.getElementById('email');
+        if (emailInput) {
+            emailInput.addEventListener('blur', function() {
+                this.validateEmail();
+            });
+
+            emailInput.validateEmail = function() {
+                const value = this.value;
+                const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const errorMsg = this.nextElementSibling;
+                
+                if (emailPattern.test(value)) {
+                    this.style.borderColor = '#10b981';
+                    if (errorMsg && errorMsg.classList.contains('error-message')) {
+                        errorMsg.remove();
+                    }
+                    return true;
+                } else if (value.length > 0) {
+                    this.style.borderColor = '#ef4444';
+                    this.showError('請輸入正確的電子郵件格式');
+                    return false;
+                }
+                return true;
+            };
+        }
+
+        // 姓名驗證
+        const nameInput = document.getElementById('contactName');
+        if (nameInput) {
+            nameInput.addEventListener('input', function() {
+                // 移除特殊字符，保留中文、英文、空格
+                this.value = this.value.replace(/[^\u4e00-\u9fa5a-zA-Z\s]/g, '');
+                this.validateName();
+            });
+
+            nameInput.validateName = function() {
+                const value = this.value.trim();
+                const errorMsg = this.nextElementSibling;
+                
+                if (value.length >= 2 && value.length <= 20) {
+                    this.style.borderColor = '#10b981';
+                    if (errorMsg && errorMsg.classList.contains('error-message')) {
+                        errorMsg.remove();
+                    }
+                    return true;
+                } else if (value.length > 0) {
+                    this.style.borderColor = '#ef4444';
+                    this.showError('姓名長度應為2-20個字符');
+                    return false;
+                }
+                return true;
+            };
+        }
+
+        // 通用錯誤訊息顯示方法
+        document.querySelectorAll('.form-input, .form-select').forEach(input => {
+            input.showError = function(message) {
+                let errorMsg = this.nextElementSibling;
+                if (!errorMsg || !errorMsg.classList.contains('error-message')) {
+                    errorMsg = document.createElement('div');
+                    errorMsg.classList.add('error-message');
+                    this.parentNode.appendChild(errorMsg);
+                }
+                errorMsg.textContent = message;
+                errorMsg.style.cssText = `
+                    color: #ef4444;
+                    font-size: 0.8rem;
+                    margin-top: 4px;
+                    display: block;
+                `;
+            };
+        });
+    },
+
+    // 表單提交驗證
+    validateForm() {
+        let isValid = true;
+        const errors = [];
+
+        // 驗證所有必填欄位
+        const requiredFields = [
+            { id: 'contactName', name: '聯絡人姓名' },
+            { id: 'email', name: '電子郵件' },
+            { id: 'phone', name: '聯絡電話' },
+            { id: 'invoiceType', name: '發票類型' }
+        ];
+
+        requiredFields.forEach(field => {
+            const input = document.getElementById(field.id);
+            if (input && !input.value.trim()) {
+                errors.push(`${field.name}為必填欄位`);
+                input.style.borderColor = '#ef4444';
+                isValid = false;
+            }
+        });
+
+        // 驗證發票類型相關欄位
+        const invoiceType = document.getElementById('invoiceType')?.value;
+        if (invoiceType === 'company') {
+            const companyName = document.getElementById('companyName');
+            const taxId = document.getElementById('taxId');
+            
+            if (!companyName?.value.trim()) {
+                errors.push('公司名稱為必填欄位');
+                if (companyName) companyName.style.borderColor = '#ef4444';
+                isValid = false;
+            }
+            
+            if (!taxId?.value.trim()) {
+                errors.push('統一編號為必填欄位');
+                if (taxId) taxId.style.borderColor = '#ef4444';
+                isValid = false;
+            } else if (taxId && !taxId.validateTaxId()) {
+                isValid = false;
+            }
+        }
+
+        // 個別欄位驗證
+        const emailInput = document.getElementById('email');
+        if (emailInput && emailInput.value && !emailInput.validateEmail()) {
+            isValid = false;
+        }
+
+        const phoneInput = document.getElementById('phone');
+        if (phoneInput && phoneInput.value && !phoneInput.validatePhone()) {
+            isValid = false;
+        }
+
+        const nameInput = document.getElementById('contactName');
+        if (nameInput && nameInput.value && !nameInput.validateName()) {
+            isValid = false;
+        }
+
+        // 服務條款確認
+        const agreeTerms = document.getElementById('agreeTerms');
+        if (agreeTerms && !agreeTerms.checked) {
+            errors.push('請同意服務條款和隱私政策');
+            isValid = false;
+        }
+
+        if (!isValid && errors.length > 0) {
+            this.showValidationErrors(errors);
+        }
+
+        return isValid;
+    },
+
+    // 顯示驗證錯誤
+    showValidationErrors(errors) {
+        const errorMessage = '請修正以下錯誤：\n\n' + errors.join('\n');
+        
+        if (this.isModernBrowser()) {
+            this.showCustomModal('表單驗證錯誤', errorMessage, [
+                { text: '確定', action: () => {} }
+            ]);
+        } else {
+            alert(errorMessage);
+        }
+    },
+
+    // 顯示服務條款
+    showTermsOfService() {
+        const content = `
+            <div style="text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto; padding: 20px;">
+                <h3 style="color: #1e293b; margin-bottom: 20px;">Speaka 服務條款</h3>
+                
+                <h4 style="color: #374151; margin: 16px 0 8px;">1. 服務說明</h4>
+                <p style="margin-bottom: 12px;">Speaka 是一個專業的多語系翻譯機器人服務，主要提供 LINE 群組即時翻譯功能。</p>
+                
+                <h4 style="color: #374151; margin: 16px 0 8px;">2. 服務範圍</h4>
+                <p style="margin-bottom: 12px;">• 中文與越南語之間的即時雙向翻譯</p>
+                <p style="margin-bottom: 12px;">• LINE 平台群組翻譯服務</p>
+                <p style="margin-bottom: 12px;">• 技術支援與客戶服務</p>
+                
+                <h4 style="color: #374151; margin: 16px 0 8px;">3. 使用規範</h4>
+                <p style="margin-bottom: 12px;">• 禁止濫用或惡意使用服務</p>
+                <p style="margin-bottom: 12px;">• 不得用於非法或不當用途</p>
+                <p style="margin-bottom: 12px;">• 尊重其他用戶的使用權益</p>
+                
+                <h4 style="color: #374151; margin: 16px 0 8px;">4. 付費與退款</h4>
+                <p style="margin-bottom: 12px;">• 服務採用訂閱制收費模式</p>
+                <p style="margin-bottom: 12px;">• 月繳方案可隨時取消</p>
+                <p style="margin-bottom: 12px;">• 不滿意可享比例退費保障</p>
+                
+                <h4 style="color: #374151; margin: 16px 0 8px;">5. 服務保障</h4>
+                <p style="margin-bottom: 12px;">• 提供 99.9% 的服務可用性</p>
+                <p style="margin-bottom: 12px;">• 24小時技術支援</p>
+                <p style="margin-bottom: 12px;">• 資料安全與隱私保護</p>
+                
+                <h4 style="color: #374151; margin: 16px 0 8px;">6. 責任限制</h4>
+                <p style="margin-bottom: 12px;">• 翻譯結果僅供參考，重要文件建議人工確認</p>
+                <p style="margin-bottom: 12px;">• 不承擔因翻譯錯誤造成的間接損失</p>
+                
+                <h4 style="color: #374151; margin: 16px 0 8px;">7. 條款變更</h4>
+                <p style="margin-bottom: 12px;">本公司保留修改服務條款的權利，變更將透過官方管道通知用戶。</p>
+                
+                <p style="margin-top: 20px; color: #64748b; font-size: 0.9rem;">
+                    最後更新日期：2025年1月
+                </p>
+            </div>
+        `;
+        
+        this.showCustomModal('服務條款', content, [
+            { text: '我已了解', action: () => {} }
+        ]);
+    },
+
+    // 顯示隱私政策
+    showPrivacyPolicy() {
+        const content = `
+            <div style="text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto; padding: 20px;">
+                <h3 style="color: #1e293b; margin-bottom: 20px;">Speaka 隱私政策</h3>
+                
+                <h4 style="color: #374151; margin: 16px 0 8px;">1. 資料收集</h4>
+                <p style="margin-bottom: 12px;">我們收集以下類型的個人資料：</p>
+                <p style="margin-bottom: 8px;">• 聯絡資訊：姓名、電子郵件、電話號碼</p>
+                <p style="margin-bottom: 8px;">• 帳務資訊：發票資料、付款記錄</p>
+                <p style="margin-bottom: 8px;">• 使用資料：服務使用情況、技術日誌</p>
+                
+                <h4 style="color: #374151; margin: 16px 0 8px;">2. 資料用途</h4>
+                <p style="margin-bottom: 8px;">• 提供翻譯服務</p>
+                <p style="margin-bottom: 8px;">• 客戶支援與技術協助</p>
+                <p style="margin-bottom: 8px;">• 帳務處理與發票開立</p>
+                <p style="margin-bottom: 8px;">• 服務改善與品質提升</p>
+                
+                <h4 style="color: #374151; margin: 16px 0 8px;">3. 資料保護</h4>
+                <p style="margin-bottom: 8px;">• 採用業界標準的加密技術</p>
+                <p style="margin-bottom: 8px;">• 限制員工存取權限</p>
+                <p style="margin-bottom: 8px;">• 定期進行安全性檢查</p>
+                <p style="margin-bottom: 8px;">• 遵循個人資料保護法規</p>
+                
+                <h4 style="color: #374151; margin: 16px 0 8px;">4. 翻譯內容處理</h4>
+                <p style="margin-bottom: 8px;">• 翻譯內容僅用於提供翻譯服務</p>
+                <p style="margin-bottom: 8px;">• 不會儲存或分析群組對話內容</p>
+                <p style="margin-bottom: 8px;">• 即時處理，不留存敏感資訊</p>
+                
+                <h4 style="color: #374151; margin: 16px 0 8px;">5. 資料分享</h4>
+                <p style="margin-bottom: 12px;">除法律要求外，我們不會與第三方分享您的個人資料。僅在以下情況下可能分享：</p>
+                <p style="margin-bottom: 8px;">• 經您明確同意</p>
+                <p style="margin-bottom: 8px;">• 法律強制要求</p>
+                <p style="margin-bottom: 8px;">• 保護用戶安全必要時</p>
+                
+                <h4 style="color: #374151; margin: 16px 0 8px;">6. 您的權利</h4>
+                <p style="margin-bottom: 8px;">• 查詢個人資料</p>
+                <p style="margin-bottom: 8px;">• 更正錯誤資料</p>
+                <p style="margin-bottom: 8px;">• 刪除個人資料</p>
+                <p style="margin-bottom: 8px;">• 停止資料處理</p>
+                
+                <h4 style="color: #374151; margin: 16px 0 8px;">7. Cookie 使用</h4>
+                <p style="margin-bottom: 12px;">我們使用 Cookie 來改善網站功能和用戶體驗，您可以透過瀏覽器設定管理 Cookie。</p>
+                
+                <h4 style="color: #374151; margin: 16px 0 8px;">8. 聯絡我們</h4>
+                <p style="margin-bottom: 12px;">如有隱私相關問題，請聯絡：</p>
+                <p style="margin-bottom: 8px;">Email: talkeasenow@gmail.com</p>
+                <p style="margin-bottom: 8px;">LINE: @537etdoz</p>
+                
+                <p style="margin-top: 20px; color: #64748b; font-size: 0.9rem;">
+                    最後更新日期：2025年1月
+                </p>
+            </div>
+        `;
+        
+        this.showCustomModal('隱私政策', content, [
+            { text: '我已了解', action: () => {} }
+        ]);
     },
 
     // 初始化表單提交
@@ -954,6 +1295,11 @@ const SubscriptionPage = {
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            // 表單驗證
+            if (!this.validateForm()) {
+                return;
+            }
             
             // 收集表單數據
             const formData = new FormData(form);
@@ -965,6 +1311,17 @@ const SubscriptionPage = {
             
             // 顯示確認彈窗
             SpeakaModal.showSubscriptionConfirm(data);
+        });
+
+        // 服務條款和隱私政策連結
+        document.addEventListener('click', (e) => {
+            if (e.target.textContent === '服務條款') {
+                e.preventDefault();
+                SpeakaModal.showTermsOfService();
+            } else if (e.target.textContent === '隱私政策') {
+                e.preventDefault();
+                SpeakaModal.showPrivacyPolicy();
+            }
         });
     }
 };
