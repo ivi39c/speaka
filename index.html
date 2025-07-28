@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speaka v1 - 專業越南語翻譯機器人 | LINE 群組即時翻譯</title>
+    <title>Speaka - 專業多語系翻譯機器人 | LINE 群組即時翻譯解決方案</title>
     <style>
         * {
             margin: 0;
@@ -236,7 +236,7 @@
             color: white;
         }
 
-        .chat-message.vietnamese .message-bubble {
+        .chat-message.foreign .message-bubble {
             background: white;
             color: #333;
             border: 1px solid #e2e8f0;
@@ -849,6 +849,40 @@
             transform: translateY(-2px);
         }
 
+        /* 支援語言顯示 */
+        .language-support {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .language-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8fafc;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid #e2e8f0;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        .language-badge.current {
+            background: #eff6ff;
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+
+        .language-badge.coming {
+            background: #fef3c7;
+            border-color: #f59e0b;
+            color: #d97706;
+        }
+
         /* 響應式設計 */
         @media (max-width: 768px) {
             .nav-links {
@@ -905,6 +939,15 @@
                 min-width: 120px;
                 padding: 10px 8px;
                 font-size: 0.9rem;
+            }
+
+            .language-support {
+                gap: 10px;
+            }
+
+            .language-badge {
+                font-size: 0.8rem;
+                padding: 6px 12px;
             }
         }
 
@@ -966,8 +1009,9 @@
             <div class="hero-content fade-in">
                 <h1>專業<span class="highlight">多語系翻譯</span>機器人</h1>
                 <p class="subtitle">LINE 群組即時翻譯解決方案</p>
-                <p>專為群組溝通打造的即時翻譯機器人，支援多種翻譯引擎選擇<br>
-                一鍵安裝、自動啟用，適合仲介業、外籍勞工溝通、跨語管理需求</p>
+                <p>專為群組溝通打造的智能翻譯機器人，支援多種語言與翻譯引擎選擇<br>
+                一鍵安裝、自動啟用，適合跨國企業、多語團隊、國際業務溝通需求</p>
+                
                 <div class="hero-buttons">
                     <a href="#contact" class="btn btn-primary">🚀 立即開始使用</a>
                     <a href="#comparison" class="btn btn-secondary">📊 查看精準度</a>
@@ -980,9 +1024,17 @@
                         <div class="message-bubble">明天休假，大家好好休息</div>
                         <span class="message-flag">🇹🇼</span>
                     </div>
-                    <div class="chat-message vietnamese">
+                    <div class="chat-message foreign">
                         <span class="message-flag">🇻🇳</span>
                         <div class="message-bubble">Ngày mai nghỉ, mọi người nghỉ ngơi thật tốt nhé</div>
+                    </div>
+                    <div class="chat-message chinese">
+                        <div class="message-bubble">今天工作辛苦了，記得按時吃飯</div>
+                        <span class="message-flag">🇹🇼</span>
+                    </div>
+                    <div class="chat-message foreign">
+                        <span class="message-flag">🇻🇳</span>
+                        <div class="message-bubble">Hôm nay làm việc vất vả rồi, nhớ ăn cơm đúng giờ nhé</div>
                     </div>
                 </div>
             </div>
@@ -1005,7 +1057,7 @@
                             <th>Google 翻譯<br>(Speaka 使用)</th>
                             <th>微軟翻譯</th>
                             <th>ChatGPT 翻譯</th>
-                            <th>正確答案</th>
+                            <th>理想翻譯</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -1043,10 +1095,10 @@
             
             <div style="margin-top: 40px; text-align: center;">
                 <div style="background: #eff6ff; padding: 25px; border-radius: 15px; border-left: 4px solid #2563eb; max-width: 800px; margin: 0 auto;">
-                    <h3 style="color: #1e293b; margin-bottom: 15px;">🎯 未來將提供多種翻譯引擎選擇</h3>
+                    <h3 style="color: #1e293b; margin-bottom: 15px;">🎯 多種翻譯引擎，智能選擇最佳結果</h3>
                     <p style="color: #64748b; line-height: 1.6;">
-                        Speaka 持續優化翻譯品質，未來版本將提供 Google 翻譯與 GPT AI 翻譯雙引擎選擇，
-                        讓用戶根據需求選擇最適合的翻譯技術，滿足不同應用情境的翻譯需求。
+                        Speaka 持續優化翻譯品質，未來版本將整合 Google 翻譯與 GPT AI 翻譯雙引擎，
+                        自動選擇最適合的翻譯技術，並支援更多語言對，滿足不同應用情境的翻譯需求。
                     </p>
                 </div>
             </div>
@@ -1063,8 +1115,8 @@
             <div class="features-grid">
                 <div class="feature-card slide-in-left">
                     <div class="feature-icon">⚡</div>
-                    <h3>中越雙向即時翻譯</h3>
-                    <p>支援繁體中文與越南語之間的即時雙向翻譯，未來將提供多種翻譯引擎選擇</p>
+                    <h3>多語系即時翻譯</h3>
+                    <p>支援中文與多種東南亞語言的即時雙向翻譯，未來將擴展到更多語言支援</p>
                 </div>
                 <div class="feature-card slide-in-right">
                     <div class="feature-icon">🎯</div>
@@ -1105,8 +1157,8 @@
             <div class="roadmap-timeline">
                 <div class="roadmap-item fade-in">
                     <div class="roadmap-status status-current">目前版本</div>
-                    <h3>Speaka v1.0 - 越南語專版</h3>
-                    <p>專精越南語翻譯的 LINE 群組機器人，提供穩定可靠的中越雙向翻譯服務。</p>
+                    <h3>Speaka v1.0 - 中越翻譯專版</h3>
+                    <p>專精中文與越南語翻譯的 LINE 群組機器人，提供穩定可靠的雙向翻譯服務。</p>
                     <ul class="roadmap-features">
                         <li>中文 ↔ 越南語即時翻譯</li>
                         <li>Google 翻譯核心技術</li>
@@ -1124,7 +1176,7 @@
                         <li>新增印尼語支援</li>
                         <li>新增泰語支援</li>
                         <li>新增英語支援</li>
-                        <li>語言切換功能</li>
+                        <li>語言自動偵測</li>
                         <li>多語言群組管理</li>
                     </ul>
                 </div>
@@ -1141,19 +1193,6 @@
                         <li>個人化翻譯偏好</li>
                     </ul>
                 </div>
-
-<!--                 <div class="roadmap-item fade-in">
-                    <div class="roadmap-status status-coming">未來願景</div>
-                    <h3>Speaka Enterprise - 企業解決方案</h3>
-                    <p>打造完整的企業級跨語溝通平台，支援更多平台與進階管理功能。</p>
-                    <ul class="roadmap-features">
-                        <li>支援 Slack、Teams 等平台</li>
-                        <li>企業專屬詞彙庫</li>
-                        <li>翻譯品質分析報表</li>
-                        <li>API 整合服務</li>
-                        <li>私有化部署選項</li>
-                    </ul>
-                </div> -->
             </div>
         </div>
     </section>
@@ -1163,38 +1202,38 @@
         <div class="container">
             <div class="section-title fade-in">
                 <h2>誰最適合使用 Speaka？</h2>
-                <p>專為需要越南語溝通的企業和個人量身打造</p>
+                <p>專為需要多語系溝通的企業和個人量身打造</p>
             </div>
             <div class="audience-grid">
                 <div class="audience-card fade-in">
                     <span class="audience-icon">🏢</span>
                     <h3>人力仲介業</h3>
-                    <p>與越南籍移工、求職者溝通，提升服務品質與工作效率，建立良好的雇主關係</p>
+                    <p>與各國籍移工、求職者溝通，提升服務品質與工作效率，建立良好的雇主關係</p>
                 </div>
                 <div class="audience-card fade-in">
                     <span class="audience-icon">🏭</span>
                     <h3>製造業管理</h3>
-                    <p>工廠現場管理越南籍員工，即時傳達工作指示，確保生產安全與品質</p>
+                    <p>工廠現場管理多國籍員工，即時傳達工作指示，確保生產安全與品質</p>
                 </div>
                 <div class="audience-card fade-in">
                     <span class="audience-icon">🏗️</span>
                     <h3>建築營造業</h3>
-                    <p>工地現場與越南籍工人溝通，確保工程安全規範的有效傳達與執行</p>
+                    <p>工地現場與外籍工人溝通，確保工程安全規範的有效傳達與執行</p>
                 </div>
                 <div class="audience-card fade-in">
                     <span class="audience-icon">🍽️</span>
                     <h3>餐飲服務業</h3>
-                    <p>餐廳、飯店業與越南籍員工的日常工作溝通，提升服務品質與團隊合作</p>
+                    <p>餐廳、飯店業與多國籍員工的日常工作溝通，提升服務品質與團隊合作</p>
                 </div>
                 <div class="audience-card fade-in">
                     <span class="audience-icon">🏥</span>
                     <h3>照護機構</h3>
-                    <p>長照機構、醫院與越南籍看護員溝通，確保照護品質與病患安全</p>
+                    <p>長照機構、醫院與外籍看護員溝通，確保照護品質與病患安全</p>
                 </div>
                 <div class="audience-card fade-in">
                     <span class="audience-icon">🌐</span>
                     <h3>跨國企業</h3>
-                    <p>與越南分公司、合作夥伴的商務溝通，促進國際業務發展</p>
+                    <p>與海外分公司、合作夥伴的商務溝通，促進國際業務發展</p>
                 </div>
             </div>
         </div>
@@ -1216,7 +1255,7 @@
                     </div>
                     <p class="plan-average">彈性試用，隨時調整</p>
                     <ul class="plan-features">
-                        <li>中越雙向即時翻譯</li>
+                        <li>多語系即時翻譯</li>
                         <li>無訊息數量限制</li>
                         <li>每群獨立翻譯</li>
                         <li>LINE 平台專用</li>
@@ -1224,21 +1263,6 @@
                     </ul>
                     <a href="#contact" class="plan-button">立即開始</a>
                 </div>
-
-<!--                 <div class="pricing-card fade-in">
-                    <h3 class="plan-period">季繳方案</h3>
-                    <div class="plan-price">
-                        <span class="currency">NT$</span>599
-                        <span class="unit">/群組/季</span>
-                    </div>
-                    <p class="plan-average">平均 NT$190/月</p>
-                    <div class="plan-discount">省下 5% 費用</div>
-                    <ul class="plan-features">
-                        <li>包含月繳方案所有功能</li>
-                        <li>3個月穩定服務保障</li>
-                    </ul>
-                    <a href="#contact" class="plan-button">選擇季繳</a>
-                </div> -->
 
                 <div class="pricing-card fade-in">
                     <h3 class="plan-period">半年方案</h3>
@@ -1249,8 +1273,9 @@
                     <p class="plan-average">平均 NT$200/月</p>
                     <div class="plan-discount">省下 5% 費用</div>
                     <ul class="plan-features">
-                        <li>包含季繳方案所有功能</li>
+                        <li>包含月繳方案所有功能</li>
                         <li>6個月服務保障</li>
+                        <li>優先客服支援</li>
                     </ul>
                     <a href="#contact" class="plan-button">選擇半年</a>
                 </div>
@@ -1267,6 +1292,7 @@
                         <li>包含半年方案所有功能</li>
                         <li>優先體驗新功能</li>
                         <li>12個月服務保障</li>
+                        <li>專屬客戶經理</li>
                     </ul>
                     <a href="#contact" class="plan-button">選擇年繳</a>
                 </div>
@@ -1321,7 +1347,6 @@
                         <li style="padding: 8px 0;">• 信用卡安全交易</li>
                         <li style="padding: 8px 0;">• 銀行轉帳</li>
                         <li style="padding: 8px 0;">• 企業發票開立</li>
-<!--                         <li style="padding: 8px 0;">• PayPal 海外支付</li> -->
                     </ul>
                 </div>
                 <div style="background: #f8fafc; padding: 30px; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); border: 1px solid #e2e8f0;">
@@ -1356,11 +1381,6 @@
                         <span>LINE: @537etdoz</span>
                     </a>
                 </div>
-                
-<!--                 <div style="margin-top: 40px; padding: 25px; background: rgba(255,255,255,0.1); border-radius: 15px; border: 1px solid rgba(255,255,255,0.2);">
-                    <h3 style="margin-bottom: 15px;">🎁 分享好友賺回饋</h3>
-                    <p style="opacity: 0.9;">推薦朋友使用 Speaka，雙方都能享有專屬優惠！</p>
-                </div> -->
             </div>
         </div>
     </section>
@@ -1487,18 +1507,9 @@
         // 聯絡按鈕特殊處理
         document.querySelectorAll('a[href^="mailto:"], a[href^="https://line.me"]').forEach(link => {
             link.addEventListener('click', function(e) {
-                // 不阻止默認行為，讓郵件和LINE連結正常工作
                 console.log('聯絡方式被點擊:', this.href);
             });
         });
     </script>
 </body>
-</html>message-bubble">今天工作辛苦了，記得按時吃飯</div>
-                        <span class="message-flag">🇹🇼</span>
-                    </div>
-                    <div class="chat-message vietnamese">
-                        <span class="message-flag">🇻🇳</span>
-                        <div class="message-bubble">Hôm nay làm việc vất vả rồi, nhớ ăn cơm đúng giờ nhé</div>
-                    </div>
-                    <div class="chat-message chinese">
-                        <div class="
+</html>
