@@ -949,26 +949,22 @@ const SubscriptionPage = {
             // 添加統一編號驗證方法
             taxIdInput.validateTaxId = function() {
                 const value = this.value;
-                const errorMsg = this.nextElementSibling;
                 
                 if (value.length === 8) {
                     if (this.isValidTaxId(value)) {
-                        this.style.borderColor = '#10b981';
-                        if (errorMsg && errorMsg.classList.contains('error-message')) {
-                            errorMsg.remove();
-                        }
+                        this.setValid();
                         return true;
                     } else {
-                        this.style.borderColor = '#ef4444';
                         this.showError('統一編號格式不正確');
                         return false;
                     }
                 } else if (value.length > 0) {
-                    this.style.borderColor = '#ef4444';
                     this.showError('統一編號必須為8位數字');
                     return false;
+                } else {
+                    this.clearError();
+                    return true;
                 }
-                return true;
             };
 
             // 統一編號檢查演算法
@@ -998,7 +994,6 @@ const SubscriptionPage = {
 
             phoneInput.validatePhone = function() {
                 const value = this.value.replace(/[\s\-\(\)]/g, '');
-                const errorMsg = this.nextElementSibling;
                 
                 // 台灣手機格式：09開頭10位數 或 市話格式
                 const mobilePattern = /^09\d{8}$/;
@@ -1006,17 +1001,15 @@ const SubscriptionPage = {
                 const internationalPattern = /^\+\d{8,15}$/;
                 
                 if (mobilePattern.test(value) || landlinePattern.test(value) || internationalPattern.test(value)) {
-                    this.style.borderColor = '#10b981';
-                    if (errorMsg && errorMsg.classList.contains('error-message')) {
-                        errorMsg.remove();
-                    }
+                    this.setValid();
                     return true;
                 } else if (value.length > 0) {
-                    this.style.borderColor = '#ef4444';
                     this.showError('請輸入正確的電話號碼格式');
                     return false;
+                } else {
+                    this.clearError();
+                    return true;
                 }
-                return true;
             };
         }
 
@@ -1030,20 +1023,17 @@ const SubscriptionPage = {
             emailInput.validateEmail = function() {
                 const value = this.value;
                 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                const errorMsg = this.nextElementSibling;
                 
                 if (emailPattern.test(value)) {
-                    this.style.borderColor = '#10b981';
-                    if (errorMsg && errorMsg.classList.contains('error-message')) {
-                        errorMsg.remove();
-                    }
+                    this.setValid();
                     return true;
                 } else if (value.length > 0) {
-                    this.style.borderColor = '#ef4444';
                     this.showError('請輸入正確的電子郵件格式');
                     return false;
+                } else {
+                    this.clearError();
+                    return true;
                 }
-                return true;
             };
         }
 
@@ -1058,32 +1048,32 @@ const SubscriptionPage = {
 
             nameInput.validateName = function() {
                 const value = this.value.trim();
-                const errorMsg = this.nextElementSibling;
                 
                 if (value.length >= 2 && value.length <= 20) {
-                    this.style.borderColor = '#10b981';
-                    if (errorMsg && errorMsg.classList.contains('error-message')) {
-                        errorMsg.remove();
-                    }
+                    this.setValid();
                     return true;
                 } else if (value.length > 0) {
-                    this.style.borderColor = '#ef4444';
                     this.showError('姓名長度應為2-20個字符');
                     return false;
+                } else {
+                    this.clearError();
+                    return true;
                 }
-                return true;
             };
         }
 
         // 通用錯誤訊息顯示方法
         document.querySelectorAll('.form-input, .form-select').forEach(input => {
             input.showError = function(message) {
-                let errorMsg = this.nextElementSibling;
-                if (!errorMsg || !errorMsg.classList.contains('error-message')) {
-                    errorMsg = document.createElement('div');
-                    errorMsg.classList.add('error-message');
-                    this.parentNode.appendChild(errorMsg);
-                }
+                // 先移除現有的錯誤訊息
+                this.clearError();
+                
+                // 設置錯誤狀態
+                this.style.borderColor = '#ef4444';
+                
+                // 創建新的錯誤訊息
+                const errorMsg = document.createElement('div');
+                errorMsg.classList.add('error-message');
                 errorMsg.textContent = message;
                 errorMsg.style.cssText = `
                     color: #ef4444;
@@ -1091,6 +1081,23 @@ const SubscriptionPage = {
                     margin-top: 4px;
                     display: block;
                 `;
+                
+                // 將錯誤訊息插入到正確位置
+                this.parentNode.appendChild(errorMsg);
+            };
+            
+            input.clearError = function() {
+                // 移除該欄位的所有錯誤訊息
+                const errorMsgs = this.parentNode.querySelectorAll('.error-message');
+                errorMsgs.forEach(msg => msg.remove());
+                
+                // 重置為預設邊框顏色
+                this.style.borderColor = '#e2e8f0';
+            };
+            
+            input.setValid = function() {
+                this.clearError();
+                // 不設置綠色邊框，保持預設狀態
             };
         });
     },
