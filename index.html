@@ -571,34 +571,44 @@
             border: 2px solid #f1f5f9;
             transition: all 0.3s ease;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
+            z-index: 1;
         }
 
         .pricing-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
             border-color: #2563eb;
+            z-index: 2;
         }
 
         .pricing-card.featured {
             border-color: #2563eb;
             transform: scale(1.05);
             box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2);
+            z-index: 10;
         }
 
         .pricing-card.featured::before {
-            content: '🎉 最優惠';
+            content: '';
+            display: none;
+        }
+
+        .pricing-card.featured::after {
+            content: '最受歡迎 ⭐';
             position: absolute;
-            top: 0px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
             color: white;
-            padding: 8px 25px;
-            border-radius: 25px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            padding: 6px 14px;
+            border-radius: 15px 15px 15px 4px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            transform: rotate(12deg);
+            z-index: 100;
+            white-space: nowrap;
         }
 
         .plan-period {
@@ -956,7 +966,7 @@
             <div class="hero-content fade-in">
                 <h1>專業<span class="highlight">越南語翻譯</span>機器人</h1>
                 <p class="subtitle">LINE 群組即時翻譯解決方案</p>
-                <p>專為群組溝通打造的即時翻譯機器人，採用 Google 翻譯核心技術<br>
+                <p>專為群組溝通打造的即時翻譯機器人，支援多種翻譯引擎選擇<br>
                 一鍵安裝、自動啟用，適合仲介業、外籍勞工溝通、跨語管理需求</p>
                 <div class="hero-buttons">
                     <a href="#contact" class="btn btn-primary">🚀 立即試用</a>
@@ -966,14 +976,6 @@
             
             <div class="hero-demo fade-in">
                 <div class="chat-demo">
-                    <div class="chat-message chinese">
-                        <div class="message-bubble">今天工作辛苦了，記得按時吃飯</div>
-                        <span class="message-flag">🇹🇼</span>
-                    </div>
-                    <div class="chat-message vietnamese">
-                        <span class="message-flag">🇻🇳</span>
-                        <div class="message-bubble">Hôm nay làm việc vất vả rồi, nhớ ăn cơm đúng giờ nhé</div>
-                    </div>
                     <div class="chat-message chinese">
                         <div class="message-bubble">明天休假，大家好好休息</div>
                         <span class="message-flag">🇹🇼</span>
@@ -1039,13 +1041,13 @@
                 </table>
             </div>
             
-<!--             <div style="margin-top: 40px; text-align: center;">
+            <div style="margin-top: 40px; text-align: center;">
                 <div style="background: #eff6ff; padding: 25px; border-radius: 15px; border-left: 4px solid #2563eb; max-width: 800px; margin: 0 auto;">
-                    <h3 style="color: #1e293b; margin-bottom: 15px;">🎯 為什麼選擇 Google 翻譯技術？</h3>
+                    <h3 style="color: #1e293b; margin-bottom: 15px;">🎯 未來將提供多種翻譯引擎選擇</h3>
                     <p style="color: #64748b; line-height: 1.6;">
-                        Google 翻譯在處理越南語到中文的語意轉換上具有明顯優勢，特別是在慣用語、俚語和口語化表達方面。
-                        雖然在某些特定語境下仍有改進空間，但整體而言提供了最適合日常溝通的翻譯品質。
-                    </p> -->
+                        Speaka 持續優化翻譯品質，未來版本將提供 Google 翻譯與 GPT AI 翻譯雙引擎選擇，
+                        讓用戶根據需求選擇最適合的翻譯技術，滿足不同應用情境的翻譯需求。
+                    </p>
                 </div>
             </div>
         </div>
@@ -1062,7 +1064,7 @@
                 <div class="feature-card slide-in-left">
                     <div class="feature-icon">⚡</div>
                     <h3>中越雙向即時翻譯</h3>
-                    <p>採用 Google 翻譯核心技術，支援繁體中文與越南語之間的即時雙向翻譯，語意理解更準確</p>
+                    <p>支援繁體中文與越南語之間的即時雙向翻譯，未來將提供多種翻譯引擎選擇</p>
                 </div>
                 <div class="feature-card slide-in-right">
                     <div class="feature-icon">🎯</div>
@@ -1219,7 +1221,6 @@
                         <li>每群獨立翻譯</li>
                         <li>LINE 平台專用</li>
                         <li>基礎客服支援</li>
-                        <li>隨時可取消</li>
                     </ul>
                     <a href="#contact" class="plan-button">立即開始</a>
                 </div>
@@ -1234,10 +1235,7 @@
                     <div class="plan-discount">省下 5% 費用</div>
                     <ul class="plan-features">
                         <li>包含月繳方案所有功能</li>
-                        <li>優先客服支援</li>
-                        <li>使用報告分析</li>
-                        <li>批量群組管理</li>
-                        <li>3個月穩定服務</li>
+                        <li>3個月穩定服務保障</li>
                     </ul>
                     <a href="#contact" class="plan-button">選擇季繳</a>
                 </div>
@@ -1252,9 +1250,6 @@
                     <div class="plan-discount">省下 5% 費用</div>
                     <ul class="plan-features">
                         <li>包含季繳方案所有功能</li>
-                        <li>專屬客戶經理</li>
-                        <li>自訂翻譯詞彙</li>
-                        <li>企業發票服務</li>
                         <li>6個月服務保障</li>
                     </ul>
                     <a href="#contact" class="plan-button">選擇半年</a>
@@ -1270,21 +1265,18 @@
                     <div class="plan-discount">省下 15% 費用</div>
                     <ul class="plan-features">
                         <li>包含半年方案所有功能</li>
-                        <li>專業技術支援</li>
-                        <li>客製化整合服務</li>
-                        <li>優先新功能體驗</li>
-                        <li>年度使用統計報告</li>
+                        <li>優先體驗新功能</li>
                         <li>12個月服務保障</li>
                     </ul>
                     <a href="#contact" class="plan-button">選擇年繳</a>
                 </div>
             </div>
             
-<!--             <div style="text-align: center; margin-top: 40px; padding: 25px; background: white; border-radius: 15px; border: 2px solid #2563eb;">
+            <div style="text-align: center; margin-top: 40px; padding: 25px; background: white; border-radius: 15px; border: 2px solid #2563eb;">
                 <h3 style="color: #2563eb; margin-bottom: 10px;">🏢 企業大量方案</h3>
                 <p style="color: #64748b; margin-bottom: 15px;">500+ 群組享有專案合約優惠價格</p>
                 <a href="#contact" class="btn btn-primary" style="display: inline-block;">洽詢企業方案</a>
-            </div> -->
+            </div>
         </div>
     </section>
 
@@ -1501,4 +1493,12 @@
         });
     </script>
 </body>
-</html>
+</html>message-bubble">今天工作辛苦了，記得按時吃飯</div>
+                        <span class="message-flag">🇹🇼</span>
+                    </div>
+                    <div class="chat-message vietnamese">
+                        <span class="message-flag">🇻🇳</span>
+                        <div class="message-bubble">Hôm nay làm việc vất vả rồi, nhớ ăn cơm đúng giờ nhé</div>
+                    </div>
+                    <div class="chat-message chinese">
+                        <div class="
