@@ -216,7 +216,7 @@ const SpeakaModal = {
         const message = `您選擇了：${planName}\n\n請聯絡客服完成訂閱流程：\nLINE: @537etdoz\nEmail: talkeasenow@gmail.com`;
         
         if (this.isModernBrowser()) {
-            this.showCustomModal('服務條款', content, [
+            this.showCustomModal('服務條款', message, [
             { text: '我已了解', action: () => {} }
         ]);
     }
