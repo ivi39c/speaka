@@ -229,7 +229,7 @@ const SpeakaModal = {
                 
                 <h4 style="color: #374151; margin: 16px 0 8px;">1. 資料收集</h4>
                 <p style="margin-bottom: 12px;">我們收集以下類型的個人資料：</p>
-                <p style="margin-bottom: 8px;">• 聯絡資訊：姓名、電子郵件、電話號碼</p>
+                <p style="margin-bottom: 8px;">• 聯絡資訊：姓名、電子郵件、電話號碼、地址</p>
                 <p style="margin-bottom: 8px;">• 帳務資訊：發票資料、付款記錄</p>
                 <p style="margin-bottom: 8px;">• 使用資料：服務使用情況、技術日誌</p>
                 
@@ -1450,7 +1450,7 @@ console.log('showTermsOfService 是否存在:', typeof SpeakaModal.showTermsOfSe
                 <p style="margin-bottom: 12px;">Speaka 是一個專業的多語系翻譯機器人服務，主要提供 LINE 群組即時翻譯功能。</p>
                 
                 <h4 style="color: #374151; margin: 16px 0 8px;">2. 服務範圍</h4>
-                <p style="margin-bottom: 12px;">• 中文與越南語之間的即時雙向翻譯</p>
+                <p style="margin-bottom: 12px;">• 中文與多語系之間的即時雙向翻譯</p>
                 <p style="margin-bottom: 12px;">• LINE 平台群組翻譯服務</p>
                 <p style="margin-bottom: 12px;">• 技術支援與客戶服務</p>
                 
@@ -1466,7 +1466,6 @@ console.log('showTermsOfService 是否存在:', typeof SpeakaModal.showTermsOfSe
                 
                 <h4 style="color: #374151; margin: 16px 0 8px;">5. 服務保障</h4>
                 <p style="margin-bottom: 12px;">• 提供 99.9% 的服務可用性</p>
-                <p style="margin-bottom: 12px;">• 24小時技術支援</p>
                 <p style="margin-bottom: 12px;">• 資料安全與隱私保護</p>
                 
                 <h4 style="color: #374151; margin: 16px 0 8px;">6. 責任限制</h4>
