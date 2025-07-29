@@ -219,10 +219,13 @@ const SpeakaModal = {
             this.showCustomModal('服務條款', message, [
             { text: '我已了解', action: () => {} }
         ]);
-    }
+        } else {
+            alert(message);
+        }    
+    },
 
     // 顯示隱私政策
-    showPrivacyPolicy() {
+    showPrivacyPolicy() { 
         const content = `
             <div style="text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto; padding: 20px;">
                 <h3 style="color: #1e293b; margin-bottom: 20px;">Speaka 隱私政策</h3>
@@ -280,7 +283,7 @@ const SpeakaModal = {
             { text: '我已了解', action: () => {} }
         ]);
     }
-};
+};    
 
 // ===== 表單處理模組 =====
 const FormHandlers = {
