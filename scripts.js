@@ -274,7 +274,7 @@ const SpeakaModal = {
                     最後更新日期：2025年1月
                 </p>
             </div>
-        `;
+        `};
         
         this.showCustomModal('隱私政策', content, [
             { text: '我已了解', action: () => {} }
