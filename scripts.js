@@ -219,7 +219,7 @@ const SpeakaModal = {
             this.showCustomModal('服務條款', content, [
             { text: '我已了解', action: () => {} }
         ]);
-    };
+    }
 
     // 顯示隱私政策
     showPrivacyPolicy() {
