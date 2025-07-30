@@ -1139,3 +1139,57 @@ console.log('showTermsOfService 是否存在:', typeof SpeakaModal.showTermsOfSe
 // 顯示服務條款: 此段落已在 main.js 中實作，這裡移除重複代碼。
 };
 
+
+// ---- added auto update ----
+
+// ========== 初始化事件監聽 ==========
+document.addEventListener('DOMContentLoaded', () => {
+    const groupCountInput = document.getElementById('groupCount');
+    const planButtons = document.querySelectorAll('.plan-button');
+
+    function updateSummary() {
+        const groupCount = parseInt(groupCountInput.value) || 1;
+
+        const activeButton = document.querySelector('.plan-button.active');
+        let unitPrice = 199;
+        if (activeButton) {
+            const priceText = activeButton.getAttribute('data-price') || activeButton.textContent;
+            const match = priceText.replace(/,/g,'').match(/(\d+)/);
+            if (match) unitPrice = parseInt(match[1]);
+        }
+
+        const summaryGroupCount = document.getElementById('summaryGroupCount');
+        if (summaryGroupCount) {
+            summaryGroupCount.textContent = groupCount + ' 個';
+        }
+
+        const summaryUnitPrice = document.getElementById('summaryUnitPrice');
+        if (summaryUnitPrice) {
+            summaryUnitPrice.textContent = `NT$ ${unitPrice} / 群組 / 月`;
+        }
+
+        const summarySubtotal = document.getElementById('summarySubtotal');
+        if (summarySubtotal) {
+            summarySubtotal.textContent = 'NT$ ' + (unitPrice * groupCount).toLocaleString();
+        }
+
+        const summaryTotal = document.getElementById('summaryTotal');
+        if (summaryTotal) {
+            summaryTotal.textContent = 'NT$ ' + (unitPrice * groupCount).toLocaleString();
+        }
+    }
+
+    if (groupCountInput) {
+        groupCountInput.addEventListener('input', updateSummary);
+    }
+    planButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            planButtons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateSummary();
+        });
+    });
+
+    // 初始更新
+    updateSummary();
+});
