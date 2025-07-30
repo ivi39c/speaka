@@ -1136,45 +1136,6 @@ console.log('showTermsOfService 是否存在:', typeof SpeakaModal.showTermsOfSe
         }, 300);
     },
 
-    // 顯示服務條款
-    showTermsOfService() {
-        const content = `
-            <div style="text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto; padding: 20px;">
-                <h3 style="color: #1e293b; margin-bottom: 20px;">Speaka 服務條款</h3>
-                
-                <h4 style="color: #374151; margin: 16px 0 8px;">1. 服務說明</h4>
-                <p style="margin-bottom: 12px;">Speaka 是一個專業的多語系翻譯機器人服務，主要提供 LINE 群組即時翻譯功能。</p>
-                
-                <h4 style="color: #374151; margin: 16px 0 8px;">2. 服務範圍</h4>
-                <p style="margin-bottom: 12px;">• 中文與多語系之間的即時雙向翻譯</p>
-                <p style="margin-bottom: 12px;">• LINE 平台群組翻譯服務</p>
-                <p style="margin-bottom: 12px;">• 技術支援與客戶服務</p>
-                
-                <h4 style="color: #374151; margin: 16px 0 8px;">3. 使用規範</h4>
-                <p style="margin-bottom: 12px;">• 禁止濫用或惡意使用服務</p>
-                <p style="margin-bottom: 12px;">• 不得用於非法或不當用途</p>
-                <p style="margin-bottom: 12px;">• 尊重其他用戶的使用權益</p>
-                
-                <h4 style="color: #374151; margin: 16px 0 8px;">4. 付費與退款</h4>
-                <p style="margin-bottom: 12px;">• 服務採用訂閱制收費模式</p>
-                <p style="margin-bottom: 12px;">• 月繳方案可隨時取消</p>
-                <p style="margin-bottom: 12px;">• 不滿意可享比例退費保障</p>
-                
-                <h4 style="color: #374151; margin: 16px 0 8px;">5. 服務保障</h4>
-                <p style="margin-bottom: 12px;">• 提供 99.9% 的服務可用性</p>
-                <p style="margin-bottom: 12px;">• 資料安全與隱私保護</p>
-                
-                <h4 style="color: #374151; margin: 16px 0 8px;">6. 責任限制</h4>
-                <p style="margin-bottom: 12px;">• 翻譯結果僅供參考，重要文件建議人工確認</p>
-                <p style="margin-bottom: 12px;">• 不承擔因翻譯錯誤造成的間接損失</p>
-                
-                <h4 style="color: #374151; margin: 16px 0 8px;">7. 條款變更</h4>
-                <p style="margin-bottom: 12px;">本公司保留修改服務條款的權利，變更將透過官方管道通知用戶。</p>
-                
-                <p style="margin-top: 20px; color: #64748b; font-size: 0.9rem;">
-                    最後更新日期：2025年1月
-                </p>
-            </div>
-        `;
-        
-        this.show
+// 顯示服務條款: 此段落已在 main.js 中實作，這裡移除重複代碼。
+};
+
