@@ -466,4 +466,12 @@ const Performance = {
     }
 };
 
-// ===== 訂閱頁面功能模組 =====
+// DOM 載入後初始化
+document.addEventListener('DOMContentLoaded', () => {
+    SpeakaCore.init();
+    ButtonEffects.init();
+    ContactHandlers.init();
+    FormHandlers.init();
+    Performance.init();
+});
+
