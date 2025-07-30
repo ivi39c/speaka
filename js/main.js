@@ -280,7 +280,7 @@ const SpeakaModal = {
             { text: '我已了解', action: () => {} }
         ]);
     }
-}    
+};   
 
 // ===== 表單處理模組 =====
 const FormHandlers = {
