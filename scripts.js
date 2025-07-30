@@ -216,16 +216,6 @@ const SpeakaModal = {
         const message = `您選擇了：${planName}\n\n請聯絡客服完成訂閱流程：\nLINE: @537etdoz\nEmail: talkeasenow@gmail.com`;
         
         if (this.isModernBrowser()) {
-            this.showCustomModal('服務條款', message, [
-            { text: '我已了解', action: () => {} }
-        ]);
-        } else {
-            alert(message);
-        }    
-    },
-
-    // 顯示隱私政策
-    showPrivacyPolicy() { 
         const content = `
             <div style="text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto; padding: 20px;">
                 <h3 style="color: #1e293b; margin-bottom: 20px;">Speaka 隱私政策</h3>
