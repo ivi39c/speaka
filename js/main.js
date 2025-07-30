@@ -167,6 +167,7 @@ const ContactHandlers = {
 
     // 方案選擇處理
     
+    
     initPlanSelection() {
         document.querySelectorAll('.plan-button').forEach(button => {
             button.addEventListener('click', function(e) {
@@ -174,13 +175,11 @@ const ContactHandlers = {
                 const planCard = this.closest('.pricing-card');
                 const planName = planCard ? planCard.querySelector('.plan-period').textContent : '';
 
-                // 判斷方案關鍵字
                 let planParam = 'monthly';
                 if (planName.includes('年')) planParam = 'yearly';
                 else if (planName.includes('半年')) planParam = 'halfyearly';
                 else if (planName.includes('季')) planParam = 'quarterly';
 
-                // 跳轉到訂閱頁，帶參數
                 window.location.href = `subscription.html?plan=${planParam}`;
             });
         });
