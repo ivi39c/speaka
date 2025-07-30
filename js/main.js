@@ -184,8 +184,6 @@ const ContactHandlers = {
                 window.location.href = `subscription.html?plan=${planParam}`;
             });
         });
-    });
-        });
     },
 
     // 企業方案處理
