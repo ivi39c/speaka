@@ -279,7 +279,6 @@ const SpeakaModal = {
         this.showCustomModal('隱私政策', content, [
             { text: '我已了解', action: () => {} }
         ]);
-    }
 };
 // ===== 表單處理模組 =====
 const FormHandlers = {
