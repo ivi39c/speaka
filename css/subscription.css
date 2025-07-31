@@ -1,0 +1,979 @@
+/* ===== Speaka 訂閱頁面專用樣式 subscription.css ===== */
+
+/* ===== 訂閱頁面整體布局 ===== */
+.subscription-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    min-height: 100vh;
+}
+
+.subscription-header {
+    text-align: center;
+    margin-bottom: 48px;
+    padding-top: 100px;
+}
+
+.subscription-header h1 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.subscription-header p {
+    font-size: 18px;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* ===== 主要訂閱卡片 ===== */
+.subscription-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+    margin-bottom: 32px;
+}
+
+/* ===== 區塊標題統一樣式 ===== */
+.subscription-card h3.section-title {
+    font-size: 20px;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.groups-section h3::before {
+    content: '👥';
+    font-size: 18px;
+}
+
+.billing-section h3::before {
+    content: '💳';
+    font-size: 18px;
+}
+
+.payment-section h3::before {
+    content: '💰';
+    font-size: 18px;
+}
+
+.billing-info-section h3::before {
+    content: '📋';
+    font-size: 18px;
+}
+
+/* ===== 群組數量區塊 ===== */
+.groups-section {
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+}
+
+.groups-input-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+}
+
+.groups-label {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 16px;
+    min-width: 100px;
+    white-space: nowrap;
+}
+
+.groups-input {
+    flex: 1;
+    min-width: 200px;
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 16px;
+    font-weight: 500;
+    transition: var(--transition);
+    background: white;
+    text-align: center;
+}
+
+.groups-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.groups-input::-webkit-outer-spin-button,
+.groups-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.groups-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* ===== 計費週期區塊 ===== */
+.billing-section {
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+}
+
+.billing-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.billing-option {
+    position: relative;
+    cursor: pointer;
+}
+
+.billing-radio {
+    display: none;
+}
+
+.billing-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    transition: var(--transition);
+    background: white;
+    min-height: 140px;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.billing-label:hover {
+    border-color: var(--primary);
+    background: var(--surface);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.billing-radio:checked + .billing-label {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    transform: translateY(-2px);
+}
+
+.billing-radio:checked + .billing-label.selected {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.billing-period {
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.billing-price {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 18px;
+    margin-top: 4px;
+}
+
+.billing-discount {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: linear-gradient(135deg, var(--error), #f87171);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: var(--shadow);
+    z-index: 1;
+}
+
+/* ===== 價格顯示區塊 ===== */
+.price-display {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.price-display::before {
+    content: '📊';
+    position: absolute;
+    top: 16px;
+    left: 20px;
+    font-size: 18px;
+    opacity: 0.7;
+}
+
+.price-display h3 {
+    font-size: 18px;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    font-weight: 600;
+    padding-left: 30px;
+}
+
+.price-breakdown {
+    margin-bottom: 16px;
+}
+
+.price-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 8px 0;
+    color: var(--text-secondary);
+    font-size: 15px;
+}
+
+.price-line.total {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    padding-top: 16px;
+    border-top: 2px solid var(--border);
+    margin-top: 16px;
+}
+
+.price-amount {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.price-line.total .price-amount {
+    color: var(--primary);
+    font-size: 20px;
+    font-weight: 800;
+}
+
+/* ===== 支付方式區塊 ===== */
+.payment-section {
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+}
+
+.payment-methods {
+    display: grid;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.payment-option {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: var(--transition);
+    background: white;
+    position: relative;
+}
+
+.payment-option:hover {
+    border-color: var(--primary);
+    background: var(--surface);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow);
+}
+
+.payment-option.selected {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.payment-option::after {
+    content: '';
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    transition: var(--transition);
+}
+
+.payment-option.selected::after {
+    background: var(--primary);
+    box-shadow: 0 0 0 3px white, 0 0 0 5px var(--primary);
+}
+
+.payment-radio {
+    margin-right: 12px;
+    accent-color: var(--primary);
+    width: 16px;
+    height: 16px;
+}
+
+.payment-icon {
+    font-size: 20px;
+    margin-right: 12px;
+    min-width: 24px;
+}
+
+.payment-info {
+    flex: 1;
+}
+
+.payment-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    font-size: 16px;
+}
+
+.payment-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+/* ===== 帳單資訊區塊 ===== */
+.billing-info-section {
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group.focused .form-label {
+    color: var(--primary);
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    font-size: 15px;
+    transition: var(--transition);
+}
+
+.form-label.required::after {
+    content: " *";
+    color: var(--error);
+    font-weight: bold;
+}
+
+.form-input,
+.form-select {
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 15px;
+    transition: var(--transition);
+    background-color: white;
+    font-family: inherit;
+}
+
+.form-input:focus,
+.form-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+}
+
+.form-input.error {
+    border-color: var(--error);
+    background-color: #fef2f2;
+    animation: shake 0.3s ease-in-out;
+}
+
+.form-input:valid:not(:placeholder-shown) {
+    border-color: var(--success);
+}
+
+.error-message {
+    color: var(--error);
+    font-size: 13px;
+    margin-top: 6px;
+    display: block;
+    line-height: 1.4;
+    animation: errorSlideIn 0.3s ease-out;
+}
+
+.input-hint {
+    color: var(--text-light);
+    font-size: 13px;
+    margin-top: 6px;
+    display: block;
+    line-height: 1.4;
+    transition: var(--transition);
+}
+
+.form-input:focus + .input-hint {
+    color: var(--primary);
+}
+
+/* 公司欄位動畫 */
+.company-field {
+    display: none;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+.company-field.show {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ===== 服務條款區塊 ===== */
+.terms-section {
+    margin-bottom: 40px;
+    padding: 20px;
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    position: relative;
+}
+
+.terms-section::before {
+    content: '📋';
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    font-size: 16px;
+    opacity: 0.7;
+}
+
+.terms-checkbox {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    padding-left: 20px;
+}
+
+.terms-checkbox input[type="checkbox"] {
+    margin-top: 4px;
+    accent-color: var(--primary);
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.terms-text {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.terms-link {
+    color: var(--primary) !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+    font-weight: 500 !important;
+    transition: var(--transition);
+    border-bottom: 1px solid transparent;
+}
+
+.terms-link:hover {
+    color: var(--primary-hover) !important;
+    border-bottom-color: var(--primary-hover);
+}
+
+/* ===== 提交按鈕區塊 ===== */
+.submit-section {
+    text-align: center;
+    margin-top: 32px;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, var(--primary), #3b82f6);
+    color: white;
+    border: none;
+    padding: 16px 48px;
+    border-radius: var(--radius);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    min-width: 200px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.submit-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.submit-btn:hover::before {
+    left: 100%;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(135deg, var(--primary-hover), #2563eb);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.submit-btn:disabled::before {
+    display: none;
+}
+
+.security-note {
+    margin-top: 24px;
+    padding: 16px 20px;
+    background: var(--primary-light);
+    border: 1px solid rgba(37, 99, 235, 0.2);
+    border-radius: var(--radius);
+    text-align: center;
+}
+
+.security-note p {
+    color: var(--primary);
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* ===== FAQ 區塊 ===== */
+.faq-section {
+    margin-top: 80px;
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+}
+
+.faq-section h3 {
+    text-align: center;
+    font-size: 24px;
+    color: var(--text-primary);
+    margin-bottom: 32px;
+    font-weight: 700;
+}
+
+.faq-item {
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    transition: var(--transition);
+}
+
+.faq-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.faq-item:hover {
+    background: var(--surface);
+    padding: 16px;
+    border-radius: var(--radius);
+    margin: 0 -16px 24px -16px;
+}
+
+.faq-question {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.faq-answer {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    font-size: 15px;
+}
+
+/* ===== 底部 CTA ===== */
+.bottom-cta {
+    text-align: center;
+    margin-top: 60px;
+    padding: 40px 20px;
+    background: var(--surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+}
+
+.bottom-cta h3 {
+    font-size: 1.8rem;
+    color: var(--text-primary);
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.bottom-cta p {
+    color: var(--text-secondary);
+    margin-bottom: 25px;
+    font-size: 1.1rem;
+}
+
+.contact-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.contact-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: white;
+    color: var(--primary);
+    padding: 12px 24px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    border: 2px solid var(--primary);
+    transition: var(--transition);
+}
+
+.contact-btn:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+/* ===== 動畫效果 ===== */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+@keyframes errorSlideIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(-10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+@keyframes successPop {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* ===== 載入和互動狀態 ===== */
+.loading-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s ease-in-out infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.success-checkmark {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--success);
+    position: relative;
+    animation: successPop 0.3s ease-out;
+    margin-right: 8px;
+}
+
+.success-checkmark::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* ===== 響應式設計 ===== */
+@media (max-width: 1024px) {
+    .billing-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .subscription-container {
+        padding: 20px 16px;
+    }
+    
+    .subscription-header {
+        padding-top: 80px;
+        margin-bottom: 32px;
+    }
+    
+    .subscription-header h1 {
+        font-size: 2rem;
+    }
+    
+    .subscription-card {
+        padding: 24px 20px;
+        margin-bottom: 24px;
+    }
+    
+    .billing-options {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .billing-label {
+        min-height: 120px;
+        padding: 20px 16px;
+    }
+    
+    .groups-input-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .groups-label {
+        min-width: auto;
+        text-align: center;
+    }
+    
+    .groups-input {
+        min-width: auto;
+    }
+    
+    .price-line {
+        font-size: 14px;
+    }
+    
+    .price-line.total {
+        font-size: 16px;
+    }
+    
+    .form-grid {
+        gap: 20px;
+    }
+    
+    .payment-option {
+        padding: 14px 16px;
+    }
+    
+    .payment-name {
+        font-size: 15px;
+    }
+    
+    .payment-desc {
+        font-size: 13px;
+    }
+    
+    .contact-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .contact-btn {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+    }
+    
+    .faq-section {
+        padding: 32px 24px;
+        margin-top: 60px;
+    }
+}
+
+@media (max-width: 480px) {
+    .subscription-container {
+        padding: 16px 12px;
+    }
+    
+    .subscription-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .subscription-card {
+        padding: 20px 16px;
+    }
+    
+    .billing-label {
+        min-height: 100px;
+        padding: 16px 12px;
+    }
+    
+    .billing-period {
+        font-size: 15px;
+    }
+    
+    .billing-price {
+        font-size: 16px;
+    }
+    
+    .form-input,
+    .form-select {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+    
+    .submit-btn {
+        width: 100%;
+        padding: 14px 24px;
+        font-size: 15px;
+    }
+    
+    .price-display {
+        padding: 20px 16px;
+    }
+    
+    .payment-option {
+        padding: 12px 14px;
+    }
+    
+    .terms-section {
+        padding: 16px;
+    }
+    
+    .terms-text {
+        font-size: 13px;
+    }
+    
+    .container {
+        padding: 0 12px;
+    }
+}
+
+/* ===== 無障礙設計 ===== */
+.focused .form-label {
+    color: var(--primary);
+}
+
+.focused .form-input,
+.focused .form-select {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.billing-label.selected {
+    transform: translateY(-2px);
+}
+
+.payment-option.selected {
+    transform: translateY(-1px);
+}
+
+/* 高對比模式支援 */
+@media (prefers-contrast: high) {
+    .form-input,
+    .form-select,
+    .billing-label,
+    .payment-option {
+        border-width: 3px;
+    }
+}
+
+/* 減少動畫模式 */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .submit-btn::before {
+        display: none;
+    }
+}
+
+/* 改善行動裝置體驗 */
+@media (hover: none) {
+    .billing-label:hover,
+    .payment-option:hover,
+    .subscription-card:hover,
+    .contact-btn:hover {
+        transform: none;
+    }
+}
