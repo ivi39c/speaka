@@ -1,460 +1,319 @@
-/* ===== Speaka 共用腳本 scripts.js ===== */
-
-// ===== 核心功能模組 =====
-const SpeakaCore = {
-    // 滾動時導航列效果
-    initNavbarScroll() {
-        window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.navbar');
-            if (!navbar) return;
-            
-            if (window.scrollY > 50) {
-                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-                navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
-            } else {
-                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-                navbar.style.boxShadow = 'none';
-            }
-        });
+        let currentValue = parseInt(input.value) || 1;
+        let newValue = currentValue + delta;
+        
+        if (newValue < 1) newValue = 1;
+        if (newValue > 999) newValue = 999;
+        
+        input.value = newValue;
+        this.updatePrice();
     },
 
-    // 平滑滾動
-    initSmoothScroll() {
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                // 檢查是否為條款連結，如果是則跳過
-                if (this.classList.contains('terms-link')) {
-                    return;
-                }
-                
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                
-                // 確保不是單純的 "#"
-                if (targetId && targetId !== '#') {
-                    const target = document.querySelector(targetId);
-                    if (target) {
-                        const headerOffset = 80;
-                        const elementPosition = target.getBoundingClientRect().top;
-                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-                        window.scrollTo({
-                            top: offsetPosition,
-                            behavior: 'smooth'
-                        });
-                    }
-                }
-            });
+    highlightSelectedPlan(radio) {
+        // 移除所有高亮
+        document.querySelectorAll('.billing-label').forEach(label => {
+            label.classList.remove('selected');
         });
-    },
-
-    // 滾動動畫效果
-    initScrollAnimations() {
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, observerOptions);
-
-        // 觀察所有需要動畫的元素
-        document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
-            observer.observe(el);
-        });
-    },
-
-    // 頁面載入動畫
-    initPageLoadAnimation() {
-        window.addEventListener('load', function() {
-            document.body.style.opacity = '0';
-            document.body.style.transition = 'opacity 0.5s ease';
-            
-            setTimeout(() => {
-                document.body.style.opacity = '1';
-            }, 100);
-        });
-    },
-
-    // 初始化所有核心功能
-    init() {
-        // 如果網址帶有 plan 參數，預選方案
-        const urlParams = new URLSearchParams(window.location.search);
-        const selectedPlan = urlParams.get('plan');
-        if (selectedPlan) {
-            const radio = document.querySelector(`input[name="billingPeriod"][value="${selectedPlan}"]`);
-            if (radio) radio.checked = true;
+        
+        // 高亮選中的方案
+        const selectedLabel = radio.closest('.billing-option').querySelector('.billing-label');
+        if (selectedLabel) {
+            selectedLabel.classList.add('selected');
         }
-    
-        this.initNavbarScroll();
-        this.initSmoothScroll();
-        this.initScrollAnimations();
-        this.initPageLoadAnimation();
-    }
-};
-
-// ===== 按鈕效果模組 =====
-const ButtonEffects = {
-    // 波紋效果
-    addRippleEffect(button, event) {
-        const ripple = document.createElement('span');
-        const rect = button.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = event.clientX - rect.left - size / 2;
-        const y = event.clientY - rect.top - size / 2;
-        
-        ripple.style.width = ripple.style.height = size + 'px';
-        ripple.style.left = x + 'px';
-        ripple.style.top = y + 'px';
-        ripple.style.position = 'absolute';
-        ripple.style.borderRadius = '50%';
-        ripple.style.background = 'rgba(255, 255, 255, 0.5)';
-        ripple.style.transform = 'scale(0)';
-        ripple.style.animation = 'ripple 0.6s linear';
-        ripple.style.pointerEvents = 'none';
-        
-        button.style.position = 'relative';
-        button.style.overflow = 'hidden';
-        button.appendChild(ripple);
-        
-        setTimeout(() => {
-            ripple.remove();
-        }, 600);
     },
 
-    // 初始化按鈕點擊效果
-    initButtonEffects() {
-        document.querySelectorAll('.btn, .plan-button').forEach(button => {
-            button.addEventListener('click', (e) => {
-                this.addRippleEffect(button, e);
-            });
-        });
-    },
-
-    // 價格卡片懸停效果
-    initPricingCardEffects() {
-        document.querySelectorAll('.pricing-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                if (!this.classList.contains('featured')) {
-                    this.style.borderColor = '#2563eb';
-                    this.style.transform = 'translateY(-5px)';
-                }
-            });
-            
-            card.addEventListener('mouseleave', function() {
-                if (!this.classList.contains('featured')) {
-                    this.style.borderColor = '#f1f5f9';
-                    this.style.transform = 'translateY(0)';
-                }
-            });
-        });
-    },
-
-    // 初始化所有按鈕效果
-    init() {
-        this.initButtonEffects();
-        this.initPricingCardEffects();
-    }
-};
-
-// ===== 聯絡功能模組 =====
-
-
-const SubscriptionPage = {
-    // 價格計算
-    prices: {
-        monthly: 199,
-        quarterly: 579,
-        halfyearly: 1199,
-        yearly: 2030
-    },
-
-    periodNames: {
-        monthly: '月',
-        quarterly: '季',
-        halfyearly: '半年',
-        yearly: '年'
-    },
-
-    // 初始化訂閱頁面
-    init() {
-        if (!this.isSubscriptionPage()) return;
-        
-        this.initPriceCalculation();
-        this.initPaymentMethods();
-        this.initInvoiceType();
-        this.initFormValidation();
-        this.initFormSubmission();
-        this.updatePrice(); // 初始化價格顯示
-    },
-
-    // 檢查是否為訂閱頁面
-    isSubscriptionPage() {
-        return document.getElementById('subscriptionForm') !== null;
-    },
-
-    // 初始化價格計算
-    initPriceCalculation() {
-        const groupCountInput = document.getElementById('groupCount');
-        const billingRadios = document.querySelectorAll('input[name="billingPeriod"]');
-
-        if (groupCountInput) {
-            groupCountInput.addEventListener('input', () => this.updatePrice());
-        }
-
-        billingRadios.forEach(radio => {
-            radio.addEventListener('change', () => this.updatePrice());
-        });
-    },
-
-    // 更新價格顯示
     updatePrice() {
         const groupCount = parseInt(document.getElementById('groupCount')?.value) || 1;
         const selectedPeriod = document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
-        const unitPrice = this.prices[selectedPeriod];
+        const priceInfo = this.prices[selectedPeriod];
+        
+        if (!priceInfo) return;
+        
+        const unitPrice = priceInfo.price;
         const total = unitPrice * groupCount;
 
-        // 更新顯示
-        const unitPriceEl = document.getElementById('unitPrice');
-        const groupQuantityEl = document.getElementById('groupQuantity');
-        const subtotalEl = document.getElementById('subtotal');
-        const totalPriceEl = document.getElementById('totalPrice');
+        // 更新價格顯示
+        this.updatePriceDisplay(unitPrice, groupCount, total, priceInfo.period);
+        
+        // 更新頁面標題中的價格（如果存在）
+        this.updatePageTitle(total);
+    },
 
-        if (unitPriceEl) {
-            unitPriceEl.textContent = `NT$ ${unitPrice.toLocaleString()} / 群組 / ${this.periodNames[selectedPeriod]}`;
+    updatePriceDisplay(unitPrice, groupCount, total, period) {
+        const elements = {
+            unitPrice: document.getElementById('unitPrice'),
+            groupQuantity: document.getElementById('groupQuantity'),
+            subtotal: document.getElementById('subtotal'),
+            totalPrice: document.getElementById('totalPrice')
+        };
+
+        if (elements.unitPrice) {
+            elements.unitPrice.textContent = `NT$ ${unitPrice.toLocaleString()} / 群組 / ${period}`;
         }
-        if (groupQuantityEl) {
-            groupQuantityEl.textContent = `${groupCount} 個`;
+        
+        if (elements.groupQuantity) {
+            elements.groupQuantity.textContent = `${groupCount} 個群組`;
         }
-        if (subtotalEl) {
-            subtotalEl.textContent = `NT$ ${total.toLocaleString()}`;
+        
+        if (elements.subtotal) {
+            elements.subtotal.textContent = `NT$ ${total.toLocaleString()}`;
         }
-        if (totalPriceEl) {
-            totalPriceEl.textContent = `NT$ ${total.toLocaleString()}`;
+        
+        if (elements.totalPrice) {
+            elements.totalPrice.textContent = `NT$ ${total.toLocaleString()}`;
         }
     },
 
-    // 初始化支付方式選擇
+    updatePageTitle(total) {
+        const titleElement = document.querySelector('.subscription-header h1 .price-highlight');
+        if (titleElement) {
+            titleElement.textContent = `NT$ ${total.toLocaleString()}`;
+        }
+    },
+
     initPaymentMethods() {
         document.querySelectorAll('.payment-option').forEach(option => {
             option.addEventListener('click', function() {
-                document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
+                // 移除所有選中狀態
+                document.querySelectorAll('.payment-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // 設定當前選中
                 this.classList.add('selected');
                 const radio = this.querySelector('input[type="radio"]');
-                if (radio) radio.checked = true;
+                if (radio) {
+                    radio.checked = true;
+                }
+                
+                // 添加視覺反饋
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+
+            // 鍵盤支援
+            option.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
             });
         });
     },
 
-    // 初始化發票類型
     initInvoiceType() {
         const invoiceTypeSelect = document.getElementById('invoiceType');
         if (!invoiceTypeSelect) return;
 
-        invoiceTypeSelect.addEventListener('change', function() {
-            const companyFields = document.querySelectorAll('.company-field');
-            const companyName = document.getElementById('companyName');
-            const taxId = document.getElementById('taxId');
+        invoiceTypeSelect.addEventListener('change', (e) => {
+            this.toggleCompanyFields(e.target.value === 'company');
+        });
+
+        // 初始設定
+        this.toggleCompanyFields(invoiceTypeSelect.value === 'company');
+    },
+
+    toggleCompanyFields(show) {
+        const companyFields = document.querySelectorAll('.company-field');
+        const companyName = document.getElementById('companyName');
+        const taxId = document.getElementById('taxId');
+        
+        companyFields.forEach(field => {
+            field.style.display = show ? 'flex' : 'none';
             
-            if (this.value === 'company') {
-                companyFields.forEach(field => {
-                    field.style.display = 'flex';
+            // 添加過渡動畫
+            if (show) {
+                field.style.opacity = '0';
+                field.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    field.style.transition = 'all 0.3s ease';
+                    field.style.opacity = '1';
+                    field.style.transform = 'translateY(0)';
+                }, 10);
+            }
+        });
+        
+        if (companyName) {
+            companyName.required = show;
+            if (!show) companyName.value = '';
+        }
+        
+        if (taxId) {
+            taxId.required = show;
+            if (!show) taxId.value = '';
+        }
+    },
+
+    initFormValidation() {
+        // 即時驗證設定
+        const validators = {
+            taxId: this.createTaxIdValidator(),
+            phone: this.createPhoneValidator(),
+            email: this.createEmailValidator(),
+            contactName: this.createNameValidator()
+        };
+
+        Object.entries(validators).forEach(([fieldId, validator]) => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.validator = validator;
+                
+                // 即時驗證
+                field.addEventListener('blur', function() {
+                    this.validator.validate(this);
                 });
-                if (companyName) companyName.required = true;
-                if (taxId) taxId.required = true;
-            } else {
-                companyFields.forEach(field => {
-                    field.style.display = 'none';
+                
+                // 輸入時清除錯誤
+                field.addEventListener('input', function() {
+                    if (this.classList.contains('error')) {
+                        this.validator.clearError(this);
+                    }
                 });
-                if (companyName) {
-                    companyName.required = false;
-                    companyName.value = '';
-                }
-                if (taxId) {
-                    taxId.required = false;
-                    taxId.value = '';
-                }
             }
         });
     },
 
-    // 初始化表單驗證
-    initFormValidation() {
-        // 統一編號格式驗證
-        const taxIdInput = document.getElementById('taxId');
-        if (taxIdInput) {
-            taxIdInput.addEventListener('input', function() {
-                this.value = this.value.replace(/\D/g, '').substring(0, 8);
-                this.validateTaxId();
-            });
-
-            // 添加統一編號驗證方法
-            taxIdInput.validateTaxId = function() {
-                const value = this.value;
+    createTaxIdValidator() {
+        return {
+            validate: (field) => {
+                const value = field.value.replace(/\D/g, '');
+                field.value = value.substring(0, 8);
                 
-                if (value.length === 8) {
-                    if (this.isValidTaxId(value)) {
-                        this.setValid();
-                        return true;
-                    } else {
-                        this.showError('統一編號格式不正確');
-                        return false;
-                    }
-                } else if (value.length > 0) {
-                    this.showError('統一編號必須為8位數字');
+                if (value.length === 0) {
+                    this.clearFieldError(field);
+                    return true;
+                } else if (value.length !== 8) {
+                    this.showFieldError(field, '統一編號必須為8位數字');
+                    return false;
+                } else if (!this.isValidTaxId(value)) {
+                    this.showFieldError(field, '統一編號格式不正確');
                     return false;
                 } else {
-                    this.clearError();
+                    this.clearFieldError(field);
                     return true;
                 }
-            };
+            },
+            clearError: (field) => this.clearFieldError(field)
+        };
+    },
 
-            // 統一編號檢查演算法
-            taxIdInput.isValidTaxId = function(taxId) {
-                if (!/^\d{8}$/.test(taxId)) return false;
+    createPhoneValidator() {
+        return {
+            validate: (field) => {
+                const value = field.value.replace(/[\s\-\(\)]/g, '');
                 
-                const weights = [1, 2, 1, 2, 1, 2, 4, 1];
-                let sum = 0;
-                
-                for (let i = 0; i < 8; i++) {
-                    let product = parseInt(taxId[i]) * weights[i];
-                    sum += Math.floor(product / 10) + (product % 10);
+                if (value.length === 0) {
+                    this.clearFieldError(field);
+                    return true;
                 }
                 
-                return sum % 10 === 0;
-            };
-        }
-
-        // 電話號碼驗證
-        const phoneInput = document.getElementById('phone');
-        if (phoneInput) {
-            phoneInput.addEventListener('input', function() {
-                // 只允許數字、連字號、括號、空格和加號
-                this.value = this.value.replace(/[^\d\-\(\)\s\+]/g, '');
-                this.validatePhone();
-            });
-
-            phoneInput.validatePhone = function() {
-                const value = this.value.replace(/[\s\-\(\)]/g, '');
+                const patterns = [
+                    /^09\d{8}$/, // 台灣手機
+                    /^0[2-8]\d{7,8}$/, // 市話
+                    /^\+\d{8,15}$/ // 國際號碼
+                ];
                 
-                // 台灣手機格式：09開頭10位數 或 市話格式
-                const mobilePattern = /^09\d{8}$/;
-                const landlinePattern = /^0[2-8]\d{7,8}$/;
-                const internationalPattern = /^\+\d{8,15}$/;
+                const isValid = patterns.some(pattern => pattern.test(value));
                 
-                if (mobilePattern.test(value) || landlinePattern.test(value) || internationalPattern.test(value)) {
-                    this.setValid();
+                if (isValid) {
+                    this.clearFieldError(field);
                     return true;
-                } else if (value.length > 0) {
-                    this.showError('請輸入正確的電話號碼格式');
-                    return false;
                 } else {
-                    this.clearError();
+                    this.showFieldError(field, '請輸入正確的電話號碼格式');
+                    return false;
+                }
+            },
+            clearError: (field) => this.clearFieldError(field)
+        };
+    },
+
+    createEmailValidator() {
+        return {
+            validate: (field) => {
+                const value = field.value.trim();
+                
+                if (value.length === 0) {
+                    this.clearFieldError(field);
                     return true;
                 }
-            };
-        }
-
-        // Email 驗證
-        const emailInput = document.getElementById('email');
-        if (emailInput) {
-            emailInput.addEventListener('blur', function() {
-                this.validateEmail();
-            });
-
-            emailInput.validateEmail = function() {
-                const value = this.value;
+                
                 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 
                 if (emailPattern.test(value)) {
-                    this.setValid();
+                    this.clearFieldError(field);
                     return true;
-                } else if (value.length > 0) {
-                    this.showError('請輸入正確的電子郵件格式');
-                    return false;
                 } else {
-                    this.clearError();
-                    return true;
-                }
-            };
-        }
-
-        // 姓名驗證
-        const nameInput = document.getElementById('contactName');
-        if (nameInput) {
-            nameInput.addEventListener('input', function() {
-                // 移除特殊字符，保留中文、英文、空格
-                this.value = this.value.replace(/[^\u4e00-\u9fa5a-zA-Z\s]/g, '');
-                this.validateName();
-            });
-
-            nameInput.validateName = function() {
-                const value = this.value.trim();
-                
-                if (value.length >= 2 && value.length <= 20) {
-                    this.setValid();
-                    return true;
-                } else if (value.length > 0) {
-                    this.showError('姓名長度應為2-20個字符');
+                    this.showFieldError(field, '請輸入正確的電子郵件格式');
                     return false;
-                } else {
-                    this.clearError();
-                    return true;
                 }
-            };
-        }
-
-        // 通用錯誤訊息顯示方法
-        document.querySelectorAll('.form-input, .form-select').forEach(input => {
-            input.showError = function(message) {
-                // 先移除現有的錯誤訊息
-                this.clearError();
-                
-                // 設置錯誤狀態
-                this.style.borderColor = '#ef4444';
-                
-                // 創建新的錯誤訊息
-                const errorMsg = document.createElement('div');
-                errorMsg.classList.add('error-message');
-                errorMsg.textContent = message;
-                errorMsg.style.cssText = `
-                    color: #ef4444;
-                    font-size: 0.8rem;
-                    margin-top: 4px;
-                    display: block;
-                `;
-                
-                // 將錯誤訊息插入到正確位置
-                this.parentNode.appendChild(errorMsg);
-            };
-            
-            input.clearError = function() {
-                // 移除該欄位的所有錯誤訊息
-                const errorMsgs = this.parentNode.querySelectorAll('.error-message');
-                errorMsgs.forEach(msg => msg.remove());
-                
-                // 重置為預設邊框顏色
-                this.style.borderColor = '#e2e8f0';
-            };
-            
-            input.setValid = function() {
-                this.clearError();
-                // 不設置綠色邊框，保持預設狀態
-            };
-        });
+            },
+            clearError: (field) => this.clearFieldError(field)
+        };
     },
 
-    // 表單提交驗證
+    createNameValidator() {
+        return {
+            validate: (field) => {
+                const value = field.value.trim();
+                
+                if (value.length === 0) {
+                    this.clearFieldError(field);
+                    return true;
+                }
+                
+                if (value.length >= 2 && value.length <= 20) {
+                    this.clearFieldError(field);
+                    return true;
+                } else {
+                    this.showFieldError(field, '姓名長度應為2-20個字符');
+                    return false;
+                }
+            },
+            clearError: (field) => this.clearFieldError(field)
+        };
+    },
+
+    showFieldError(field, message) {
+        this.clearFieldError(field);
+        
+        field.classList.add('error');
+        field.style.borderColor = 'var(--error)';
+        
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.textContent = message;
+        
+        field.parentNode.appendChild(errorDiv);
+    },
+
+    clearFieldError(field) {
+        field.classList.remove('error');
+        field.style.borderColor = '';
+        
+        const errorMessages = field.parentNode.querySelectorAll('.error-message');
+        errorMessages.forEach(msg => msg.remove());
+    },
+
+    isValidTaxId(taxId) {
+        if (!/^\d{8}$/.test(taxId)) return false;
+        
+        const weights = [1, 2, 1, 2, 1, 2, 4, 1];
+        let sum = 0;
+        
+        for (let i = 0; i < 8; i++) {
+            let product = parseInt(taxId[i]) * weights[i];
+            sum += Math.floor(product / 10) + (product % 10);
+        }
+        
+        return sum % 10 === 0;
+    },
+
     validateForm() {
         let isValid = true;
         const errors = [];
 
-        // 驗證所有必填欄位
+        // 驗證必填欄位
         const requiredFields = [
             { id: 'contactName', name: '聯絡人姓名' },
             { id: 'email', name: '電子郵件' },
@@ -466,7 +325,7 @@ const SubscriptionPage = {
             const input = document.getElementById(field.id);
             if (input && !input.value.trim()) {
                 errors.push(`${field.name}為必填欄位`);
-                input.style.borderColor = '#ef4444';
+                this.showFieldError(input, `${field.name}為必填欄位`);
                 isValid = false;
             }
         });
@@ -479,32 +338,33 @@ const SubscriptionPage = {
             
             if (!companyName?.value.trim()) {
                 errors.push('公司名稱為必填欄位');
-                if (companyName) companyName.style.borderColor = '#ef4444';
+                this.showFieldError(companyName, '公司名稱為必填欄位');
                 isValid = false;
             }
             
             if (!taxId?.value.trim()) {
                 errors.push('統一編號為必填欄位');
-                if (taxId) taxId.style.borderColor = '#ef4444';
+                this.showFieldError(taxId, '統一編號為必填欄位');
                 isValid = false;
-            } else if (taxId && !taxId.validateTaxId()) {
+            } else if (taxId.validator && !taxId.validator.validate(taxId)) {
                 isValid = false;
             }
         }
 
         // 個別欄位驗證
-        const emailInput = document.getElementById('email');
-        if (emailInput && emailInput.value && !emailInput.validateEmail()) {
-            isValid = false;
-        }
+        ['email', 'phone', 'contactName'].forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field && field.value && field.validator) {
+                if (!field.validator.validate(field)) {
+                    isValid = false;
+                }
+            }
+        });
 
-        const phoneInput = document.getElementById('phone');
-        if (phoneInput && phoneInput.value && !phoneInput.validatePhone()) {
-            isValid = false;
-        }
-
-        const nameInput = document.getElementById('contactName');
-        if (nameInput && nameInput.value && !nameInput.validateName()) {
+        // 支付方式驗證
+        const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+        if (!paymentMethod) {
+            errors.push('請選擇支付方式');
             isValid = false;
         }
 
@@ -522,20 +382,95 @@ const SubscriptionPage = {
         return isValid;
     },
 
-    // 顯示驗證錯誤
     showValidationErrors(errors) {
         const errorMessage = '請修正以下錯誤：\n\n' + errors.join('\n');
         
-        if (SpeakaModal.isModernBrowser()) {
-            SpeakaModal.showCustomModal('表單驗證錯誤', errorMessage, [
-                { text: '確定', action: () => {} }
-            ]);
-        } else {
-            alert(errorMessage);
+        // 創建錯誤提示彈窗
+        this.showErrorModal('表單驗證錯誤', errorMessage);
+        
+        // 滾動到第一個錯誤欄位
+        const firstError = document.querySelector('.form-input.error');
+        if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => firstError.focus(), 500);
         }
     },
 
-    // 初始化表單提交
+    showErrorModal(title, message) {
+        const modal = document.createElement('div');
+        modal.className = 'error-modal';
+        modal.innerHTML = `
+            <div class="error-modal-overlay">
+                <div class="error-modal-content">
+                    <h3>${title}</h3>
+                    <div class="error-list">
+                        ${message.split('\n\n')[1].split('\n').map(error => 
+                            `<div class="error-item">• ${error}</div>`
+                        ).join('')}
+                    </div>
+                    <button class="error-modal-close">確定</button>
+                </div>
+            </div>
+        `;
+
+        // 添加樣式
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+        `;
+
+        const overlay = modal.querySelector('.error-modal-overlay');
+        overlay.style.cssText = `
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        `;
+
+        const content = modal.querySelector('.error-modal-content');
+        content.style.cssText = `
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        `;
+
+        const closeButton = modal.querySelector('.error-modal-close');
+        closeButton.style.cssText = `
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        `;
+
+        document.body.appendChild(modal);
+
+        // 關閉事件
+        closeButton.addEventListener('click', () => {
+            document.body.removeChild(modal);
+        });
+
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                document.body.removeChild(modal);
+            }
+        });
+    },
+
     initFormSubmission() {
         const form = document.getElementById('subscriptionForm');
         if (!form) return;
@@ -543,653 +478,784 @@ const SubscriptionPage = {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            // 表單驗證
-            if (!this.validateForm()) {
-                return;
-            }
-            
-            // 收集表單數據
-            const formData = new FormData(form);
-            const data = Object.fromEntries(formData);
-            
-            // 添加價格資訊
-            data.groupCount = document.getElementById('groupCount')?.value || '1';
-            data.totalAmount = document.getElementById('totalPrice')?.textContent || 'NT$ 199';
-            
-            // 顯示確認彈窗
-            SpeakaModal.showSubscriptionConfirm(data);
+            // 顯示載入狀態
+            const submitBtn = form.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = '處理中...';
+            submitBtn.disabled = true;
+
+            // 模擬驗證延遲
+            setTimeout(() => {
+                if (this.validateForm()) {
+                    const formData = new FormData(form);
+                    const data = Object.fromEntries(formData);
+                    
+                    // 添加計算的價格資訊
+                    data.groupCount = document.getElementById('groupCount')?.value || '1';
+                    data.totalAmount = document.getElementById('totalPrice')?.textContent || 'NT$ 199';
+                    
+                    this.showSubscriptionConfirm(data);
+                }
+                
+                // 恢復按鈕狀態
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 1000);
         });
 
-        // 服務條款和隱私政策連結事件
         this.initTermsLinks();
     },
 
-    // 初始化服務條款連結
     initTermsLinks() {
-        // 使用事件委派，確保動態內容也能觸發
         document.addEventListener('click', (e) => {
-            // 檢查是否點擊的是服務條款或隱私政策連結
-            if (e.target.tagName === 'A' && e.target.classList.contains('terms-link')) {
+            if (e.target.classList.contains('terms-link')) {
                 e.preventDefault();
                 e.stopPropagation();
                 
-                console.log('點擊了條款連結:', e.target.getAttribute('data-type'));
+                const type = e.target.getAttribute('data-type') || 
+                           (e.target.textContent.includes('服務條款') ? 'terms' : 'privacy');
                 
-                const type = e.target.getAttribute('data-type');
                 if (type === 'terms') {
-                    SpeakaModal.showTermsOfService();
+                    this.showTermsModal();
                 } else if (type === 'privacy') {
-                    SpeakaModal.showPrivacyPolicy();
+                    this.showPrivacyModal();
                 }
-                
-                return false;
-            }
-            
-            // 備用方案：根據文字內容判斷
-            if (e.target.tagName === 'A' && (e.target.textContent.trim() === '服務條款' || e.target.textContent.trim() === '隱私政策')) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const text = e.target.textContent.trim();
-                if (text === '服務條款') {
-                    console.log('觸發服務條款彈窗');
-                    SpeakaModal.showTermsOfService();
-                } else if (text === '隱私政策') {
-                    console.log('觸發隱私政策彈窗');
-                    SpeakaModal.showPrivacyPolicy();
-                }
-                
-                return false;
             }
         });
-    }
-};
-
-// ===== 主初始化函數更新 =====
-function runInitialization() {
-    try {
-        // 初始化所有模組
-        SpeakaCore.init();
-        ButtonEffects.init();
-        ContactHandlers.init();
-        FormHandlers.init();
-        SubscriptionPage.init();
-        Performance.init();
-        
-        console.log('Speaka 初始化完成');
-    } catch (error) {
-        console.error('Speaka 初始化失敗:', error);
-    }
-}
-
-// ===== 調試和測試函數 =====
-const DebugHelpers = {
-    // 測試服務條款彈窗
-    testTerms() {
-        if (window.Speaka && window.Speaka.Modal) {
-            window.Speaka.Modal.showTermsOfService();
-        } else {
-            console.error('Speaka Modal 未初始化');
-        }
     },
 
-    // 測試隱私政策彈窗
-    testPrivacy() {
-        if (window.Speaka && window.Speaka.Modal) {
-            window.Speaka.Modal.showPrivacyPolicy();
-        } else {
-            console.error('Speaka Modal 未初始化');
-        }
-    },
-
-    // 檢查事件綁定
-    checkEventBinding() {
-        const links = document.querySelectorAll('.terms-link');
-        console.log('找到條款連結數量:', links.length);
-        links.forEach((link, index) => {
-            console.log(`連結 ${index + 1}:`, link.textContent, 'data-type:', link.getAttribute('data-type'));
-        });
-    }
-};
-
-// 將調試函數添加到全域
-window.DebugSpeaka = DebugHelpers;
-window.Speaka = {
-    Core: SpeakaCore,
-    ButtonEffects: ButtonEffects,
-    ContactHandlers: ContactHandlers,
-    Modal: SpeakaModal,
-    FormHandlers: FormHandlers,
-    SubscriptionPage: SubscriptionPage,
-    Utils: Utils,
-    Performance: Performance,
-    init: initSpeaka
-};
-
-// ===== 主初始化函數 =====
-function initSpeaka() {
-    // 確保DOM已載入
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            runInitialization();
-        });
-    } else {
-        runInitialization();
-    }
-}
-
-// 自動初始化
-initSpeaka();
-
-// 調試用：確保 SpeakaModal 在全域可用
-window.SpeakaModal = SpeakaModal;
-
-// 提供全域方法以防直接呼叫
-window.showPrivacyPolicy = function() {
-    console.log('嘗試顯示隱私政策彈窗');
-    if (SpeakaModal && typeof SpeakaModal.showPrivacyPolicy === 'function') {
-        SpeakaModal.showPrivacyPolicy();
-    } else {
-        console.error('SpeakaModal.showPrivacyPolicy 不可用');
-        // 延遲再試一次
-        setTimeout(() => {
-            if (SpeakaModal && typeof SpeakaModal.showPrivacyPolicy === 'function') {
-                SpeakaModal.showPrivacyPolicy();
-            }
-        }, 100);
-    }
-};
-
-window.showTermsOfService = function() {
-    console.log('嘗試顯示服務條款彈窗');
-    if (SpeakaModal && typeof SpeakaModal.showTermsOfService === 'function') {
-        SpeakaModal.showTermsOfService();
-    } else {
-        console.error('SpeakaModal.showTermsOfService 不可用');
-    }
-};
-
-// 調試：檢查初始化狀態
-console.log('SpeakaModal 是否存在:', !!SpeakaModal);
-console.log('showPrivacyPolicy 是否存在:', typeof SpeakaModal.showPrivacyPolicy === 'function');
-console.log('showTermsOfService 是否存在:', typeof SpeakaModal.showTermsOfService === 'function');CustomModal('方案選擇', message, [
-                { text: 'LINE 聯絡', action: () => window.open('https://line.me/ti/p/@537etdoz', '_blank') },
-                { text: 'Email 聯絡', action: () => window.open('mailto:talkeasenow@gmail.com', '_blank') },
-                { text: '稍後決定', action: () => {} }
-            ]);
-        } else {
-            alert(message);
-        }
-    },
-
-    // 顯示企業方案聯絡
-    showEnterpriseContact() {
-        const message = '企業方案諮詢\n\n請聯絡我們獲取專屬報價：\nLINE: @537etdoz\nEmail: talkeasenow@gmail.com';
-        
-        if (this.isModernBrowser()) {
-            this.showCustomModal('企業方案諮詢', message, [
-                { text: 'LINE 諮詢', action: () => window.open('https://line.me/ti/p/@537etdoz', '_blank') },
-                { text: 'Email 諮詢', action: () => window.open('mailto:talkeasenow@gmail.com', '_blank') },
-                { text: '返回', action: () => {} }
-            ]);
-        } else {
-            alert(message);
-        }
-    },
-
-    // 顯示訂閱確認
-    showSubscriptionConfirm(data) {
-        const paymentMethods = {
-            linepay: 'LINE Pay',
-            credit: '信用卡',
-            transfer: '銀行轉帳'
-        };
-
-        const invoiceTypes = {
-            personal: '個人發票',
-            company: '公司發票',
-            donation: '捐贈發票'
-        };
-
-        const periodNames = {
-            monthly: '月繳',
-            quarterly: '季繳',
-            halfyearly: '半年繳',
-            yearly: '年繳'
-        };
-
-        if (this.isModernBrowser()) {
-            this.showSubscriptionModal(data, paymentMethods, invoiceTypes, periodNames);
-        } else {
-            // 降級方案 - 使用簡單的 alert
-            let message = `確認訂閱資訊：\n\n`;
-            message += `群組數量：${data.groupCount} 個\n`;
-            message += `計費週期：${periodNames[data.billingPeriod] || data.billingPeriod}\n`;
-            message += `支付方式：${paymentMethods[data.paymentMethod]}\n`;
-            message += `總金額：${data.totalAmount}\n`;
-            message += `聯絡人：${data.contactName}\n`;
-            message += `電子郵件：${data.email}\n`;
-            message += `發票類型：${invoiceTypes[data.invoiceType]}\n`;
-            
-            if (data.companyName) {
-                message += `公司名稱：${data.companyName}\n`;
-                message += `統一編號：${data.taxId}\n`;
-            }
-            
-            message += `\n確認後將跳轉至付款頁面`;
-
-            if (confirm(message)) {
-                this.processPayment(data);
-            }
-        }
-    },
-
-    // 顯示專門的訂閱確認彈窗
-    showSubscriptionModal(data, paymentMethods, invoiceTypes, periodNames) {
-        // 創建遮罩
-        const overlay = document.createElement('div');
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(5px);
+    showTermsModal() {
+        const content = `
+            <h3>服務條款</h3>
+            <div class="terms-content">
+                <h4>1. 服務說明</h4>
+                <p>Speaka 提供 LINE 群組即時翻譯服務，支援多種語言間的雙向翻譯。</p>
+                
+                <h4>2. 使用規範</h4>
+                <p>用戶同意合法使用本服務，不得用於違法或有害目的。</p>
+                
+                <h4>3. 服務費用</h4>
+                <p>服務費用依所選方案計費，付款後即開始服務期間。</p>
+                
+                <h4>4. 服務品質</h4>
+                <p>我們致力提供穩定的翻譯服務，但不保證翻譯結果的絕對準確性。</p>
+                
+                <h4>5. 隱私保護</h4>
+                <p>我們承諾保護用戶隱私，翻譯內容僅用於提供服務，不會儲存或分析。</p>
+                
+                <h4>6. 服務變更</h4>
+                <p>我們保留修改服務內容和條款的權利，變更將提前通知用戶。</p>
+                
+                <h4>7. 責任限制</h4>
+                <p>本服務按現況提供，對於使用本服務造成的任何損失，我們不承擔責任。</p>
+                
+                <h4>8. 聯絡方式</h4>
+                <p>如有疑問，請聯絡：talkeasenow@gmail.com 或 LINE: @537etdoz</p>
+            </div>
         `;
+        
+        this.showModal('服務條款', content);
+    },
 
-        // 創建彈窗
+    showPrivacyModal() {
+        const content = `
+            <h3>隱私政策</h3>
+            <div class="terms-content">
+                <h4>1. 資料收集</h4>
+                <p>我們收集以下類型的個人資料：</p>
+                <ul>
+                    <li>聯絡資訊：姓名、電子郵件、電話號碼、地址</li>
+                    <li>帳務資訊：發票資料、付款記錄</li>
+                    <li>使用資料：服務使用情況、技術日誌</li>
+                </ul>
+                
+                <h4>2. 資料用途</h4>
+                <ul>
+                    <li>提供翻譯服務</li>
+                    <li>客戶支援與技術協助</li>
+                    <li>帳務處理與發票開立</li>
+                    <li>服務改善與品質提升</li>
+                </ul>
+                
+                <h4>3. 資料保護</h4>
+                <ul>
+                    <li>採用業界標準的加密技術</li>
+                    <li>限制員工存取權限</li>
+                    <li>定期進行安全性檢查</li>
+                    <li>遵循個人資料保護法規</li>
+                </ul>
+                
+                <h4>4. 翻譯內容處理</h4>
+                <ul>
+                    <li>翻譯內容僅用於提供翻譯服務</li>
+                    <li>不會儲存或分析群組對話內容</li>
+                    <li>即時處理，不留存敏感資訊</li>
+                </ul>
+                
+                <h4>5. 您的權利</h4>
+                <ul>
+                    <li>查詢個人資料</li>
+                    <li>更正錯誤資料</li>
+                    <li>刪除個人資料</li>
+                    <li>停止資料處理</li>
+                </ul>
+                
+                <h4>6. 聯絡我們</h4>
+                <p>如有隱私相關問題，請聯絡：</p>
+                <p>Email: talkeasenow@gmail.com<br>LINE: @537etdoz</p>
+                
+                <p style="margin-top: 20px; color: #64748b; font-size: 14px;">
+                    最後更新日期：2025年1月
+                </p>
+            </div>
+        `;
+        
+        this.showModal('隱私政策', content);
+    },
+
+    showModal(title, content) {
         const modal = document.createElement('div');
-        modal.style.cssText = `
-            background: white;
-            border-radius: 20px;
-            padding: 0;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            transform: scale(0.8);
-            transition: transform 0.3s ease;
-        `;
-
-        // 創建彈窗內容
+        modal.className = 'terms-modal';
         modal.innerHTML = `
-            <div style="padding: 30px 30px 0; text-align: center; border-bottom: 1px solid #f1f5f9;">
-                <h3 style="color: #1e293b; font-size: 1.5rem; margin-bottom: 10px; font-weight: 600;">確認訂閱</h3>
-                <p style="color: #64748b; margin-bottom: 20px;">請確認以下訂閱資訊</p>
-            </div>
-            
-            <div style="padding: 25px 30px;">
-                <!-- 訂閱資訊表格 -->
-                <div style="background: #f8fafc; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
-                    <h4 style="color: #374151; font-size: 1rem; font-weight: 600; margin-bottom: 15px; display: flex; align-items: center;">
-                        <span style="margin-right: 8px;">📋</span> 訂閱資訊
-                    </h4>
-                    <div style="display: grid; gap: 8px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: #64748b;">群組數量</span>
-                            <span style="color: #1e293b; font-weight: 500;">${data.groupCount} 個</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: #64748b;">計費週期</span>
-                            <span style="color: #1e293b; font-weight: 500;">${periodNames[data.billingPeriod] || data.billingPeriod}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: #64748b;">支付方式</span>
-                            <span style="color: #1e293b; font-weight: 500;">${paymentMethods[data.paymentMethod]}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px solid #e2e8f0; margin-top: 8px;">
-                            <span style="color: #2563eb; font-weight: 600;">總金額</span>
-                            <span style="color: #2563eb; font-weight: 700; font-size: 1.2rem;">${data.totalAmount}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 聯絡資訊 -->
-                <div style="background: #f0f9ff; border-radius: 12px; padding: 20px; margin-bottom: 25px;">
-                    <h4 style="color: #374151; font-size: 1rem; font-weight: 600; margin-bottom: 15px; display: flex; align-items: center;">
-                        <span style="margin-right: 8px;">👤</span> 聯絡資訊
-                    </h4>
-                    <div style="display: grid; gap: 8px;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: #64748b;">聯絡人</span>
-                            <span style="color: #1e293b; font-weight: 500;">${data.contactName}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: #64748b;">電子郵件</span>
-                            <span style="color: #1e293b; font-weight: 500;">${data.email}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: #64748b;">發票類型</span>
-                            <span style="color: #1e293b; font-weight: 500;">${invoiceTypes[data.invoiceType]}</span>
-                        </div>
-                        ${data.companyName ? `
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: #64748b;">公司名稱</span>
-                            <span style="color: #1e293b; font-weight: 500;">${data.companyName}</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="color: #64748b;">統一編號</span>
-                            <span style="color: #1e293b; font-weight: 500;">${data.taxId}</span>
-                        </div>
-                        ` : ''}
-                    </div>
-                </div>
-
-                <!-- 提示訊息 -->
-                <div style="background: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px; padding: 12px; margin-bottom: 25px; text-align: center;">
-                    <p style="color: #92400e; margin: 0; font-size: 0.9rem;">
-                        確認後將為您準備付款頁面，請聯絡客服完成付款流程
-                    </p>
-                </div>
-
-                <!-- 按鈕組 -->
-                <div style="display: flex; gap: 12px;">
-                    <button id="confirmPayment" style="
-                        flex: 1;
-                        background: linear-gradient(135deg, #2563eb, #3b82f6);
-                        color: white;
-                        border: none;
-                        padding: 14px 20px;
-                        border-radius: 10px;
-                        font-weight: 600;
-                        font-size: 1rem;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                    ">確認付款</button>
-                    <button id="modifyData" style="
-                        flex: 1;
-                        background: white;
-                        color: #2563eb;
-                        border: 2px solid #2563eb;
-                        padding: 14px 20px;
-                        border-radius: 10px;
-                        font-weight: 600;
-                        font-size: 1rem;
-                        cursor: pointer;
-                        transition: all 0.3s ease;
-                    ">修改資料</button>
+            <div class="terms-modal-overlay">
+                <div class="terms-modal-content">
+                    ${content}
+                    <button class="terms-modal-close">我已了解</button>
                 </div>
             </div>
         `;
 
-        // 添加到頁面
-        overlay.appendChild(modal);
-        document.body.appendChild(overlay);
-
-        // 動畫效果
-        setTimeout(() => {
-            modal.style.transform = 'scale(1)';
-        }, 10);
-
-        // 按鈕事件
-        modal.querySelector('#confirmPayment').addEventListener('click', () => {
-            this.processPayment(data);
-            this.closeModal(overlay);
-        });
-
-        modal.querySelector('#modifyData').addEventListener('click', () => {
-            this.closeModal(overlay);
-        });
-
-        // 點擊遮罩關閉
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                this.closeModal(overlay);
+        // 添加樣式
+        const styles = `
+            .terms-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 10000;
             }
-        });
-
-        // ESC 鍵關閉
-        const escHandler = (e) => {
-            if (e.key === 'Escape') {
-                this.closeModal(overlay);
-                document.removeEventListener('keydown', escHandler);
+            .terms-modal-overlay {
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                backdrop-filter: blur(5px);
             }
-        };
-        document.addEventListener('keydown', escHandler);
-    },
-
-    // 處理付款
-    processPayment(data) {
-        const paymentMethods = {
-            linepay: 'LINE Pay',
-            credit: '信用卡',
-            transfer: '銀行轉帳'
-        };
-
-        // 模擬跳轉到付款頁面
-        const message = `正在為您準備付款頁面...\n\n` +
-                       `付款金額：${data.totalAmount}\n` +
-                       `付款方式：${paymentMethods[data.paymentMethod]}\n\n` +
-                       `請聯絡客服完成付款流程：\n` +
-                       `LINE: @537etdoz\n` +
-                       `Email: talkeasenow@gmail.com`;
-
-        if (this.isModernBrowser()) {
-            this.showCustomModal('付款處理', message, [
-                { text: 'LINE 聯絡', action: () => window.open('https://line.me/ti/p/@537etdoz', '_blank') },
-                { text: 'Email 聯絡', action: () => window.open('mailto:talkeasenow@gmail.com', '_blank') }
-            ]);
-        } else {
-            alert(message);
-        }
-    },
-
-    // 檢查是否為現代瀏覽器
-    isModernBrowser() {
-        return typeof document.createElement === 'function' && 
-               typeof document.body.appendChild === 'function';
-    },
-
-    // 創建自定義彈窗
-    showCustomModal(title, message, buttons) {
-        // 創建遮罩
-        const overlay = document.createElement('div');
-        overlay.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(5px);
-        `;
-
-        // 創建彈窗
-        const modal = document.createElement('div');
-        modal.style.cssText = `
-            background: white;
-            border-radius: 20px;
-            padding: 40px 30px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            transform: scale(0.8);
-            transition: transform 0.3s ease;
-        `;
-
-        // 添加標題
-        const titleEl = document.createElement('h3');
-        titleEl.textContent = title;
-        titleEl.style.cssText = `
-            color: #1e293b;
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            font-weight: 600;
-        `;
-
-        // 添加訊息
-        const messageEl = document.createElement('p');
-        messageEl.innerHTML = message;
-        messageEl.style.cssText = `
-            color: #64748b;
-            line-height: 1.6;
-            margin-bottom: 30px;
-            white-space: pre-line;
-        `;
-
-        // 添加按鈕容器
-        const buttonContainer = document.createElement('div');
-        buttonContainer.style.cssText = `
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-        `;
-
-        // 創建按鈕
-        buttons.forEach((btn, index) => {
-            const button = document.createElement('button');
-            button.textContent = btn.text;
-            button.style.cssText = `
-                padding: 12px 20px;
-                border-radius: 8px;
+            .terms-modal-content {
+                background: white;
+                border-radius: 16px;
+                padding: 0;
+                max-width: 600px;
+                width: 100%;
+                max-height: 80vh;
+                overflow: hidden;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                display: flex;
+                flex-direction: column;
+            }
+            .terms-modal-content h3 {
+                background: var(--primary);
+                color: white;
+                margin: 0;
+                padding: 20px 30px;
+                font-size: 20px;
+                font-weight: 600;
+            }
+            .terms-content {
+                padding: 30px;
+                overflow-y: auto;
+                flex: 1;
+            }
+            .terms-content h4 {
+                color: var(--text-primary);
+                margin: 20px 0 10px 0;
+                font-size: 16px;
+                font-weight: 600;
+            }
+            .terms-content p, .terms-content li {
+                color: var(--text-secondary);
+                line-height: 1.6;
+                margin-bottom: 8px;
+            }
+            .terms-content ul {
+                margin-left: 20px;
+                margin-bottom: 16px;
+            }
+            .terms-modal-close {
+                background: var(--primary);
+                color: white;
                 border: none;
+                padding: 16px 32px;
                 font-weight: 600;
                 cursor: pointer;
-                transition: all 0.3s ease;
-                ${index === 0 ? 
-                  'background: #2563eb; color: white;' : 
-                  'background: #f8fafc; color: #2563eb; border: 2px solid #2563eb;'
-                }
-            `;
+                margin: 0 30px 30px 30px;
+                border-radius: 8px;
+                transition: var(--transition);
+            }
+            .terms-modal-close:hover {
+                background: var(--primary-hover);
+            }
+        `;
 
-            button.addEventListener('mouseenter', () => {
-                if (index === 0) {
-                    button.style.background = '#1d4ed8';
-                    button.style.transform = 'translateY(-2px)';
-                } else {
-                    button.style.background = '#2563eb';
-                    button.style.color = 'white';
-                }
-            });
+        // 添加樣式到頁面
+        if (!document.getElementById('terms-modal-styles')) {
+            const styleSheet = document.createElement('style');
+            styleSheet.id = 'terms-modal-styles';
+            styleSheet.textContent = styles;
+            document.head.appendChild(styleSheet);
+        }
 
-            button.addEventListener('mouseleave', () => {
-                if (index === 0) {
-                    button.style.background = '#2563eb';
-                    button.style.transform = 'translateY(0)';
-                } else {
-                    button.style.background = '#f8fafc';
-                    button.style.color = '#2563eb';
-                }
-            });
+        document.body.appendChild(modal);
 
-            button.addEventListener('click', () => {
-                btn.action();
-                this.closeModal(overlay);
-            });
-
-            buttonContainer.appendChild(button);
+        // 關閉事件
+        const closeButton = modal.querySelector('.terms-modal-close');
+        closeButton.addEventListener('click', () => {
+            document.body.removeChild(modal);
         });
 
-        // 組裝彈窗
-        modal.appendChild(titleEl);
-        modal.appendChild(messageEl);
-        modal.appendChild(buttonContainer);
-        overlay.appendChild(modal);
-
-        // 添加到頁面
-        document.body.appendChild(overlay);
-
-        // 動畫效果
-        setTimeout(() => {
-            modal.style.transform = 'scale(1)';
-        }, 10);
-
-        // 點擊遮罩關閉
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                this.closeModal(overlay);
+        modal.querySelector('.terms-modal-overlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) {
+                document.body.removeChild(modal);
             }
         });
 
         // ESC 鍵關閉
         const escHandler = (e) => {
             if (e.key === 'Escape') {
-                this.closeModal(overlay);
+                document.body.removeChild(modal);
                 document.removeEventListener('keydown', escHandler);
             }
         };
         document.addEventListener('keydown', escHandler);
     },
 
-    // 關閉彈窗
-    closeModal(overlay) {
-        const modal = overlay.querySelector('div');
-        modal.style.transform = 'scale(0.8)';
-        overlay.style.opacity = '0';
+    showSubscriptionConfirm(data) {
+        // 這裡可以整合支付系統或顯示確認彈窗
+        const message = `
+            感謝您的訂閱！
+            
+            訂閱資訊：
+            群組數量：${data.groupCount} 個
+            總金額：${data.totalAmount}
+            
+            我們將盡快為您開通服務。
+            如有任何問題，請聯絡客服。
+        `;
         
-        setTimeout(() => {
-            if (overlay.parentNode) {
-                overlay.parentNode.removeChild(overlay);
-            }
-        }, 300);
+        alert(message);
+        
+        // 可以在這裡跳轉到確認頁面或付款頁面
+        // window.location.href = 'confirmation.html';
     },
 
-// 顯示服務條款: 此段落已在 main.js 中實作，這裡移除重複代碼。
+    initAccessibilityFeatures() {
+        // 鍵盤導航支援
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                document.body.classList.add('using-keyboard');
+            }
+        });
+
+        document.addEventListener('mousedown', () => {
+            document.body.classList.remove('using-keyboard');
+        });
+
+        // 表單標籤點擊支援
+        document.querySelectorAll('.form-label').forEach(label => {
+            label.addEventListener('click', function() {
+                const input = this.parentNode.querySelector('.form-input, .form-select');
+                if (input) input.focus();
+            });
+        });
+    }
 };
 
+// 互動效果模組
+const InteractiveEffects = {
+    init() {
+        this.initButtonEffects();
+        this.initCardHoverEffects();
+        this.initFormFocusEffects();
+    },
 
-// ---- added auto update ----
-
-// ========== 初始化事件監聽 ==========
-document.addEventListener('DOMContentLoaded', () => {
-    const groupCountInput = document.getElementById('groupCount');
-    const planButtons = document.querySelectorAll('.plan-button');
-
-    function updateSummary() {
-        const groupCount = parseInt(groupCountInput.value) || 1;
-
-        const activeButton = document.querySelector('.plan-button.active');
-        let unitPrice = 199;
-        if (activeButton) {
-            const priceText = activeButton.getAttribute('data-price') || activeButton.textContent;
-            const match = priceText.replace(/,/g,'').match(/(\d+)/);
-            if (match) unitPrice = parseInt(match[1]);
-        }
-
-        const summaryGroupCount = document.getElementById('summaryGroupCount');
-        if (summaryGroupCount) {
-            summaryGroupCount.textContent = groupCount + ' 個';
-        }
-
-        const summaryUnitPrice = document.getElementById('summaryUnitPrice');
-        if (summaryUnitPrice) {
-            summaryUnitPrice.textContent = `NT$ ${unitPrice} / 群組 / 月`;
-        }
-
-        const summarySubtotal = document.getElementById('summarySubtotal');
-        if (summarySubtotal) {
-            summarySubtotal.textContent = 'NT$ ' + (unitPrice * groupCount).toLocaleString();
-        }
-
-        const summaryTotal = document.getElementById('summaryTotal');
-        if (summaryTotal) {
-            summaryTotal.textContent = 'NT$ ' + (unitPrice * groupCount).toLocaleString();
-        }
-    }
-
-    if (groupCountInput) {
-        groupCountInput.addEventListener('input', updateSummary);
-    }
-    planButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            planButtons.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            updateSummary();
+    initButtonEffects() {
+        document.addEventListener('click', (e) => {
+            const button = e.target.closest('.submit-btn, .billing-label, .payment-option');
+            if (button && !button.disabled) {
+                this.addRippleEffect(button, e);
+            }
         });
-    });
+    },
 
-    // 初始更新
-    updateSummary();
-});
+    addRippleEffect(element, event) {
+        const ripple = document.createElement('span');
+        const rect = element.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = event.clientX - rect.left - size / 2;
+        const y = event.clientY - rect.top - size / 2;
+        
+        ripple.style.cssText = `
+            width: ${size}px;
+            height: ${size}px;
+            left: ${x}px;
+            top: ${y}px;
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple 0.4s ease-out;
+            pointer-events: none;
+            z-index: 1;
+        `;
+        
+        element.style.position = 'relative';
+        element.style.overflow = 'hidden';
+        element.appendChild(ripple);
+        
+        setTimeout(() => {
+            if (ripple.parentNode) {
+                ripple.remove();
+            }
+        }, 400);
+    },
+
+    initCardHoverEffects() {
+        document.querySelectorAll('.subscription-card, .billing-label').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                if (!this.classList.contains('selected')) {
+                    this.style.transform = 'translateY(0)';
+                }
+            });
+        });
+    },
+
+    initFormFocusEffects() {
+        document.querySelectorAll('.form-input, .form-select').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentNode.classList.add('focused');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentNode.classList.remove('focused');
+            });
+        });
+    }
+};
+
+// 主初始化函數
+function initializeSubscriptionPage() {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeSubscriptionPage);
+        return;
+    }
+
+    try {
+        SpeakaCore.init();
+        SubscriptionPage.init();
+        InteractiveEffects.init();
+        
+        console.log('🎉 訂閱頁面初始化完成！');
+        
+        // 發送初始化完成事件
+        window.dispatchEvent(new CustomEvent('subscriptionPageReady', {
+            detail: { timestamp: Date.now() }
+        }));
+        
+    } catch (error) {
+        console.error('❌ 訂閱頁面初始化失敗:', error);
+        
+        // 確保基本功能仍然可用
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.classList.add('visible');
+        });
+    }
+}
+
+// 添加必要的 CSS 動畫
+if (!document.getElementById('subscription-animations')) {
+    const animationStyles = document.createElement('style');
+    animationStyles.id = 'subscription-animations';
+    animationStyles.textContent = `
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        .focused .form-label {
+            color: var(--primary);
+        }
+        
+        .focused .form-input,
+        .focused .form-select {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .billing-label.selected {
+            transform: translateY(-2px);
+        }
+        
+        .payment-option.selected {
+            transform: translateY(-1px);
+        }
+        
+        .form-input:invalid {
+            border-color: var(--error);
+        }
+        
+        .form-input:valid {
+            border-color: var(--success);
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .success-checkmark {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--success);
+            position: relative;
+            animation: successPop 0.3s ease-out;
+        }
+        
+        .success-checkmark::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        @keyframes successPop {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        /* 提升表單可用性 */
+        .form-input:focus + .input-hint {
+            color: var(--primary);
+        }
+        
+        .error-message {
+            animation: errorSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes errorSlideIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(-10px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        /* 改善行動裝置體驗 */
+        @media (hover: none) {
+            .billing-label:hover,
+            .payment-option:hover,
+            .subscription-card:hover {
+                transform: none;
+            }
+        }
+        
+        /* 高對比模式支援 */
+        @media (prefers-contrast: high) {
+            .form-input,
+            .form-select {
+                border-width: 3px;
+            }
+            
+            .billing-label,
+            .payment-option {
+                border-width: 3px;
+            }
+        }
+        
+        /* 減少動畫模式 */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    `;
+    document.head.appendChild(animationStyles);
+}
+
+// 啟動應用程式
+initializeSubscriptionPage();
+
+// 導出模組供外部使用
+window.SubscriptionSpeaka = {
+    Core: SpeakaCore,
+    SubscriptionPage: SubscriptionPage,
+    Effects: InteractiveEffects,
+    init: initializeSubscriptionPage
+};
+
+// 添加一些實用的全域函數
+window.updateSubscriptionPrice = function() {
+    if (SubscriptionPage.isSubscriptionPage()) {
+        SubscriptionPage.updatePrice();
+    }
+};
+
+window.validateSubscriptionForm = function() {
+    if (SubscriptionPage.isSubscriptionPage()) {
+        return SubscriptionPage.validateForm();
+    }
+    return false;
+};
+
+// 調試輔助函數
+window.debugSubscription = {
+    showPrices: () => console.table(SubscriptionPage.prices),
+    getCurrentData: () => {
+        const form = document.getElementById('subscriptionForm');
+        if (form) {
+            const formData = new FormData(form);
+            return Object.fromEntries(formData);
+        }
+        return null;
+    },
+    testValidation: () => {
+        return SubscriptionPage.validateForm();
+    },
+    showTerms: () => {
+        SubscriptionPage.showTermsModal();
+    },
+    showPrivacy: () => {
+        SubscriptionPage.showPrivacyModal();
+    }
+};/* ===== Speaka 訂閱頁面優化腳本 ===== */
+
+// 繼承主頁面的核心功能
+const SpeakaCore = {
+    initNavbarScroll() {
+        const navbar = document.querySelector('.navbar');
+        if (!navbar) return;
+        
+        let lastScrollY = window.scrollY;
+        let ticking = false;
+        
+        const updateNavbar = () => {
+            const currentScrollY = window.scrollY;
+            
+            if (currentScrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.boxShadow = '0 1px 3px 0 rgb(0 0 0 / 0.1)';
+                navbar.style.borderBottom = '1px solid rgb(226 232 240)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.boxShadow = 'none';
+                navbar.style.borderBottom = '1px solid rgb(226 232 240 / 0.5)';
+            }
+            
+            lastScrollY = currentScrollY;
+            ticking = false;
+        };
+        
+        const onScroll = () => {
+            if (!ticking) {
+                requestAnimationFrame(updateNavbar);
+                ticking = true;
+            }
+        };
+        
+        window.addEventListener('scroll', onScroll, { passive: true });
+    },
+
+    initSmoothScroll() {
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                if (this.classList.contains('terms-link')) {
+                    return;
+                }
+                
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                
+                if (targetId && targetId !== '#') {
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        const headerOffset = 80;
+                        const elementPosition = target.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+    },
+
+    initScrollAnimations() {
+        if (!('IntersectionObserver' in window)) {
+            document.querySelectorAll('.fade-in').forEach(el => {
+                el.classList.add('visible');
+            });
+            return;
+        }
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -30px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+    },
+
+    initPageLoad() {
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('loaded');
+        });
+        
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 50);
+        });
+    },
+
+    init() {
+        // 預選方案
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedPlan = urlParams.get('plan');
+        if (selectedPlan) {
+            const radio = document.querySelector(`input[name="billingPeriod"][value="${selectedPlan}"]`);
+            if (radio) radio.checked = true;
+        }
+
+        this.initNavbarScroll();
+        this.initSmoothScroll();
+        this.initScrollAnimations();
+        this.initPageLoad();
+    }
+};
+
+// 訂閱頁面專用功能
+const SubscriptionPage = {
+    prices: {
+        monthly: { price: 199, period: '月' },
+        quarterly: { price: 579, period: '季', discount: '5%' },
+        halfyearly: { price: 1199, period: '半年', discount: '10%' },
+        yearly: { price: 2030, period: '年', discount: '15%' }
+    },
+
+    init() {
+        if (!this.isSubscriptionPage()) return;
+        
+        this.initPriceCalculation();
+        this.initPaymentMethods();
+        this.initInvoiceType();
+        this.initFormValidation();
+        this.initFormSubmission();
+        this.initAccessibilityFeatures();
+        this.updatePrice();
+        
+        console.log('✅ 訂閱頁面初始化完成');
+    },
+
+    isSubscriptionPage() {
+        return document.getElementById('subscriptionForm') !== null;
+    },
+
+    initPriceCalculation() {
+        const groupCountInput = document.getElementById('groupCount');
+        const billingRadios = document.querySelectorAll('input[name="billingPeriod"]');
+
+        if (groupCountInput) {
+            // 限制輸入範圍
+            groupCountInput.addEventListener('input', (e) => {
+                let value = parseInt(e.target.value) || 1;
+                if (value < 1) value = 1;
+                if (value > 999) value = 999;
+                e.target.value = value;
+                this.updatePrice();
+            });
+
+            // 鍵盤操作支援
+            groupCountInput.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    this.adjustGroupCount(1);
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    this.adjustGroupCount(-1);
+                }
+            });
+        }
+
+        billingRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                this.updatePrice();
+                this.highlightSelectedPlan(radio);
+            });
+        });
+
+        // 初始設定
+        const defaultRadio = document.querySelector('input[name="billingPeriod"]:checked');
+        if (defaultRadio) {
+            this.highlightSelectedPlan(defaultRadio);
+        }
+    },
+
+    adjustGroupCount(delta) {
+        const input = document.getElementById('groupCount');
+        if (!input) return;
+        
+        let currentValue = parseInt(input.value) || 
