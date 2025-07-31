@@ -239,6 +239,7 @@ body {
     background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
     position: relative;
     overflow: hidden;
+    padding: 120px 0 60px;
 }
 
 .hero::before {
@@ -250,6 +251,7 @@ body {
     height: 100%;
     background: linear-gradient(135deg, rgba(37, 99, 235, 0.03) 0%, rgba(59, 130, 246, 0.05) 100%);
     border-radius: 0 0 0 100px;
+    opacity: 0.6;
 }
 
 .hero .container {
@@ -259,6 +261,7 @@ body {
     align-items: center;
     position: relative;
     z-index: 1;
+    width: 100%;
 }
 
 .hero-content h1 {
@@ -917,6 +920,15 @@ body {
         text-align: center;
     }
     
+    .hero::before {
+        width: 100%;
+        height: 40%;
+        top: auto;
+        bottom: 0;
+        border-radius: 100px 100px 0 0;
+        opacity: 0.3;
+    }
+    
     .features-grid,
     .audience-grid {
         grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -930,6 +942,36 @@ body {
     
     .nav-links {
         display: none;
+    }
+    
+    .hero {
+        min-height: auto;
+        padding: 100px 0 80px;
+        background: #f8fafc;
+    }
+    
+    .hero::before {
+        display: none;
+    }
+    
+    .hero .container {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+    }
+    
+    .hero-content {
+        padding: 0;
+    }
+    
+    .hero-demo {
+        margin-top: 40px;
+    }
+    
+    .chat-demo {
+        margin: 0 auto;
+        max-width: 100%;
+        padding: 24px 20px;
     }
     
     .hero,
@@ -946,6 +988,12 @@ body {
     .hero-buttons {
         flex-direction: column;
         align-items: center;
+        gap: 12px;
+    }
+    
+    .hero-buttons .btn {
+        width: 280px;
+        max-width: 100%;
     }
     
     .features-grid,
