@@ -1,21 +1,40 @@
-/* ===== Speaka 共用腳本 scripts.js ===== */
+/* ===== Speaka 現代簡約腳本 main.js ===== */
 
 // ===== 核心功能模組 =====
 const SpeakaCore = {
     // 滾動時導航列效果
     initNavbarScroll() {
-        window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.navbar');
-            if (!navbar) return;
+        const navbar = document.querySelector('.navbar');
+        if (!navbar) return;
+        
+        let lastScrollY = window.scrollY;
+        let ticking = false;
+        
+        const updateNavbar = () => {
+            const currentScrollY = window.scrollY;
             
-            if (window.scrollY > 50) {
+            if (currentScrollY > 50) {
                 navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-                navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+                navbar.style.boxShadow = '0 1px 3px 0 rgb(0 0 0 / 0.1)';
+                navbar.style.borderBottom = '1px solid rgb(226 232 240)';
             } else {
                 navbar.style.background = 'rgba(255, 255, 255, 0.95)';
                 navbar.style.boxShadow = 'none';
+                navbar.style.borderBottom = '1px solid rgb(226 232 240 / 0.5)';
             }
-        });
+            
+            lastScrollY = currentScrollY;
+            ticking = false;
+        };
+        
+        const onScroll = () => {
+            if (!ticking) {
+                requestAnimationFrame(updateNavbar);
+                ticking = true;
+            }
+        };
+        
+        window.addEventListener('scroll', onScroll, { passive: true });
     },
 
     // 平滑滾動
@@ -48,17 +67,28 @@ const SpeakaCore = {
         });
     },
 
-    // 滾動動畫效果
+    // 滾動動畫效果 - 使用 Intersection Observer
     initScrollAnimations() {
+        // 檢查瀏覽器支援
+        if (!('IntersectionObserver' in window)) {
+            // 降級處理：直接顯示所有元素
+            document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
+                el.classList.add('visible');
+            });
+            return;
+        }
+
         const observerOptions = {
             threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+            rootMargin: '0px 0px -30px 0px'
         };
 
-        const observer = new IntersectionObserver(function(entries) {
+        const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
+                    // 一次性觀察，提升性能
+                    observer.unobserve(entry.target);
                 }
             });
         }, observerOptions);
@@ -69,15 +99,18 @@ const SpeakaCore = {
         });
     },
 
-    // 頁面載入動畫
-    initPageLoadAnimation() {
-        window.addEventListener('load', function() {
-            document.body.style.opacity = '0';
-            document.body.style.transition = 'opacity 0.5s ease';
-            
+    // 頁面載入優化
+    initPageLoad() {
+        // 確保 CSS 載入完成後顯示內容
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.classList.add('loaded');
+        });
+        
+        // 防止 FOUC (Flash of Unstyled Content)
+        window.addEventListener('load', () => {
             setTimeout(() => {
                 document.body.style.opacity = '1';
-            }, 100);
+            }, 50);
         });
     },
 
@@ -86,71 +119,160 @@ const SpeakaCore = {
         this.initNavbarScroll();
         this.initSmoothScroll();
         this.initScrollAnimations();
-        this.initPageLoadAnimation();
+        this.initPageLoad();
+        console.log('✅ Speaka Core 初始化完成');
     }
 };
 
-// ===== 按鈕效果模組 =====
-const ButtonEffects = {
-    // 波紋效果
+// ===== 互動效果模組 =====
+const InteractiveEffects = {
+    // 現代化按鈕波紋效果
     addRippleEffect(button, event) {
+        // 避免重複創建波紋
+        const existingRipple = button.querySelector('.ripple');
+        if (existingRipple) {
+            existingRipple.remove();
+        }
+
         const ripple = document.createElement('span');
         const rect = button.getBoundingClientRect();
         const size = Math.max(rect.width, rect.height);
         const x = event.clientX - rect.left - size / 2;
         const y = event.clientY - rect.top - size / 2;
         
-        ripple.style.width = ripple.style.height = size + 'px';
-        ripple.style.left = x + 'px';
-        ripple.style.top = y + 'px';
-        ripple.style.position = 'absolute';
-        ripple.style.borderRadius = '50%';
-        ripple.style.background = 'rgba(255, 255, 255, 0.5)';
-        ripple.style.transform = 'scale(0)';
-        ripple.style.animation = 'ripple 0.6s linear';
-        ripple.style.pointerEvents = 'none';
+        ripple.className = 'ripple';
+        ripple.style.cssText = `
+            width: ${size}px;
+            height: ${size}px;
+            left: ${x}px;
+            top: ${y}px;
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple 0.4s ease-out;
+            pointer-events: none;
+            z-index: 1;
+        `;
         
         button.style.position = 'relative';
         button.style.overflow = 'hidden';
         button.appendChild(ripple);
         
+        // 清理動畫元素
         setTimeout(() => {
-            ripple.remove();
-        }, 600);
+            if (ripple.parentNode) {
+                ripple.remove();
+            }
+        }, 400);
     },
 
-    // 初始化按鈕點擊效果
-    initButtonEffects() {
-        document.querySelectorAll('.btn, .plan-button').forEach(button => {
-            button.addEventListener('click', (e) => {
-                this.addRippleEffect(button, e);
-            });
-        });
-    },
-
-    // 價格卡片懸停效果
-    initPricingCardEffects() {
-        document.querySelectorAll('.pricing-card').forEach(card => {
+    // 卡片懸停效果
+    initCardHoverEffects() {
+        const cards = document.querySelectorAll('.feature-card, .audience-card, .pricing-card, .roadmap-item');
+        
+        cards.forEach(card => {
+            let hoverTimeout;
+            
             card.addEventListener('mouseenter', function() {
-                if (!this.classList.contains('featured')) {
-                    this.style.borderColor = '#2563eb';
-                    this.style.transform = 'translateY(-5px)';
-                }
+                clearTimeout(hoverTimeout);
+                this.style.transform = 'translateY(-4px)';
             });
             
             card.addEventListener('mouseleave', function() {
-                if (!this.classList.contains('featured')) {
-                    this.style.borderColor = '#f1f5f9';
+                hoverTimeout = setTimeout(() => {
                     this.style.transform = 'translateY(0)';
-                }
+                }, 50);
             });
         });
     },
 
-    // 初始化所有按鈕效果
+    // 價格卡片特殊效果
+    initPricingCardEffects() {
+        document.querySelectorAll('.pricing-card:not(.featured)').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.borderColor = 'var(--primary)';
+                this.style.boxShadow = '0 10px 15px -3px rgb(0 0 0 / 0.1)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.borderColor = 'var(--border)';
+                this.style.boxShadow = 'none';
+            });
+        });
+    },
+
+    // 按鈕點擊效果
+    initButtonEffects() {
+        document.addEventListener('click', (e) => {
+            const button = e.target.closest('.btn, .plan-button, .nav-cta');
+            if (button && !button.disabled) {
+                this.addRippleEffect(button, e);
+                
+                // 輕微的點擊反饋
+                button.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    button.style.transform = '';
+                }, 100);
+            }
+        });
+    },
+
+    // 導航連結懸停效果
+    initNavLinkEffects() {
+        document.querySelectorAll('.nav-links a:not(.nav-cta)').forEach(link => {
+            link.addEventListener('mouseenter', function() {
+                this.style.color = 'var(--primary)';
+            });
+            
+            link.addEventListener('mouseleave', function() {
+                this.style.color = 'var(--text-primary)';
+            });
+        });
+    },
+
+    // 聊天演示動畫
+    initChatAnimation() {
+        const chatMessages = document.querySelectorAll('.chat-message');
+        if (chatMessages.length === 0) return;
+
+        // 初始隱藏所有訊息
+        chatMessages.forEach(msg => {
+            msg.style.opacity = '0';
+            msg.style.transform = 'translateY(20px)';
+        });
+
+        // 創建觀察者
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // 依序顯示訊息
+                    chatMessages.forEach((msg, index) => {
+                        setTimeout(() => {
+                            msg.style.transition = 'all 0.4s ease-out';
+                            msg.style.opacity = '1';
+                            msg.style.transform = 'translateY(0)';
+                        }, index * 200);
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        const chatDemo = document.querySelector('.chat-demo');
+        if (chatDemo) {
+            observer.observe(chatDemo);
+        }
+    },
+
+    // 初始化所有互動效果
     init() {
-        this.initButtonEffects();
+        this.initCardHoverEffects();
         this.initPricingCardEffects();
+        this.initButtonEffects();
+        this.initNavLinkEffects();
+        this.initChatAnimation();
+        console.log('✅ 互動效果初始化完成');
     }
 };
 
@@ -160,49 +282,84 @@ const ContactHandlers = {
     initContactButtons() {
         document.querySelectorAll('a[href^="mailto:"], a[href^="https://line.me"]').forEach(link => {
             link.addEventListener('click', function(e) {
-                console.log('聯絡方式被點擊:', this.href);
+                // 添加點擊追蹤
+                const contactType = this.href.includes('mailto') ? 'Email' : 'LINE';
+                console.log(`聯絡方式點擊: ${contactType}`);
+                
+                // 可以在這裡添加 GA 追蹤
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'contact_click', {
+                        'contact_method': contactType
+                    });
+                }
             });
         });
     },
 
     // 方案選擇處理
-    
-    
     initPlanSelection() {
         document.querySelectorAll('.plan-button').forEach(button => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
                 const planCard = this.closest('.pricing-card');
-                const planName = planCard ? planCard.querySelector('.plan-period').textContent : '';
+                const planName = planCard ? planCard.querySelector('.plan-period').textContent.trim() : '';
 
+                // 確定方案參數
                 let planParam = 'monthly';
                 if (planName.includes('年')) planParam = 'yearly';
                 else if (planName.includes('半年')) planParam = 'halfyearly';
-                else if (planName.includes('季')) planParam = 'quarterly';
 
-                window.location.href = `subscription.html?plan=${planParam}`;
+                // 添加載入狀態
+                this.style.opacity = '0.7';
+                this.style.pointerEvents = 'none';
+                this.textContent = '處理中...';
+
+                // 模擬載入
+                setTimeout(() => {
+                    window.location.href = `subscription.html?plan=${planParam}`;
+                }, 300);
+
+                // 追蹤方案選擇
+                console.log(`方案選擇: ${planName}`);
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'plan_select', {
+                        'plan_type': planParam
+                    });
+                }
             });
         });
     },
 
-    // 企業方案處理
-    initEnterpriseButton() {
-        const enterpriseBtn = document.querySelector('.enterprise-btn');
-        if (enterpriseBtn) {
-            enterpriseBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                SpeakaModal.showEnterpriseContact();
+    // CTA 按鈕處理
+    initCTAButtons() {
+        document.querySelectorAll('.btn-primary, .btn-secondary').forEach(button => {
+            button.addEventListener('click', function(e) {
+                const buttonText = this.textContent.trim();
+                console.log(`CTA 按鈕點擊: ${buttonText}`);
+                
+                // 如果是外部連結，添加載入效果
+                if (this.href && !this.href.includes('#')) {
+                    this.style.opacity = '0.8';
+                    this.innerHTML = this.innerHTML.replace(/🚀|📊/, '⏳');
+                }
             });
-        }
+        });
     },
 
-    // 返回首頁處理
+    // 返回按鈕處理
     initBackButton() {
         const backBtn = document.querySelector('.back-btn');
         if (backBtn) {
             backBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-                history.back();
+                
+                // 檢查是否有歷史記錄
+                if (window.history.length > 1) {
+                    history.back();
+                } else {
+                    // 沒有歷史記錄時跳轉到首頁
+                    window.location.href = 'index.html';
+                }
             });
         }
     },
@@ -211,137 +368,51 @@ const ContactHandlers = {
     init() {
         this.initContactButtons();
         this.initPlanSelection();
-        this.initEnterpriseButton();
+        this.initCTAButtons();
         this.initBackButton();
+        console.log('✅ 聯絡功能初始化完成');
     }
 };
 
-// ===== 彈窗模組 =====
-const SpeakaModal = {
-    // 顯示方案選擇確認
-    showPlanSelection(planName) {
-        const message = `您選擇了：${planName}\n\n請聯絡客服完成訂閱流程：\nLINE: @537etdoz\nEmail: talkeasenow@gmail.com`;
-        
-        if (this.isModernBrowser()) {
-        const content = `
-            <div style="text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto; padding: 20px;">
-                <h3 style="color: #1e293b; margin-bottom: 20px;">Speaka 隱私政策</h3>
-                
-                <h4 style="color: #374151; margin: 16px 0 8px;">1. 資料收集</h4>
-                <p style="margin-bottom: 12px;">我們收集以下類型的個人資料：</p>
-                <p style="margin-bottom: 8px;">• 聯絡資訊：姓名、電子郵件、電話號碼、地址</p>
-                <p style="margin-bottom: 8px;">• 帳務資訊：發票資料、付款記錄</p>
-                <p style="margin-bottom: 8px;">• 使用資料：服務使用情況、技術日誌</p>
-                
-                <h4 style="color: #374151; margin: 16px 0 8px;">2. 資料用途</h4>
-                <p style="margin-bottom: 8px;">• 提供翻譯服務</p>
-                <p style="margin-bottom: 8px;">• 客戶支援與技術協助</p>
-                <p style="margin-bottom: 8px;">• 帳務處理與發票開立</p>
-                <p style="margin-bottom: 8px;">• 服務改善與品質提升</p>
-                
-                <h4 style="color: #374151; margin: 16px 0 8px;">3. 資料保護</h4>
-                <p style="margin-bottom: 8px;">• 採用業界標準的加密技術</p>
-                <p style="margin-bottom: 8px;">• 限制員工存取權限</p>
-                <p style="margin-bottom: 8px;">• 定期進行安全性檢查</p>
-                <p style="margin-bottom: 8px;">• 遵循個人資料保護法規</p>
-                
-                <h4 style="color: #374151; margin: 16px 0 8px;">4. 翻譯內容處理</h4>
-                <p style="margin-bottom: 8px;">• 翻譯內容僅用於提供翻譯服務</p>
-                <p style="margin-bottom: 8px;">• 不會儲存或分析群組對話內容</p>
-                <p style="margin-bottom: 8px;">• 即時處理，不留存敏感資訊</p>
-                
-                <h4 style="color: #374151; margin: 16px 0 8px;">5. 資料分享</h4>
-                <p style="margin-bottom: 12px;">除法律要求外，我們不會與第三方分享您的個人資料。僅在以下情況下可能分享：</p>
-                <p style="margin-bottom: 8px;">• 經您明確同意</p>
-                <p style="margin-bottom: 8px;">• 法律強制要求</p>
-                <p style="margin-bottom: 8px;">• 保護用戶安全必要時</p>
-                
-                <h4 style="color: #374151; margin: 16px 0 8px;">6. 您的權利</h4>
-                <p style="margin-bottom: 8px;">• 查詢個人資料</p>
-                <p style="margin-bottom: 8px;">• 更正錯誤資料</p>
-                <p style="margin-bottom: 8px;">• 刪除個人資料</p>
-                <p style="margin-bottom: 8px;">• 停止資料處理</p>
-                
-                <h4 style="color: #374151; margin: 16px 0 8px;">7. Cookie 使用</h4>
-                <p style="margin-bottom: 12px;">我們使用 Cookie 來改善網站功能和用戶體驗，您可以透過瀏覽器設定管理 Cookie。</p>
-                
-                <h4 style="color: #374151; margin: 16px 0 8px;">8. 聯絡我們</h4>
-                <p style="margin-bottom: 12px;">如有隱私相關問題，請聯絡：</p>
-                <p style="margin-bottom: 8px;">Email: talkeasenow@gmail.com</p>
-                <p style="margin-bottom: 8px;">LINE: @537etdoz</p>
-                
-                <p style="margin-top: 20px; color: #64748b; font-size: 0.9rem;">
-                    最後更新日期：2025年1月
-                </p>
-            </div>
-        `;
-        
-        this.showCustomModal('隱私政策', content, [
-            { text: '我已了解', action: () => {} }
-        ]);
-};
-// ===== 表單處理模組 =====
-    }
+// ===== 性能優化模組 =====
+const PerformanceOptimizer = {
+    // 圖片懶載入
+    initLazyLoading() {
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        if (img.dataset.src) {
+                            img.src = img.dataset.src;
+                            img.removeAttribute('data-src');
+                            imageObserver.unobserve(img);
+                        }
+                    }
+                });
+            });
 
-};
-
-const FormHandlers = {
-    // 表單驗證
-    validateForm(formData) {
-        const errors = [];
-        
-        if (!formData.get('name') || formData.get('name').trim().length < 2) {
-            errors.push('請輸入有效的姓名');
+            document.querySelectorAll('img[data-src]').forEach(img => {
+                imageObserver.observe(img);
+            });
         }
-        
-        if (!formData.get('email') || !this.isValidEmail(formData.get('email'))) {
-            errors.push('請輸入有效的電子郵件');
-        }
-        
-        if (!formData.get('phone') || formData.get('phone').trim().length < 8) {
-            errors.push('請輸入有效的電話號碼');
-        }
-        
-        return errors;
     },
 
-    // 電子郵件驗證
-    isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    },
+    // 預載入關鍵資源
+    preloadCriticalResources() {
+        const criticalResources = [
+            'subscription.html'
+        ];
 
-    // 處理聯絡表單提交
-    handleContactForm(form) {
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const formData = new FormData(form);
-            const errors = this.validateForm(formData);
-            
-            if (errors.length > 0) {
-                alert('請修正以下錯誤：\n' + errors.join('\n'));
-                return;
-            }
-            
-            // 這裡可以添加實際的表單提交邏輯
-            console.log('表單數據:', Object.fromEntries(formData));
-            alert('感謝您的聯絡，我們會盡快回覆您！');
-            form.reset();
+        criticalResources.forEach(resource => {
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = resource;
+            document.head.appendChild(link);
         });
     },
 
-    // 初始化表單處理
-    init() {
-        document.querySelectorAll('form.contact-form').forEach(form => {
-            this.handleContactForm(form);
-        });
-    }
-};
-
-// ===== 工具函數模組 =====
-const Utils = {
-    // 防抖函數
+    // 防抖函數工具
     debounce(func, wait) {
         let timeout;
         return function executedFunction(...args) {
@@ -354,7 +425,7 @@ const Utils = {
         };
     },
 
-    // 節流函數
+    // 節流函數工具
     throttle(func, limit) {
         let inThrottle;
         return function() {
@@ -368,114 +439,271 @@ const Utils = {
         };
     },
 
-    // 檢查元素是否在視窗中
-    isElementInViewport(el) {
-        const rect = el.getBoundingClientRect();
-        return (
-            rect.top >= 0 &&
-            rect.left >= 0 &&
-            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-        );
-    },
-
-    // 平滑滾動到元素
-    scrollToElement(element, offset = 0) {
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-        window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-        });
-    },
-
-    // 複製文字到剪貼板
-    async copyToClipboard(text) {
-        try {
-            if (navigator.clipboard && window.isSecureContext) {
-                await navigator.clipboard.writeText(text);
-                return true;
-            } else {
-                // 降級方案
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
-                textArea.style.position = 'absolute';
-                textArea.style.left = '-999999px';
-                document.body.prepend(textArea);
-                textArea.select();
-                const success = document.execCommand('copy');
-                textArea.remove();
-                return success;
-            }
-        } catch (error) {
-            console.error('複製失敗:', error);
-            return false;
-        }
+    // 初始化性能優化
+    init() {
+        this.initLazyLoading();
+        this.preloadCriticalResources();
+        console.log('✅ 性能優化初始化完成');
     }
 };
 
-// ===== 性能監控模組 =====
-const Performance = {
-    // 監控頁面載入時間
-    trackPageLoad() {
-        window.addEventListener('load', () => {
-            const loadTime = performance.timing.loadEventEnd - performance.timing.navigationStart;
-            console.log(`頁面載入時間: ${loadTime}ms`);
-            
-            // 可以發送到分析服務
-            this.sendAnalytics('page_load_time', loadTime);
-        });
-    },
-
-    // 監控用戶互動
-    trackUserInteractions() {
-        // 監控按鈕點擊
-        document.addEventListener('click', (e) => {
-            if (e.target.matches('.btn, .plan-button, .contact-btn')) {
-                const buttonText = e.target.textContent.trim();
-                console.log(`按鈕點擊: ${buttonText}`);
-                this.sendAnalytics('button_click', buttonText);
+// ===== 用戶體驗增強模組 =====
+const UXEnhancer = {
+    // 鍵盤導航支援
+    initKeyboardNavigation() {
+        // ESC 鍵關閉彈窗
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modals = document.querySelectorAll('.modal[style*="block"]');
+                modals.forEach(modal => {
+                    modal.style.display = 'none';
+                });
             }
         });
 
-        // 監控滾動深度
-        let maxScroll = 0;
-        window.addEventListener('scroll', Utils.throttle(() => {
-            const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
-            if (scrollPercent > maxScroll) {
-                maxScroll = scrollPercent;
-                if (maxScroll % 25 === 0) { // 每25%記錄一次
-                    console.log(`滾動深度: ${maxScroll}%`);
-                    this.sendAnalytics('scroll_depth', maxScroll);
+        // Tab 鍵導航優化
+        const focusableElements = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                const focusable = Array.from(document.querySelectorAll(focusableElements));
+                const index = focusable.indexOf(document.activeElement);
+                
+                if (e.shiftKey) {
+                    const nextIndex = index > 0 ? index - 1 : focusable.length - 1;
+                    focusable[nextIndex]?.focus();
+                } else {
+                    const nextIndex = index < focusable.length - 1 ? index + 1 : 0;
+                    focusable[nextIndex]?.focus();
                 }
             }
-        }, 1000));
+        });
     },
 
-    // 發送分析數據（模擬）
-    sendAnalytics(event, value) {
-        // 這裡可以集成 Google Analytics, Mixpanel 等
+    // 焦點指示器
+    initFocusIndicators() {
+        // 只在鍵盤導航時顯示焦點輪廓
+        let isUsingKeyboard = false;
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                isUsingKeyboard = true;
+                document.body.classList.add('using-keyboard');
+            }
+        });
+
+        document.addEventListener('mousedown', () => {
+            isUsingKeyboard = false;
+            document.body.classList.remove('using-keyboard');
+        });
+    },
+
+    // 滾動進度指示器
+    initScrollProgress() {
+        const progressBar = document.createElement('div');
+        progressBar.className = 'scroll-progress';
+        progressBar.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--primary);
+            z-index: 9999;
+            transition: width 0.1s ease;
+        `;
+        document.body.appendChild(progressBar);
+
+        const updateProgress = PerformanceOptimizer.throttle(() => {
+            const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            progressBar.style.width = Math.min(scrolled, 100) + '%';
+        }, 10);
+
+        window.addEventListener('scroll', updateProgress, { passive: true });
+    },
+
+    // 錯誤處理
+    initErrorHandling() {
+        window.addEventListener('error', (e) => {
+            console.error('頁面錯誤:', e.error);
+            // 在生產環境中可以發送錯誤報告
+        });
+
+        // 處理 Promise 拒絕
+        window.addEventListener('unhandledrejection', (e) => {
+            console.error('未處理的 Promise 拒絕:', e.reason);
+            e.preventDefault();
+        });
+    },
+
+    // 初始化用戶體驗增強
+    init() {
+        this.initKeyboardNavigation();
+        this.initFocusIndicators();
+        this.initScrollProgress();
+        this.initErrorHandling();
+        console.log('✅ 用戶體驗增強初始化完成');
+    }
+};
+
+// ===== 分析追蹤模組 =====
+const Analytics = {
+    // 頁面瀏覽追蹤
+    trackPageView() {
+        const pageTitle = document.title;
+        const pagePath = window.location.pathname;
+        
+        console.log(`頁面瀏覽: ${pageTitle} (${pagePath})`);
+        
         if (typeof gtag !== 'undefined') {
-            gtag('event', event, {
-                'custom_parameter': value
+            gtag('config', 'GA_MEASUREMENT_ID', {
+                page_title: pageTitle,
+                page_location: window.location.href
             });
         }
     },
 
-    // 初始化性能監控
+    // 滾動深度追蹤
+    trackScrollDepth() {
+        let maxScroll = 0;
+        const milestones = [25, 50, 75, 100];
+        const trackedMilestones = new Set();
+
+        const trackScroll = PerformanceOptimizer.throttle(() => {
+            const scrollPercent = Math.round(
+                (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100
+            );
+            
+            if (scrollPercent > maxScroll) {
+                maxScroll = scrollPercent;
+                
+                milestones.forEach(milestone => {
+                    if (scrollPercent >= milestone && !trackedMilestones.has(milestone)) {
+                        trackedMilestones.add(milestone);
+                        console.log(`滾動深度: ${milestone}%`);
+                        
+                        if (typeof gtag !== 'undefined') {
+                            gtag('event', 'scroll_depth', {
+                                'percentage': milestone
+                            });
+                        }
+                    }
+                });
+            }
+        }, 1000);
+
+        window.addEventListener('scroll', trackScroll, { passive: true });
+    },
+
+    // 互動事件追蹤
+    trackInteractions() {
+        // 按鈕點擊追蹤
+        document.addEventListener('click', (e) => {
+            const button = e.target.closest('.btn, .plan-button, .contact-btn');
+            if (button) {
+                const buttonText = button.textContent.trim();
+                console.log(`按鈕點擊: ${buttonText}`);
+                
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'button_click', {
+                        'button_text': buttonText,
+                        'button_location': button.className
+                    });
+                }
+            }
+        });
+
+        // 外部連結追蹤
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a[href^="http"]');
+            if (link && !link.href.includes(window.location.hostname)) {
+                console.log(`外部連結點擊: ${link.href}`);
+                
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'external_link_click', {
+                        'link_url': link.href,
+                        'link_text': link.textContent.trim()
+                    });
+                }
+            }
+        });
+    },
+
+    // 性能指標追蹤
+    trackPerformance() {
+        window.addEventListener('load', () => {
+            // 等待性能數據穩定
+            setTimeout(() => {
+                const perfData = performance.getEntriesByType('navigation')[0];
+                const loadTime = perfData.loadEventEnd - perfData.fetchStart;
+                const domContentLoaded = perfData.domContentLoadedEventEnd - perfData.fetchStart;
+                
+                console.log(`頁面載入時間: ${Math.round(loadTime)}ms`);
+                console.log(`DOM 載入時間: ${Math.round(domContentLoaded)}ms`);
+                
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'timing_complete', {
+                        'name': 'page_load',
+                        'value': Math.round(loadTime)
+                    });
+                }
+            }, 0);
+        });
+    },
+
+    // 初始化分析追蹤
     init() {
-        this.trackPageLoad();
-        this.trackUserInteractions();
+        this.trackPageView();
+        this.trackScrollDepth();
+        this.trackInteractions();
+        this.trackPerformance();
+        console.log('✅ 分析追蹤初始化完成');
     }
 };
 
-// DOM 載入後初始化
-document.addEventListener('DOMContentLoaded', () => {
-    SpeakaCore.init();
-    ButtonEffects.init();
-    ContactHandlers.init();
-    FormHandlers.init();
-    Performance.init();
-});
+// ===== 主初始化函數 =====
+const initializeApp = () => {
+    // 確保 DOM 完全載入
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initializeApp);
+        return;
+    }
 
+    try {
+        // 按順序初始化各模組
+        SpeakaCore.init();
+        InteractiveEffects.init();
+        ContactHandlers.init();
+        PerformanceOptimizer.init();
+        UXEnhancer.init();
+        Analytics.init();
+        
+        console.log('🎉 Speaka 應用程式初始化完成！');
+        
+        // 發送初始化完成事件
+        window.dispatchEvent(new CustomEvent('speakaReady', {
+            detail: { timestamp: Date.now() }
+        }));
+        
+    } catch (error) {
+        console.error('❌ 初始化過程中發生錯誤:', error);
+        
+        // 確保基本功能仍然可用
+        document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
+            el.classList.add('visible');
+        });
+    }
+};
+
+// 啟動應用程式
+initializeApp();
+
+// 導出模組供外部使用
+window.Speaka = {
+    Core: SpeakaCore,
+    Effects: InteractiveEffects,
+    Contact: ContactHandlers,
+    Performance: PerformanceOptimizer,
+    UX: UXEnhancer,
+    Analytics: Analytics
+};
