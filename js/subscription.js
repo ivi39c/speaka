@@ -267,19 +267,29 @@ const SubscriptionPage = {
         const invoiceTypeSelect = document.getElementById('invoiceType');
         if (!invoiceTypeSelect) return;
         invoiceTypeSelect.addEventListener('change', (e) => {
-            this.toggleCompanyFields(e.target.value === 'company');
+            this.toggleInvoiceFields(e.target.value);
         });
-        this.toggleCompanyFields(invoiceTypeSelect.value === 'company');
+        this.toggleInvoiceFields(invoiceTypeSelect.value);
     },
 
-    // 顯示或隱藏公司欄位
-    toggleCompanyFields(show) {
-        const companyFields = document.querySelectorAll('.company-field');
-        const companyName   = document.getElementById('companyName');
-        const taxId         = document.getElementById('taxId');
-        companyFields.forEach(field => {
-            field.style.display = show ? 'flex' : 'none';
-            if (show) {
+    /**
+     * 根據發票類型顯示或隱藏個人/公司相關欄位
+     * @param {string} type 發票類型 personal|company|donation|""
+     */
+    toggleInvoiceFields(type) {
+        const personalFields = document.querySelectorAll('.personal-field');
+        const companyFields  = document.querySelectorAll('.company-field');
+        // 個人欄位元素
+        const carrierInput   = document.getElementById('carrierNumber');
+        const addressInput   = document.getElementById('address');
+        // 公司欄位元素
+        const companyName    = document.getElementById('companyName');
+        const taxId          = document.getElementById('taxId');
+        const companyAddr    = document.getElementById('companyAddress');
+        if (type === 'company') {
+            // 顯示公司欄位
+            companyFields.forEach(field => {
+                field.style.display = 'flex';
                 field.style.opacity = '0';
                 field.style.transform = 'translateY(-10px)';
                 setTimeout(() => {
@@ -287,15 +297,85 @@ const SubscriptionPage = {
                     field.style.opacity = '1';
                     field.style.transform = 'translateY(0)';
                 }, 10);
+            });
+            // 隱藏個人欄位
+            personalFields.forEach(field => {
+                field.style.display = 'none';
+            });
+            // 設定必填
+            if (companyName) companyName.required = true;
+            if (taxId)       taxId.required       = true;
+            if (companyAddr) companyAddr.required = true;
+            // 取消個人欄位必填與內容
+            if (carrierInput) {
+                carrierInput.required = false;
+                carrierInput.value = '';
             }
-        });
-        if (companyName) {
-            companyName.required = show;
-            if (!show) companyName.value = '';
-        }
-        if (taxId) {
-            taxId.required = show;
-            if (!show) taxId.value = '';
+            if (addressInput) {
+                addressInput.required = false;
+                addressInput.value = '';
+            }
+        } else if (type === 'personal') {
+            // 顯示個人欄位
+            personalFields.forEach(field => {
+                field.style.display = field.classList.contains('full-width') ? 'block' : 'flex';
+                field.style.opacity = '0';
+                field.style.transform = 'translateY(-10px)';
+                setTimeout(() => {
+                    field.style.transition = 'all 0.3s ease';
+                    field.style.opacity = '1';
+                    field.style.transform = 'translateY(0)';
+                }, 10);
+            });
+            // 隱藏公司欄位
+            companyFields.forEach(field => {
+                field.style.display = 'none';
+            });
+            // 個人欄位可選填 (不設必填)
+            if (carrierInput) carrierInput.required = false;
+            if (addressInput) addressInput.required = false;
+            // 清除公司欄位的必填與內容
+            if (companyName) {
+                companyName.required = false;
+                companyName.value = '';
+            }
+            if (taxId) {
+                taxId.required = false;
+                taxId.value = '';
+            }
+            if (companyAddr) {
+                companyAddr.required = false;
+                companyAddr.value = '';
+            }
+        } else {
+            // 其他類型（如捐贈）隱藏所有個人/公司欄位
+            personalFields.forEach(field => {
+                field.style.display = 'none';
+            });
+            companyFields.forEach(field => {
+                field.style.display = 'none';
+            });
+            // 清除必填
+            if (carrierInput) {
+                carrierInput.required = false;
+                carrierInput.value = '';
+            }
+            if (addressInput) {
+                addressInput.required = false;
+                addressInput.value = '';
+            }
+            if (companyName) {
+                companyName.required = false;
+                companyName.value = '';
+            }
+            if (taxId) {
+                taxId.required = false;
+                taxId.value = '';
+            }
+            if (companyAddr) {
+                companyAddr.required = false;
+                companyAddr.value = '';
+            }
         }
     },
 
