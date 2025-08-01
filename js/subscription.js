@@ -287,8 +287,9 @@ const SubscriptionPage = {
         const taxId          = document.getElementById('taxId');
         const companyAddr    = document.getElementById('companyAddress');
         if (type === 'company') {
-            // 顯示公司欄位
+            // 顯示公司欄位：使用 .show 類覆蓋 CSS 預設 display:none
             companyFields.forEach(field => {
+                field.classList.add('show');
                 field.style.display = '';
                 field.style.opacity = '0';
                 field.style.transform = 'translateY(-10px)';
@@ -300,6 +301,7 @@ const SubscriptionPage = {
             });
             // 隱藏個人欄位
             personalFields.forEach(field => {
+                field.classList.remove('show');
                 field.style.display = 'none';
             });
             // 設定必填
@@ -318,6 +320,7 @@ const SubscriptionPage = {
         } else if (type === 'personal') {
             // 顯示個人欄位
             personalFields.forEach(field => {
+                field.classList.remove('show');
                 field.style.display = '';
                 field.style.opacity = '0';
                 field.style.transform = 'translateY(-10px)';
@@ -329,6 +332,7 @@ const SubscriptionPage = {
             });
             // 隱藏公司欄位
             companyFields.forEach(field => {
+                field.classList.remove('show');
                 field.style.display = 'none';
             });
             // 個人欄位可選填 (不設必填)
