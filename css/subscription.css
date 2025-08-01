@@ -196,18 +196,22 @@
     margin-top: 4px;
 }
 
+/* 調高 z-index 讓優惠標籤永遠在最上層顯示 */
 .billing-discount {
     position: absolute;
-    top: -8px;
-    right: -8px;
-    background: linear-gradient(135deg, var(--error), #f87171);
-    color: white;
-    padding: 4px 10px;
+    /* 已調整至下方，負值偏移取消 */
+    /* 使用更飽和的紅色漸層並加上 !important，避免被其他樣式覆蓋 */
+    background: linear-gradient(135deg, #f43f5e, #f87171) !important;
+    color: #ffffff;
+    padding: 4px 12px;
     border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
-    box-shadow: var(--shadow);
-    z-index: 1;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* 將優惠標籤定位在卡片外部的右上角，留出更大的偏移量以避免被選中邊框或陰影覆蓋 */
+    top: -14px;
+    right: -14px;
+    z-index: 100;
 }
 
 /* ===== 價格顯示區塊 ===== */
@@ -221,13 +225,10 @@
     overflow: hidden;
 }
 
+/* 移除價格區塊的左上圖示，不論 PC 或 mobile 都不顯示 */
 .price-display::before {
-    content: '📊';
-    position: absolute;
-    top: 16px;
-    left: 20px;
-    font-size: 18px;
-    opacity: 0.7;
+    content: none;
+    display: none;
 }
 
 .price-display h3 {
@@ -485,12 +486,9 @@
 }
 
 .terms-section::before {
-    content: '📋';
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    font-size: 16px;
-    opacity: 0.7;
+    /* 移除服務條款區塊前方的圖示 */
+    content: none;
+    display: none;
 }
 
 .terms-checkbox {
