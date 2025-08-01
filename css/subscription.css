@@ -208,10 +208,10 @@
     font-size: 13px;
     font-weight: 700;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 20;
-    /* 將優惠標籤定位在卡片內部，避免被選中時的邊框遮蓋 */
-    top: 8px;
-    right: 8px;
+    /* 將優惠標籤定位回卡片外部的右上角，並提升 z-index 以確保在選中時仍然顯示 */
+    top: -8px;
+    right: -8px;
+    z-index: 100;
 }
 
 /* ===== 價格顯示區塊 ===== */
