@@ -112,8 +112,8 @@ const SubscriptionPage = {
     // 方案價格定義
     prices: {
         monthly:   { price: 199,  period: '月' },
-        quarterly: { price: 579,  period: '季',   discount: '5%'  },
-        halfyearly:{ price: 1199, period: '半年', discount: '10%' },
+        // Removed quarterly plan and adjusted halfyearly discount to reflect the design
+        halfyearly:{ price: 1199, period: '半年', discount: '5%'  },
         yearly:    { price: 2030, period: '年',   discount: '15%' }
     },
 
