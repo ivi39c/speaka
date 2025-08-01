@@ -289,7 +289,7 @@ const SubscriptionPage = {
         if (type === 'company') {
             // 顯示公司欄位
             companyFields.forEach(field => {
-                field.style.display = 'flex';
+                field.style.display = '';
                 field.style.opacity = '0';
                 field.style.transform = 'translateY(-10px)';
                 setTimeout(() => {
@@ -318,7 +318,7 @@ const SubscriptionPage = {
         } else if (type === 'personal') {
             // 顯示個人欄位
             personalFields.forEach(field => {
-                field.style.display = field.classList.contains('full-width') ? 'block' : 'flex';
+                field.style.display = '';
                 field.style.opacity = '0';
                 field.style.transform = 'translateY(-10px)';
                 setTimeout(() => {
