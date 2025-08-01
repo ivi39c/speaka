@@ -201,13 +201,14 @@
     position: absolute;
     top: -8px;
     right: -8px;
-    background: linear-gradient(135deg, var(--error), #f87171);
-    color: white;
-    padding: 4px 10px;
+    /* 使用更明亮的紅色漸層提升對比度 */
+    background: linear-gradient(135deg, var(--error), #fda4af);
+    color: #ffffff;
+    padding: 4px 12px;
     border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
-    box-shadow: var(--shadow);
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 10;
 }
 
@@ -222,13 +223,10 @@
     overflow: hidden;
 }
 
+/* 移除價格區塊的左上圖示，不論 PC 或 mobile 都不顯示 */
 .price-display::before {
-    content: '📊';
-    position: absolute;
-    top: 16px;
-    left: 20px;
-    font-size: 18px;
-    opacity: 0.7;
+    content: none;
+    display: none;
 }
 
 .price-display h3 {
