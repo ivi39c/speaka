@@ -199,8 +199,7 @@
 /* 調高 z-index 讓優惠標籤永遠在最上層顯示 */
 .billing-discount {
     position: absolute;
-    top: -8px;
-    right: -8px;
+    /* 已調整至下方，負值偏移取消 */
     /* 使用更飽和的紅色漸層並加上 !important，避免被其他樣式覆蓋 */
     background: linear-gradient(135deg, #f43f5e, #f87171) !important;
     color: #ffffff;
@@ -209,7 +208,10 @@
     font-size: 13px;
     font-weight: 700;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 10;
+    z-index: 20;
+    /* 將優惠標籤定位在卡片內部，避免被選中時的邊框遮蓋 */
+    top: 8px;
+    right: 8px;
 }
 
 /* ===== 價格顯示區塊 ===== */
