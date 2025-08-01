@@ -852,8 +852,13 @@ const SubscriptionPage = {
         const methodCode = encodeURIComponent(method);
         const groupCount = encodeURIComponent(data.groupCount || '1');
         const total      = encodeURIComponent(data.totalAmount || '');
-        // 將使用者導向模擬付款頁並攜帶資訊
-        window.location.href = `payment.html?method=${methodCode}&groupCount=${groupCount}&total=${total}`;
+        // 取得所選方案（計費週期）
+        const periodVal  = data.billingPeriod || document.querySelector('input[name="billingPeriod"]:checked')?.value || '';
+        const period     = encodeURIComponent(periodVal);
+        // 加入 LINE ID，若表單有填寫則帶入參數
+        const lineId     = encodeURIComponent(data.lineId || document.getElementById('lineId')?.value || '');
+        // 將使用者導向模擬付款頁並攜帶資訊：方案、群組數、總金額、付款方式與 LINE ID
+        window.location.href = `payment.html?method=${methodCode}&groupCount=${groupCount}&total=${total}&period=${period}&lineId=${lineId}`;
     },
 
     // 檢查 URL 參數以確認付款結果並在回到訂閱頁時提示用戶
@@ -863,7 +868,18 @@ const SubscriptionPage = {
         if (status === 'success') {
             const groupCount = params.get('groupCount') || '1';
             const total      = params.get('total')      || '';
-            const message    = `感謝您的付款！\n\n訂閱已成功開通。\n群組數量：${groupCount} 個\n總金額：${total}\n\n我們已收到您的訂單，稍後將通知您服務已啟用。`;
+            const period     = params.get('period')     || '';
+            const lineId     = params.get('lineId')     || '';
+            // 將方案代碼轉換成中文顯示
+            const planMap = { monthly: '月繳', halfyearly: '半年繳', yearly: '年繳' };
+            const planText= planMap[period] || '';
+            let message   = `感謝您的付款！\n\n訂閱已成功開通。\n`;
+            if (planText) message += `方案：${planText}\n`;
+            message      += `群組數量：${groupCount} 個\n總金額：${total}\n\n`;
+            if (lineId) {
+                message += `您的 LINE ID：${lineId}\n`;
+            }
+            message      += `請加入官方 LINE 完成服務開通（官方 LINE：@537etdoz）。\n如有任何問題，請聯絡客服。`;
             alert(message);
             // 移除 URL 參數以避免重複提示
             history.replaceState(null, '', window.location.pathname);
