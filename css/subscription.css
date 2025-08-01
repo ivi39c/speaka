@@ -484,12 +484,9 @@
 }
 
 .terms-section::before {
-    content: '📋';
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    font-size: 16px;
-    opacity: 0.7;
+    /* 移除服務條款區塊前方的圖示 */
+    content: none;
+    display: none;
 }
 
 .terms-checkbox {
