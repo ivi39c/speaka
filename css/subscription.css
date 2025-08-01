@@ -201,8 +201,8 @@
     position: absolute;
     top: -8px;
     right: -8px;
-    /* 使用更明亮的紅色漸層提升對比度 */
-    background: linear-gradient(135deg, var(--error), #fda4af);
+    /* 使用更飽和的紅色漸層並加上 !important，避免被其他樣式覆蓋 */
+    background: linear-gradient(135deg, #f43f5e, #f87171) !important;
     color: #ffffff;
     padding: 4px 12px;
     border-radius: 12px;
