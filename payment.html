@@ -13,19 +13,29 @@
 <body>
     <h1>金流模擬頁面</h1>
     <p id="info">正在載入訂單資訊…</p>
+    <!-- 顯示使用者的 LINE ID，用於付款確認 -->
+    <div id="lineInfo" style="margin: 16px 0; font-size:14px;"></div>
     <button id="finishBtn">完成付款</button>
     <script>
         // 讀取 URL 參數
-        const params    = new URLSearchParams(window.location.search);
-        const method    = params.get('method') || '';
-        const groupCount= params.get('groupCount') || '1';
-        const total     = params.get('total') || '';
+        const params     = new URLSearchParams(window.location.search);
+        const method     = params.get('method') || '';
+        const groupCount = params.get('groupCount') || '1';
+        const total      = params.get('total') || '';
+        const period     = params.get('period') || '';
         // 顯示訂單資訊
-        const infoEl    = document.getElementById('info');
-        infoEl.textContent = `付款方式：${decodeURIComponent(method)}，群組數量：${groupCount}，總金額：${total}`;
-        // 完成付款後導回訂閱頁並帶上成功標記
+        const infoEl       = document.getElementById('info');
+        const lineInfoEl   = document.getElementById('lineInfo');
+        const decodedMethod= decodeURIComponent(method);
+        const decodedLineId= params.get('lineId') ? decodeURIComponent(params.get('lineId')) : '';
+        infoEl.textContent = `付款方式：${decodedMethod}，群組數量：${groupCount}，總金額：${total}`;
+        // 如果有傳入 LINE ID，顯示於付款頁讓使用者確認
+        if (decodedLineId) {
+            lineInfoEl.textContent = `您的 LINE ID：${decodedLineId}`;
+        }
+        // 完成付款後導回訂閱頁並帶上成功標記與 LINE ID
         document.getElementById('finishBtn').addEventListener('click', () => {
-            const returnUrl = `subscription.html?status=success&groupCount=${encodeURIComponent(groupCount)}&total=${encodeURIComponent(total)}`;
+            const returnUrl = `subscription.html?status=success&groupCount=${encodeURIComponent(groupCount)}&total=${encodeURIComponent(total)}&period=${encodeURIComponent(period)}&lineId=${encodeURIComponent(decodedLineId)}`;
             window.location.href = returnUrl;
         });
     </script>
