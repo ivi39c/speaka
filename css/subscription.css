@@ -196,6 +196,7 @@
     margin-top: 4px;
 }
 
+/* 調高 z-index 讓優惠標籤永遠在最上層顯示 */
 .billing-discount {
     position: absolute;
     top: -8px;
@@ -207,7 +208,7 @@
     font-size: 12px;
     font-weight: 600;
     box-shadow: var(--shadow);
-    z-index: 1;
+    z-index: 10;
 }
 
 /* ===== 價格顯示區塊 ===== */
