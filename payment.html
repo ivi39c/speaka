@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模擬付款頁面</title>
+    <style>
+        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; text-align: center; }
+        button { padding: 12px 24px; font-size: 16px; background: #4f46e5; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+        button:hover { background: #4338ca; }
+    </style>
+</head>
+<body>
+    <h1>金流模擬頁面</h1>
+    <p id="info">正在載入訂單資訊…</p>
+    <button id="finishBtn">完成付款</button>
+    <script>
+        // 讀取 URL 參數
+        const params    = new URLSearchParams(window.location.search);
+        const method    = params.get('method') || '';
+        const groupCount= params.get('groupCount') || '1';
+        const total     = params.get('total') || '';
+        // 顯示訂單資訊
+        const infoEl    = document.getElementById('info');
+        infoEl.textContent = `付款方式：${decodeURIComponent(method)}，群組數量：${groupCount}，總金額：${total}`;
+        // 完成付款後導回訂閱頁並帶上成功標記
+        document.getElementById('finishBtn').addEventListener('click', () => {
+            const returnUrl = `subscription.html?status=success&groupCount=${encodeURIComponent(groupCount)}&total=${encodeURIComponent(total)}`;
+            window.location.href = returnUrl;
+        });
+    </script>
+</body>
+</html>
