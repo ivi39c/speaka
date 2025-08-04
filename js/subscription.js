@@ -212,18 +212,6 @@ const SubscriptionPage = {
             taxRate = 1.05;
         }
         const totalWithTax = Math.round((unitPrice * groupCount) * taxRate);
-        // 計算稅額顯示
-        const taxAmount = Math.round(unitPrice * groupCount * (invoiceType === 'none' ? 0 : 0.05));
-        const taxRow = document.getElementById('summaryTaxRow');
-        const taxCell = document.getElementById('summaryTax');
-        if (taxRow && taxCell) {
-            if (invoiceType === 'none') {
-                taxRow.style.display = 'none';
-            } else {
-                taxRow.style.display = 'flex';
-                taxCell.textContent = 'NT$ ' + taxAmount.toLocaleString();
-            }
-        }
         this.updatePriceDisplay(unitPrice, groupCount, totalWithTax, priceInfo.period);
         this.updatePageTitle(totalWithTax);
     },
