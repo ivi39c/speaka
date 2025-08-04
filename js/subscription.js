@@ -204,7 +204,18 @@ const SubscriptionPage = {
         if (!priceInfo) return;
         const unitPrice = priceInfo.price;
         const total     = unitPrice * groupCount;
-        this.updatePriceDisplay(unitPrice, groupCount, total, priceInfo.period);
+        
+        // 加上公司發票 5% 稅金
+        let taxRate = 1;
+        const invoiceType = document.getElementById('invoiceType');
+        if (invoiceType && invoiceType.value === 'company') {
+            taxRate = 1.05;
+        }
+        const totalWithTax = Math.round((unitPrice * groupCount) * taxRate);
+        this.updatePriceDisplay(unitPrice, groupCount, totalWithTax, priceInfo.period);
+        this.updatePageTitle(totalWithTax);
+        return;
+(unitPrice, groupCount, total, priceInfo.period);
         this.updatePageTitle(total);
     },
 
