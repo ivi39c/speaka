@@ -214,12 +214,6 @@ const SubscriptionPage = {
         const totalWithTax = Math.round((unitPrice * groupCount) * taxRate);
         this.updatePriceDisplay(unitPrice, groupCount, totalWithTax, priceInfo.period);
         this.updatePageTitle(totalWithTax);
-        return;
-(unitPrice, groupCount, totalWithTax, priceInfo.period);
-        this.updatePageTitle(totalWithTax);
-        return;
-(unitPrice, groupCount, total, priceInfo.period);
-        this.updatePageTitle(total);
     },
 
     // 依據計算結果更新各欄位文字
