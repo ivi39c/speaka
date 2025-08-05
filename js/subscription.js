@@ -204,16 +204,8 @@ const SubscriptionPage = {
         if (!priceInfo) return;
         const unitPrice = priceInfo.price;
         const total     = unitPrice * groupCount;
-        
-        // 加上公司發票 5% 稅金
-        let taxRate = 1;
-        const invoiceType = document.getElementById('invoiceType');
-        if (invoiceType && invoiceType.value === 'company') {
-            taxRate = 1.05;
-        }
-        const totalWithTax = Math.round((unitPrice * groupCount) * taxRate);
-        this.updatePriceDisplay(unitPrice, groupCount, totalWithTax, priceInfo.period);
-        this.updatePageTitle(totalWithTax);
+        this.updatePriceDisplay(unitPrice, groupCount, total, priceInfo.period);
+        this.updatePageTitle(total);
     },
 
     // 依據計算結果更新各欄位文字
@@ -231,14 +223,7 @@ const SubscriptionPage = {
             elements.groupQuantity.textContent = `${groupCount} 個群組`;
         }
         if (elements.subtotal) {
-            const subtotal = unitPrice * groupCount;
-            const invoiceTypeEl = document.getElementById('invoiceType');
-            let taxInfo = '';
-            if (invoiceTypeEl && invoiceTypeEl.value === 'company') {
-                const taxAmount = Math.round(subtotal * 0.05);
-                taxInfo = `<br><small style="color:#666;">+5% 稅金 NT$ ${taxAmount.toLocaleString()}</small>`;
-            }
-            elements.subtotal.innerHTML = `NT$ ${subtotal.toLocaleString()}${taxInfo}`;
+            elements.subtotal.textContent = `NT$ ${total.toLocaleString()}`;
         }
         if (elements.totalPrice) {
             elements.totalPrice.textContent = `NT$ ${total.toLocaleString()}`;
