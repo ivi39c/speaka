@@ -270,7 +270,98 @@
                 </div>
             </div>
         </div>
-    </main>
+    
+<!-- 新增：底部浮動總計欄位 -->
+<div class="floating-total" id="floatingTotal" onclick="toggleFloatingDetails()">
+  <div class="floating-total-header">
+    <span><strong>總計：</strong><span id="floatingTotalPrice">NT$ 199</span></span>
+    <span id="floatingToggleIcon">▲</span>
+  </div>
+  <div class="floating-total-details" id="floatingTotalDetails">
+    <div class="detail-line">
+      <span>單價：</span>
+      <span id="floatingUnitPrice">NT$ 199 / 群組 / 月</span>
+    </div>
+    <div class="detail-line">
+      <span>群組數量：</span>
+      <span id="floatingGroupCount">1 個群組</span>
+    </div>
+    <div class="detail-line">
+      <span>小計：</span>
+      <span id="floatingSubtotal">NT$ 199</span>
+    </div>
+  </div>
+</div>
+
+<style>
+.floating-total {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.05);
+  z-index: 9999;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.floating-total-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+.floating-total-details {
+  display: none;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 12px 20px;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+.detail-line {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+</style>
+
+<script>
+function toggleFloatingDetails() {
+  const details = document.getElementById('floatingTotalDetails');
+  const icon = document.getElementById('floatingToggleIcon');
+  if (details.style.display === 'none' || details.style.display === '') {
+    details.style.display = 'block';
+    icon.textContent = '▼';
+  } else {
+    details.style.display = 'none';
+    icon.textContent = '▲';
+  }
+}
+
+// 更新浮動總計區塊
+function updateFloatingSummary(unitPrice, groupCount, subtotal) {
+  const period = document.querySelector('input[name="billingPeriod"]:checked')?.labels[0]?.innerText.trim() || '月';
+  document.getElementById('floatingUnitPrice').textContent = `NT$ ${unitPrice.toLocaleString()} / 群組 / ${period}`;
+  document.getElementById('floatingGroupCount').textContent = `${groupCount} 個群組`;
+  document.getElementById('floatingSubtotal').textContent = `NT$ ${subtotal.toLocaleString()}`;
+  document.getElementById('floatingTotalPrice').textContent = `NT$ ${subtotal.toLocaleString()}`;
+}
+
+// 掛鉤原本的價格更新函式
+const originalUpdateDisplay = window.SubscriptionSpeaka?.SubscriptionPage?.updatePriceDisplay;
+if (originalUpdateDisplay) {
+  window.SubscriptionSpeaka.SubscriptionPage.updatePriceDisplay = function(unitPrice, groupCount, subtotal, period) {
+    originalUpdateDisplay.call(this, unitPrice, groupCount, subtotal, period);
+    updateFloatingSummary(unitPrice, groupCount, subtotal);
+  }
+}
+</script>
+</main>
 
     <!-- 引用 JS 文件 -->
     
