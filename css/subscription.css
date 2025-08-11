@@ -977,3 +977,104 @@
         transform: none;
     }
 }
+
+
+/* === Floating Total (theme-aligned) === */
+.floating-total {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -6px 20px rgba(0,0,0,0.08);
+  z-index: 9999;
+  backdrop-filter: saturate(120%) blur(6px);
+}
+
+.floating-total-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 12px 16px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.floating-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex: 1;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.floating-toggle:hover {
+  border-color: var(--primary);
+  background: white;
+  box-shadow: var(--shadow);
+}
+
+.floating-total-label {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.floating-toggle-icon {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.floating-total-details {
+  background: white;
+  border-top: 1px solid var(--border);
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.floating-total-details .detail-line {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.floating-cta-btn {
+  background: linear-gradient(135deg, var(--primary), #3b82f6);
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  min-width: 140px;
+  box-shadow: var(--shadow);
+}
+
+.floating-cta-btn:hover {
+  background: linear-gradient(135deg, var(--primary-hover), #2563eb);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+@media (max-width: 640px) {
+  .floating-total-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 12px;
+  }
+  .floating-cta-btn {
+    width: 100%;
+  }
+}
