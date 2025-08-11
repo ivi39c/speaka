@@ -170,14 +170,14 @@
     box-shadow: var(--shadow);
 }
 
-.billing-radio:checked + .billing-label {
+.billing-radio:checked ~ .billing-label {
     border-color: var(--primary);
     background: var(--primary-light);
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
     transform: translateY(-2px);
 }
 
-.billing-radio:checked + .billing-label.selected {
+.billing-radio:checked ~ .billing-label.selected {
     border-color: var(--primary);
     background: var(--primary-light);
 }
@@ -1192,3 +1192,7 @@
     width: 100%;
   }
 }
+
+
+/* Ensure selected plan style wins even if elements inserted between input and label */
+.billing-option .billing-radio:checked ~ .billing-label { border-color: var(--primary); background: var(--primary-light); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
