@@ -1196,3 +1196,32 @@
 
 /* Ensure selected plan style wins even if elements inserted between input and label */
 .billing-option .billing-radio:checked ~ .billing-label { border-color: var(--primary); background: var(--primary-light); box-shadow: 0 0 0 3px rgba(37,99,235,.1); }
+
+
+/* === PATCH: Floating Total unified, no border/shadow, number-only bold === */
+.floating-total {
+  background: var(--surface);
+  border-top: none !important;
+  box-shadow: none !important;
+}
+
+.floating-total-inner { max-width: 1000px; margin: 0 auto; }
+
+.floating-toggle {
+  border: none !important;
+  background: white !important;
+  box-shadow: none !important;
+}
+
+.floating-total-label { font-weight: 500; }
+.floating-total-label strong { font-weight: 500; } /* "總計：" normal */
+#floatingTotalPrice {
+  font-size: 24px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.3px;
+}
+
+.floating-cta-btn {
+  font-weight: 500 !important; /* CTA文字不加粗 */
+  box-shadow: none !important;
+}

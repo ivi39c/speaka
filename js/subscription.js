@@ -55,9 +55,20 @@ const SpeakaCore = {
     document.addEventListener('DOMContentLoaded', () => document.body.classList.add('loaded'));
     window.addEventListener('load', () => setTimeout(() => { document.body.style.opacity = '1'; }, 50));
   },
-  init() {
+  normalizePlan(value) {
+  if (!value) return null;
+  const v = String(value).toLowerCase();
+  const map = {
+    'monthly': 'monthly', 'month': 'monthly', '1m': 'monthly', '1mo': 'monthly', 'm': 'monthly', '30d': 'monthly',
+    'halfyear': 'halfyearly', 'half-year': 'halfyearly', 'halfyearly': 'halfyearly', 'semiannual': 'halfyearly', 'semi-annual': 'halfyearly', '6m': 'halfyearly', '6mo': 'halfyearly', '6months': 'halfyearly', '6month': 'halfyearly', 'half': 'halfyearly',
+    'yearly': 'yearly', 'annual': 'yearly', 'annually': 'yearly', '12m': 'yearly', '12mo': 'yearly', '12months': 'yearly', 'year': 'yearly', 'y': 'yearly'
+  };
+  return map[v] || value; 
+},
+
+init() {
     const urlParams = new URLSearchParams(window.location.search);
-    const selectedPlan = urlParams.get('plan');
+    const selectedPlan = this.normalizePlan(urlParams.get('plan'));
     if (selectedPlan) {
       const radio = document.querySelector(`input[name="billingPeriod"][value="${selectedPlan}"]`);
       if (radio) radio.checked = true;
@@ -75,7 +86,18 @@ const SubscriptionPage = {
     halfyearly: { price: 1199, period: '半年', discount: '5%' },
     yearly:     { price: 2030, period: '年',   discount: '15%' }
   },
-  init() {
+  normalizePlan(value) {
+  if (!value) return null;
+  const v = String(value).toLowerCase();
+  const map = {
+    'monthly': 'monthly', 'month': 'monthly', '1m': 'monthly', '1mo': 'monthly', 'm': 'monthly', '30d': 'monthly',
+    'halfyear': 'halfyearly', 'half-year': 'halfyearly', 'halfyearly': 'halfyearly', 'semiannual': 'halfyearly', 'semi-annual': 'halfyearly', '6m': 'halfyearly', '6mo': 'halfyearly', '6months': 'halfyearly', '6month': 'halfyearly', 'half': 'halfyearly',
+    'yearly': 'yearly', 'annual': 'yearly', 'annually': 'yearly', '12m': 'yearly', '12mo': 'yearly', '12months': 'yearly', 'year': 'yearly', 'y': 'yearly'
+  };
+  return map[v] || value; 
+},
+
+init() {
     if (!this.isSubscriptionPage()) return;
     this.checkPaymentStatus();
     this.initPriceCalculation();
@@ -511,7 +533,18 @@ const SubscriptionPage = {
 };
 
 const InteractiveEffects = {
-  init() { this.initButtonEffects(); this.initCardHoverEffects(); this.initFormFocusEffects(); },
+  normalizePlan(value) {
+  if (!value) return null;
+  const v = String(value).toLowerCase();
+  const map = {
+    'monthly': 'monthly', 'month': 'monthly', '1m': 'monthly', '1mo': 'monthly', 'm': 'monthly', '30d': 'monthly',
+    'halfyear': 'halfyearly', 'half-year': 'halfyearly', 'halfyearly': 'halfyearly', 'semiannual': 'halfyearly', 'semi-annual': 'halfyearly', '6m': 'halfyearly', '6mo': 'halfyearly', '6months': 'halfyearly', '6month': 'halfyearly', 'half': 'halfyearly',
+    'yearly': 'yearly', 'annual': 'yearly', 'annually': 'yearly', '12m': 'yearly', '12mo': 'yearly', '12months': 'yearly', 'year': 'yearly', 'y': 'yearly'
+  };
+  return map[v] || value; 
+},
+
+init() { this.initButtonEffects(); this.initCardHoverEffects(); this.initFormFocusEffects(); },
   initButtonEffects() {
     document.addEventListener('click', (e) => {
       const target = e.target.closest('.submit-btn, .billing-label, .payment-option');
