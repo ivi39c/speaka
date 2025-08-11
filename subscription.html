@@ -1,370 +1,377 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>訂閱 Speaka | 專業多語系翻譯機器人</title>
-    
-    <!-- 引用 CSS 文件 -->
-    <link rel="stylesheet" href="css/styles.css">
-    <!-- 訂閱頁面專用樣式 -->
-    <link rel="stylesheet" href="css/subscription.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>訂閱 Speaka | 專業多語系翻譯機器人</title>
+  <!-- 訂閱頁面專用樣式 -->
+  <link rel="stylesheet" href="subscription.fixed.css">
 </head>
 <body>
-    <!-- 導航列 -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-content">
-                <a href="index.html" class="logo">Speaka</a>
-                <a href="index.html" class="back-btn">
-                    <span>←</span>
-                    <span>返回首頁</span>
-                </a>
+  <!-- 導航列 -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="nav-content">
+        <a href="index.html" class="logo">Speaka</a>
+        <a href="index.html" class="back-btn">
+          <span>←</span>
+          <span>返回首頁</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 主要內容 -->
+  <main style="padding: 120px 0 60px;">
+    <div class="subscription-container">
+      <!-- 頁面標題 -->
+      <div class="subscription-header">
+        <h1>訂閱 Speaka</h1>
+        <p>開始您的多語系翻譯之旅</p>
+      </div>
+
+      <!-- 訂閱表單卡片 -->
+      <div class="subscription-card">
+        <form id="subscriptionForm">
+          <!-- 群組數量選擇 -->
+          <div class="groups-section">
+            <h3 class="section-title">選擇群組數量</h3>
+            <div class="groups-input-container">
+              <label class="groups-label" for="groupCount">需要翻譯的群組數量：</label>
+              <input 
+                type="number"
+                id="groupCount"
+                class="groups-input"
+                min="1"
+                max="999"
+                step="1"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                value="1"
+                placeholder="輸入群組數量"
+              >
+              <span class="groups-label">個群組</span>
             </div>
+          </div>
+
+          <!-- 計費週期選擇 -->
+          <div class="billing-section">
+            <h3 class="section-title">選擇計費週期</h3>
+            <div class="billing-options">
+              <div class="billing-option">
+                <input type="radio" id="monthly" name="billingPeriod" value="monthly" class="billing-radio" checked>
+                <label for="monthly" class="billing-label">
+                  <div class="billing-period">月繳</div>
+                  <div class="billing-price">NT$ 199</div>
+                </label>
+              </div>
+              <div class="billing-option">
+                <input type="radio" id="halfyearly" name="billingPeriod" value="halfyearly" class="billing-radio">
+                <div class="billing-discount">省 5%</div>
+                <label for="halfyearly" class="billing-label">
+                  <div class="billing-period">半年繳</div>
+                  <div class="billing-price">NT$ 1,199</div>
+                </label>
+              </div>
+              <div class="billing-option">
+                <input type="radio" id="yearly" name="billingPeriod" value="yearly" class="billing-radio">
+                <div class="billing-discount">省 15%</div>
+                <label for="yearly" class="billing-label">
+                  <div class="billing-period">年繳</div>
+                  <div class="billing-price">NT$ 2,030</div>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 價格顯示 -->
+          <div class="price-display">
+            <div class="price-breakdown">
+              <div class="price-line">
+                <span>單價：</span>
+                <span class="price-amount" id="unitPrice">NT$ 199 / 群組 / 月</span>
+              </div>
+              <div class="price-line">
+                <span>群組數量：</span>
+                <span id="groupQuantity">1 個</span>
+              </div>
+              <div class="price-line">
+                <span>小計：</span>
+                <span class="price-amount" id="subtotal">NT$ 199</span>
+              </div>
+              <!-- 稅金列：目前停用（隱藏），未計入總計 -->
+              <div class="price-line" id="summaryTaxRow" style="display:none;">
+                <span>稅金 5%</span>
+                <span class="price-amount" id="summaryTax">NT$ 0</span>
+              </div>
+              <div class="price-line total">
+                <span>總計：</span>
+                <span class="price-amount" id="totalPrice">NT$ 199</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 支付方式選擇 -->
+          <div class="payment-section">
+            <h3 class="section-title">選擇支付方式</h3>
+            <div class="payment-methods">
+              <div class="payment-option selected">
+                <input type="radio" name="paymentMethod" value="linepay" class="payment-radio" checked>
+                <span class="payment-icon">💳</span>
+                <div class="payment-info">
+                  <div class="payment-name">LINE Pay</div>
+                  <div class="payment-desc">快速安全的行動支付</div>
+                </div>
+              </div>
+              <div class="payment-option">
+                <input type="radio" name="paymentMethod" value="credit" class="payment-radio">
+                <span class="payment-icon">💳</span>
+                <div class="payment-info">
+                  <div class="payment-name">信用卡</div>
+                  <div class="payment-desc">Visa、MasterCard、JCB</div>
+                </div>
+              </div>
+              <div class="payment-option">
+                <input type="radio" name="paymentMethod" value="transfer" class="payment-radio">
+                <span class="payment-icon">🏦</span>
+                <div class="payment-info">
+                  <div class="payment-name">銀行轉帳</div>
+                  <div class="payment-desc">ATM 或網路銀行轉帳</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 帳單資訊 -->
+          <div class="billing-info-section">
+            <h3 class="section-title">帳單資訊</h3>
+            <div class="form-grid">
+              <!-- 姓名 -->
+              <div class="form-group">
+                <label for="contactName" class="form-label required">聯絡人姓名</label>
+                <input type="text" id="contactName" name="contactName" class="form-input" required>
+                <div class="input-hint">請輸入真實姓名，2-20個字符</div>
+              </div>
+              <!-- LINE ID -->
+              <div class="form-group">
+                <label for="lineId" class="form-label required">LINE ID</label>
+                <input type="text" id="lineId" name="lineId" class="form-input" placeholder="請輸入您的 LINE ID" required>
+                <div class="input-hint">請填寫您的 LINE ID，以協助後續開通服務</div>
+              </div>
+              <!-- 電話 -->
+              <div class="form-group">
+                <label for="phone" class="form-label required">聯絡電話</label>
+                <input type="tel" id="phone" name="phone" class="form-input" required>
+                <div class="input-hint">格式：09xxxxxxxx 或 02-xxxxxxxx</div>
+              </div>
+              <!-- 電子郵件 -->
+              <div class="form-group">
+                <label for="email" class="form-label required">電子郵件</label>
+                <input type="email" id="email" name="email" class="form-input" required>
+                <div class="input-hint">用於接收訂閱確認和重要通知</div>
+              </div>
+              <!-- 發票類型 -->
+              <div class="form-group">
+                <label for="invoiceType" class="form-label required">發票類型</label>
+                <select id="invoiceType" name="invoiceType" class="form-select" required>
+                  <option value="">請選擇發票類型</option>
+                  <option value="none">免開發票</option>
+                  <option value="personal">個人發票</option>
+                  <option value="company">公司發票</option>
+                  <option value="donation">捐贈發票</option>
+                </select>
+              </div>
+              <!-- 個人發票：共通載具號碼 -->
+              <div class="form-group personal-field" style="display: none;">
+                <label for="carrierNumber" class="form-label">共通載具號碼</label>
+                <input type="text" id="carrierNumber" name="carrierNumber" class="form-input" placeholder="請輸入共通載具號碼">
+                <div class="input-hint">若無共通載具，可留空或填寫寄送地址</div>
+              </div>
+              <!-- 個人發票：寄送地址 -->
+              <div class="form-group personal-field full-width" style="display: none;">
+                <label for="address" class="form-label">寄送地址</label>
+                <input type="text" id="address" name="address" class="form-input" placeholder="發票寄送地址（選填）">
+                <div class="input-hint">如需紙本發票寄送請填寫</div>
+              </div>
+              <!-- 公司發票相關欄位 -->
+              <div class="form-group company-field" style="display: none;">
+                <label for="companyName" class="form-label">公司名稱</label>
+                <input type="text" id="companyName" name="companyName" class="form-input">
+                <div class="input-hint">請輸入完整的公司名稱</div>
+              </div>
+              <div class="form-group company-field" style="display: none;">
+                <label for="taxId" class="form-label">統一編號</label>
+                <input type="text" id="taxId" name="taxId" class="form-input" pattern="[0-9]{8}" maxlength="8">
+                <div class="input-hint">8位數字，系統會自動驗證格式</div>
+              </div>
+              <div class="form-group company-field full-width" style="display: none;">
+                <label for="companyAddress" class="form-label">公司地址</label>
+                <input type="text" id="companyAddress" name="companyAddress" class="form-input" placeholder="請輸入公司地址">
+                <div class="input-hint">公司發票寄送地址</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 服務條款 -->
+          <div class="terms-section">
+            <div class="terms-checkbox">
+              <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+              <label for="agreeTerms" class="terms-text">
+                我已閱讀並同意 <a href="#" class="terms-link" data-type="terms">服務條款</a> 和 <a href="#" class="terms-link" data-type="privacy">隱私政策</a>
+              </label>
+            </div>
+          </div>
+
+          <!-- 提交按鈕 -->
+          <div class="submit-section">
+            <button type="submit" class="submit-btn">確認訂閱</button>
+            <div class="security-note">
+              <p>🔒 您的個人資訊將會被安全加密處理</p>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- FAQ 區塊 -->
+      <div class="faq-section">
+        <h3>常見問題</h3>
+        <div class="faq-item">
+          <div class="faq-question">Q: 如何開始使用 Speaka？</div>
+          <div class="faq-answer">選擇方案完成付款後，聯絡官方 LINE 進行服務開通，我們會協助您將機器人加入群組。</div>
         </div>
-    </nav>
-
-    <!-- 主要內容 -->
-    <main style="padding: 120px 0 60px;">
-        <div class="subscription-container">
-            <!-- 頁面標題 -->
-            <div class="subscription-header">
-                <h1>訂閱 Speaka</h1>
-                <p>開始您的多語系翻譯之旅</p>
-            </div>
-
-            <!-- 訂閱表單卡片 -->
-            <div class="subscription-card">
-                <form id="subscriptionForm">
-                    <!-- 群組數量選擇 -->
-                    <div class="groups-section">
-                        <h3 class="section-title">選擇群組數量</h3>
-                        <div class="groups-input-container">
-                            <label class="groups-label" for="groupCount">需要翻譯的群組數量：</label>
-                            <input 
-                                type="number" 
-                                id="groupCount" 
-                                class="groups-input" 
-                                min="1" 
-                                max="999" 
-                                value="1" 
-                                placeholder="輸入群組數量"
-                            >
-                            <span class="groups-label">個群組</span>
-                        </div>
-                    </div>
-
-                    <!-- 計費週期選擇 -->
-                    <div class="billing-section">
-                        <h3 class="section-title">選擇計費週期</h3>
-                        <div class="billing-options">
-                            <div class="billing-option">
-                                <input type="radio" id="monthly" name="billingPeriod" value="monthly" class="billing-radio" checked>
-                                <label for="monthly" class="billing-label">
-                                    <div class="billing-period">月繳</div>
-                                    <div class="billing-price">NT$ 199</div>
-                                </label>
-                            </div>
-                            <div class="billing-option">
-                                <input type="radio" id="halfyearly" name="billingPeriod" value="halfyearly" class="billing-radio">
-                                <!-- 將優惠標籤移出 label，避免被邊框遮擋 -->
-                                <div class="billing-discount">省 5%</div>
-                                <label for="halfyearly" class="billing-label">
-                                    <div class="billing-period">半年繳</div>
-                                    <div class="billing-price">NT$ 1,199</div>
-                                </label>
-                            </div>
-                            <div class="billing-option">
-                                <input type="radio" id="yearly" name="billingPeriod" value="yearly" class="billing-radio">
-                                <!-- 將優惠標籤移出 label，避免被邊框遮擋 -->
-                                <div class="billing-discount">省 15%</div>
-                                <label for="yearly" class="billing-label">
-                                    <div class="billing-period">年繳</div>
-                                    <div class="billing-price">NT$ 2,030</div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 價格顯示 -->
-                    <div class="price-display">
-                        <div class="price-breakdown">
-                            <div class="price-line">
-                                <span>單價：</span>
-                                <span class="price-amount" id="unitPrice">NT$ 199 / 群組 / 月</span>
-                            </div>
-                            <div class="price-line">
-                                <span>群組數量：</span>
-                                <span id="groupQuantity">1 個</span>
-                            </div>
-                            <div class="price-line">
-                                <span>小計：</span>
-                                <span class="price-amount" id="subtotal">NT$ 199</span>
-                            </div>
-                            <div class="price-line" id="summaryTaxRow" style="display: none;">
-  <span>稅金 5%</span>
-  <span class="price-amount" id="summaryTax">NT$ 0</span>
-</div>
-<div class="price-line total">
-                                <span>總計：</span>
-                                <span class="price-amount" id="totalPrice">NT$ 199</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 支付方式選擇 -->
-                    <div class="payment-section">
-                        <h3 class="section-title">選擇支付方式</h3>
-                        <div class="payment-methods">
-                            <div class="payment-option selected">
-                                <input type="radio" name="paymentMethod" value="linepay" class="payment-radio" checked>
-                                <span class="payment-icon">💳</span>
-                                <div class="payment-info">
-                                    <div class="payment-name">LINE Pay</div>
-                                    <div class="payment-desc">快速安全的行動支付</div>
-                                </div>
-                            </div>
-                            <div class="payment-option">
-                                <input type="radio" name="paymentMethod" value="credit" class="payment-radio">
-                                <span class="payment-icon">💳</span>
-                                <div class="payment-info">
-                                    <div class="payment-name">信用卡</div>
-                                    <div class="payment-desc">Visa、MasterCard、JCB</div>
-                                </div>
-                            </div>
-                            <div class="payment-option">
-                                <input type="radio" name="paymentMethod" value="transfer" class="payment-radio">
-                                <span class="payment-icon">🏦</span>
-                                <div class="payment-info">
-                                    <div class="payment-name">銀行轉帳</div>
-                                    <div class="payment-desc">ATM 或網路銀行轉帳</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 帳單資訊 -->
-                    <div class="billing-info-section">
-                        <h3 class="section-title">帳單資訊</h3>
-                        <div class="form-grid">
-                            <!-- 姓名 -->
-                            <div class="form-group">
-                                <label for="contactName" class="form-label required">聯絡人姓名</label>
-                                <input type="text" id="contactName" name="contactName" class="form-input" required>
-                                <div class="input-hint">請輸入真實姓名，2-20個字符</div>
-                            </div>
-                            <!-- LINE ID -->
-                            <div class="form-group">
-                                <label for="lineId" class="form-label required">LINE ID</label>
-                                <input type="text" id="lineId" name="lineId" class="form-input" placeholder="請輸入您的 LINE ID" required>
-                                <div class="input-hint">請填寫您的 LINE ID，以協助後續開通服務</div>
-                            </div>
-                            <!-- 電話 -->
-                            <div class="form-group">
-                                <label for="phone" class="form-label required">聯絡電話</label>
-                                <input type="tel" id="phone" name="phone" class="form-input" required>
-                                <div class="input-hint">格式：09xxxxxxxx 或 02-xxxxxxxx</div>
-                            </div>
-                            <!-- 電子郵件 -->
-                            <div class="form-group">
-                                <label for="email" class="form-label required">電子郵件</label>
-                                <input type="email" id="email" name="email" class="form-input" required>
-                                <div class="input-hint">用於接收訂閱確認和重要通知</div>
-                            </div>
-                            <!-- 發票類型 -->
-                            <div class="form-group">
-                                <label for="invoiceType" class="form-label required">發票類型</label>
-                                <select id="invoiceType" name="invoiceType" class="form-select" required>
-                                    <option value="">請選擇發票類型</option>
-                                    <option value="none">免開發票</option>
-<option value="personal">個人發票</option>
-                                    <option value="company">公司發票</option>
-                                    <option value="donation">捐贈發票</option>
-                                </select>
-                            </div>
-                            <!-- 個人發票：共通載具號碼 -->
-                            <div class="form-group personal-field" style="display: none;">
-                                <label for="carrierNumber" class="form-label">共通載具號碼</label>
-                                <input type="text" id="carrierNumber" name="carrierNumber" class="form-input" placeholder="請輸入共通載具號碼">
-                                <div class="input-hint">若無共通載具，可留空或填寫寄送地址</div>
-                            </div>
-                            <!-- 個人發票：寄送地址 -->
-                            <div class="form-group personal-field full-width" style="display: none;">
-                                <label for="address" class="form-label">寄送地址</label>
-                                <input type="text" id="address" name="address" class="form-input" placeholder="發票寄送地址（選填）">
-                                <div class="input-hint">如需紙本發票寄送請填寫</div>
-                            </div>
-                            <!-- 公司發票相關欄位 -->
-                            <div class="form-group company-field" style="display: none;">
-                                <label for="companyName" class="form-label">公司名稱</label>
-                                <input type="text" id="companyName" name="companyName" class="form-input">
-                                <div class="input-hint">請輸入完整的公司名稱</div>
-                            </div>
-                            <div class="form-group company-field" style="display: none;">
-                                <label for="taxId" class="form-label">統一編號</label>
-                                <input type="text" id="taxId" name="taxId" class="form-input" pattern="[0-9]{8}" maxlength="8">
-                                <div class="input-hint">8位數字，系統會自動驗證格式</div>
-                            </div>
-                            <div class="form-group company-field full-width" style="display: none;">
-                                <label for="companyAddress" class="form-label">公司地址</label>
-                                <input type="text" id="companyAddress" name="companyAddress" class="form-input" placeholder="請輸入公司地址">
-                                <div class="input-hint">公司發票寄送地址</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 服務條款 -->
-                    <div class="terms-section">
-                        <div class="terms-checkbox">
-                            <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
-                            <label for="agreeTerms" class="terms-text">
-                                我已閱讀並同意 <a href="#" class="terms-link" data-type="terms">服務條款</a> 和 <a href="#" class="terms-link" data-type="privacy">隱私政策</a>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- 提交按鈕 -->
-                    <div class="submit-section">
-                        <button type="submit" class="submit-btn">確認訂閱</button>
-                        <div class="security-note">
-                            <p>🔒 您的個人資訊將會被安全加密處理</p>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <!-- FAQ 區塊 -->
-            <div class="faq-section">
-                <h3>常見問題</h3>
-                <div class="faq-item">
-                    <div class="faq-question">Q: 如何開始使用 Speaka？</div>
-                    <div class="faq-answer">選擇方案完成付款後，聯絡官方 LINE 進行服務開通，我們會協助您將機器人加入群組。</div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question">Q: 支援哪些付款方式？</div>
-                    <div class="faq-answer">支援 LINE Pay、信用卡、銀行轉帳等多種付款方式，企業客戶可開立發票。</div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question">Q: 可以隨時取消訂閱嗎？</div>
-                    <div class="faq-answer">可以，月繳方案可隨時取消，其他方案依照合約條款執行，不滿意可享比例退費。</div>
-                </div>
-                <div class="faq-item">
-                    <div class="faq-question">Q: 翻譯品質如何保證？</div>
-                    <div class="faq-answer">採用 Google 翻譯核心技術，並持續優化演算法，確保翻譯準確度與流暢度。</div>
-                </div>
-            </div>
-
-            <!-- 底部 CTA -->
-            <div class="bottom-cta">
-                <h3>還有其他問題？</h3>
-                <p>我們的客服團隊隨時為您服務</p>
-                <div class="contact-buttons">
-                    <a href="mailto:talkeasenow@gmail.com" class="contact-btn">
-                        <span>📧</span>
-                        <span>Email 諮詢</span>
-                    </a>
-                    <a href="https://line.me/ti/p/@537etdoz" class="contact-btn" target="_blank">
-                        <span>💬</span>
-                        <span>LINE 客服</span>
-                    </a>
-                </div>
-            </div>
+        <div class="faq-item">
+          <div class="faq-question">Q: 支援哪些付款方式？</div>
+          <div class="faq-answer">支援 LINE Pay、信用卡、銀行轉帳等多種付款方式，企業客戶可開立發票。</div>
         </div>
+        <div class="faq-item">
+          <div class="faq-question">Q: 可以隨時取消訂閱嗎？</div>
+          <div class="faq-answer">可以，月繳方案可隨時取消，其他方案依照合約條款執行，不滿意可享比例退費。</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question">Q: 翻譯品質如何保證？</div>
+          <div class="faq-answer">採用 Google 翻譯核心技術，並持續優化演算法，確保翻譯準確度與流暢度。</div>
+        </div>
+      </div>
+
+      <!-- 底部 CTA -->
+      <div class="bottom-cta">
+        <h3>還有其他問題？</h3>
+        <p>我們的客服團隊隨時為您服務</p>
+        <div class="contact-buttons">
+          <a href="mailto:talkeasenow@gmail.com" class="contact-btn">
+            <span>📧</span>
+            <span>Email 諮詢</span>
+          </a>
+          <a href="https://line.me/ti/p/@537etdoz" class="contact-btn" target="_blank">
+            <span>💬</span>
+            <span>LINE 客服</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
     
-<!-- 新增：底部浮動總計欄位 -->
-<div class="floating-total" id="floatingTotal" onclick="toggleFloatingDetails()">
-  <div class="floating-total-header">
-    <span><strong>總計：</strong><span id="floatingTotalPrice">NT$ 199</span></span>
-    <span id="floatingToggleIcon">▲</span>
-  </div>
-  <div class="floating-total-details" id="floatingTotalDetails">
-    <div class="detail-line">
-      <span>單價：</span>
-      <span id="floatingUnitPrice">NT$ 199 / 群組 / 月</span>
+    <!-- 底部浮動總計欄位（與整體風格一致） -->
+    <div class="floating-total" id="floatingTotal">
+      <div class="floating-total-inner">
+        <button class="floating-toggle" id="floatingToggleBtn" type="button" aria-expanded="false" aria-controls="floatingTotalDetails">
+          <span class="floating-total-label"><strong>總計：</strong><span id="floatingTotalPrice">NT$ 199</span></span>
+          <span class="floating-toggle-icon" id="floatingToggleIcon" aria-hidden="true">▲</span>
+        </button>
+        <button class="floating-cta-btn" id="floatingCtaBtn" type="button">立即訂閱</button>
+      </div>
+      <div class="floating-total-details" id="floatingTotalDetails" hidden>
+        <div class="detail-line">
+          <span>單價：</span>
+          <span id="floatingUnitPrice">NT$ 199 / 群組 / 月</span>
+        </div>
+        <div class="detail-line">
+          <span>群組數量：</span>
+          <span id="floatingGroupCount">1 個群組</span>
+        </div>
+        <div class="detail-line">
+          <span>小計：</span>
+          <span id="floatingSubtotal">NT$ 199</span>
+        </div>
+      </div>
     </div>
-    <div class="detail-line">
-      <span>群組數量：</span>
-      <span id="floatingGroupCount">1 個群組</span>
-    </div>
-    <div class="detail-line">
-      <span>小計：</span>
-      <span id="floatingSubtotal">NT$ 199</span>
-    </div>
-  </div>
-</div>
 
-<style>
-.floating-total {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  background: white;
-  border-top: 1px solid var(--border);
-  box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.05);
-  z-index: 9999;
-  font-size: 16px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-.floating-total-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 20px;
-  cursor: pointer;
-  color: var(--text-primary);
-}
-.floating-total-details {
-  display: none;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
-  padding: 12px 20px;
-  font-size: 15px;
-  color: var(--text-secondary);
-}
-.detail-line {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-</style>
+    <script>
+      (function() {
+        const toggleBtn = document.getElementById('floatingToggleBtn');
+        const details   = document.getElementById('floatingTotalDetails');
+        const icon      = document.getElementById('floatingToggleIcon');
+        const ctaBtn    = document.getElementById('floatingCtaBtn');
+        const form      = document.getElementById('subscriptionForm');
 
-<script>
-function toggleFloatingDetails() {
-  const details = document.getElementById('floatingTotalDetails');
-  const icon = document.getElementById('floatingToggleIcon');
-  if (details.style.display === 'none' || details.style.display === '') {
-    details.style.display = 'block';
-    icon.textContent = '▼';
-  } else {
-    details.style.display = 'none';
-    icon.textContent = '▲';
-  }
-}
+        function toggleDetails() {
+          const isHidden = details.hasAttribute('hidden');
+          if (isHidden) {
+            details.removeAttribute('hidden');
+            icon.textContent = '▼';
+            toggleBtn.setAttribute('aria-expanded', 'true');
+          } else {
+            details.setAttribute('hidden', '');
+            icon.textContent = '▲';
+            toggleBtn.setAttribute('aria-expanded', 'false');
+          }
+        }
+        if (toggleBtn && details && icon) {
+          toggleBtn.addEventListener('click', toggleDetails);
+        }
+        if (ctaBtn && form) {
+          ctaBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            // 觸發表單送出流程（會自行驗證並導向下一步）
+            if (typeof form.requestSubmit === 'function') {
+              form.requestSubmit();
+            } else {
+              form.submit();
+            }
+          });
+        }
+        // 鍵盤可及性：Enter/Space 也能切換
+        if (toggleBtn) {
+          toggleBtn.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              toggleDetails();
+            }
+          });
+        }
+      })();
 
-// 更新浮動總計區塊
-function updateFloatingSummary(unitPrice, groupCount, subtotal) {
-  const period = document.querySelector('input[name="billingPeriod"]:checked')?.labels[0]?.innerText.trim() || '月';
-  document.getElementById('floatingUnitPrice').textContent = `NT$ ${unitPrice.toLocaleString()} / 群組 / ${period}`;
-  document.getElementById('floatingGroupCount').textContent = `${groupCount} 個群組`;
-  document.getElementById('floatingSubtotal').textContent = `NT$ ${subtotal.toLocaleString()}`;
-  document.getElementById('floatingTotalPrice').textContent = `NT$ ${subtotal.toLocaleString()}`;
-}
+      // 更新浮動總計區塊（由核心邏輯傳入 period）
+      function updateFloatingSummary(unitPrice, groupCount, subtotal, period) {
+        document.getElementById('floatingUnitPrice').textContent =
+          `NT$ ${unitPrice.toLocaleString()} / 群組 / ${period}`;
+        document.getElementById('floatingGroupCount').textContent = `${groupCount} 個群組`;
+        document.getElementById('floatingSubtotal').textContent = `NT$ ${subtotal.toLocaleString()}`;
+        document.getElementById('floatingTotalPrice').textContent = `NT$ ${subtotal.toLocaleString()}`;
+      }
 
-// 掛鉤原本的價格更新函式
-const originalUpdateDisplay = window.SubscriptionSpeaka?.SubscriptionPage?.updatePriceDisplay;
-if (originalUpdateDisplay) {
-  window.SubscriptionSpeaka.SubscriptionPage.updatePriceDisplay = function(unitPrice, groupCount, subtotal, period) {
-    originalUpdateDisplay.call(this, unitPrice, groupCount, subtotal, period);
-    updateFloatingSummary(unitPrice, groupCount, subtotal);
-  }
-}
-</script>
-</main>
+      // 等 Subscription 模組 ready 後再掛鉤
+      (function () {
+        function patch() {
+          const mod = window.SubscriptionSpeaka?.SubscriptionPage;
+          if (!mod || !mod.updatePriceDisplay) return;
+          if (mod.__patchedFloating) return;
+          const original = mod.updatePriceDisplay.bind(mod);
+          mod.updatePriceDisplay = function (unitPrice, groupCount, total, period) {
+            original(unitPrice, groupCount, total, period);
+            updateFloatingSummary(unitPrice, groupCount, total, period);
+          };
+          mod.__patchedFloating = true;
+          window.updateSubscriptionPrice?.();
+        }
+        window.addEventListener('subscriptionPageReady', patch);
+        if (document.readyState !== 'loading') setTimeout(patch, 0);
+      })();
+    </script>
 
-    <!-- 引用 JS 文件 -->
-    
-    <script src="js/subscription.js"></script>
+  </main>
+
+  <!-- 引用 JS 文件（放在尾端） -->
+  <script src="subscription.fixed.js"></script>
 </body>
 </html>
