@@ -299,37 +299,34 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  background: #fff;
-  border-top: 1px solid #e2e8f0;
-  box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.05);
-  z-index: 1000;
-  font-family: inherit;
+  background: white;
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.05);
+  z-index: 9999;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
 }
 .floating-total-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 24px;
-  font-size: 16px;
-  font-weight: 700;
-  color: #0f172a;
+  padding: 16px 20px;
   cursor: pointer;
-}
-.floating-total-header span:last-child {
-  font-size: 16px;
+  color: var(--text-primary);
 }
 .floating-total-details {
   display: none;
-  background: #f8fafc;
-  padding: 12px 24px 20px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 12px 20px;
   font-size: 15px;
-  color: #475569;
-  border-top: 1px solid #e2e8f0;
+  color: var(--text-secondary);
 }
 .detail-line {
   display: flex;
   justify-content: space-between;
-  padding: 4px 0;
+  margin-bottom: 8px;
 }
 </style>
 
@@ -346,6 +343,7 @@ function toggleFloatingDetails() {
   }
 }
 
+// 更新浮動總計區塊
 function updateFloatingSummary(unitPrice, groupCount, subtotal) {
   const period = document.querySelector('input[name="billingPeriod"]:checked')?.labels[0]?.innerText.trim() || '月';
   document.getElementById('floatingUnitPrice').textContent = `NT$ ${unitPrice.toLocaleString()} / 群組 / ${period}`;
@@ -354,26 +352,15 @@ function updateFloatingSummary(unitPrice, groupCount, subtotal) {
   document.getElementById('floatingTotalPrice').textContent = `NT$ ${subtotal.toLocaleString()}`;
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  const updateFn = window.SubscriptionSpeaka?.SubscriptionPage?.updatePriceDisplay;
-  if (updateFn) {
-    const original = updateFn.bind(window.SubscriptionSpeaka.SubscriptionPage);
-    window.SubscriptionSpeaka.SubscriptionPage.updatePriceDisplay = function(unitPrice, groupCount, subtotal, period) {
-      original(unitPrice, groupCount, subtotal, period);
-      updateFloatingSummary(unitPrice, groupCount, subtotal);
-    };
-    const input = document.getElementById('groupCount');
-    const radio = document.querySelector('input[name="billingPeriod"]:checked');
-    if (input && radio) {
-      const unitPrice = parseInt(radio.nextElementSibling?.querySelector('.billing-price')?.textContent.replace(/[NT$\s,]/g, '') || 199);
-      const count = parseInt(input.value) || 1;
-      const subtotal = unitPrice * count;
-      updateFloatingSummary(unitPrice, count, subtotal);
-    }
+// 掛鉤原本的價格更新函式
+const originalUpdateDisplay = window.SubscriptionSpeaka?.SubscriptionPage?.updatePriceDisplay;
+if (originalUpdateDisplay) {
+  window.SubscriptionSpeaka.SubscriptionPage.updatePriceDisplay = function(unitPrice, groupCount, subtotal, period) {
+    originalUpdateDisplay.call(this, unitPrice, groupCount, subtotal, period);
+    updateFloatingSummary(unitPrice, groupCount, subtotal);
   }
-});
+}
 </script>
-
 </main>
 
     <!-- 引用 JS 文件 -->
