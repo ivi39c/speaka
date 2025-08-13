@@ -1401,3 +1401,77 @@ function updateFloatingSummary(unitPrice, groupCount, subtotal, period){
     render(unit, count, unit*count, planKey, period);
   });
 })();
+
+
+/* injected: self-healing CTA + robust chevron + formula + submit */
+(function(){
+  const PLAN_LABEL = { monthly:'月繳', halfyearly:'半年繳', yearly:'年繳' };
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
+  function ensureChevron(iconEl){
+    if (!iconEl) return;
+    iconEl.innerHTML = '<svg class="floating-chevron" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.7 9.3a1 1 0 0 1 1.4 0L12 13.2l3.9-3.9a1 1 0 1 1 1.4 1.4l-4.6 4.6a1 1 0 0 1-1.4 0L6.7 10.7a1 1 0 0 1 0-1.4z"/></svg>';
+  }
+  function ensureCTA(){
+    const wrap = document.querySelector('.floating-total-inner');
+    if (!wrap) return null;
+    let btn = document.getElementById('floatingCtaBtn');
+    if (!btn){
+      btn = document.createElement('button');
+      btn.id = 'floatingCtaBtn';
+      btn.className = 'floating-cta-btn';
+      btn.type = 'button';
+      btn.textContent = '立即訂閱';
+      const chevron = document.getElementById('floatingToggleBtn');
+      if (chevron) wrap.insertBefore(btn, chevron); else wrap.appendChild(btn);
+    }
+    if (!btn.textContent.trim()) btn.textContent = '立即訂閱';
+    btn.onclick = function(){
+      const form = document.querySelector('form#subscriptionForm') || document.querySelector('form');
+      if (form && form.requestSubmit) form.requestSubmit(); else if (form) form.submit();
+    };
+    return btn;
+  }
+  function wireToggle(){
+    const tbtn = document.getElementById('floatingToggleBtn');
+    const details = document.getElementById('floatingTotalDetails');
+    if (!tbtn || !details) return;
+    tbtn.classList.add('floating-toggle-btn');
+    tbtn.setAttribute('aria-expanded', details.hasAttribute('hidden') ? 'false' : 'true');
+    tbtn.onclick = function(){
+      const hidden = details.hasAttribute('hidden') || details.style.display==='none';
+      if (hidden){ details.removeAttribute('hidden'); details.style.display='block'; tbtn.setAttribute('aria-expanded','true'); }
+      else { details.setAttribute('hidden',''); details.style.display='none'; tbtn.setAttribute('aria-expanded','false'); }
+    };
+  }
+  function render(unitPrice, count, total, planKey, periodText){
+    const labelEl = document.querySelector('.floating-total-label');
+    if(labelEl){
+      labelEl.innerHTML = `${({monthly:'月繳',halfyearly:'半年繳',yearly:'年繳'})[planKey]||''} × ${count} 群組 = <span class="amount">NT$ <span class="price-number">${Number(total||0).toLocaleString()}</span></span>`;
+    }
+    const unitEl = document.getElementById('floatingUnitPrice');
+    if(unitEl){ unitEl.textContent = `單價 NT$ ${Number(unitPrice||0).toLocaleString()} / 群組 / ${periodText||'月'}`; }
+  }
+  ready(function(){
+    ensureChevron(document.getElementById('floatingToggleIcon'));
+    ensureCTA();
+    wireToggle();
+    try{
+      var mod = window.SubscriptionPage || (window.SubscriptionSpeaka && window.SubscriptionSpeaka.SubscriptionPage) || SubscriptionPage;
+      if(mod && mod.updatePriceDisplay && !mod.__patchedBar){
+        const orig = mod.updatePriceDisplay.bind(mod);
+        mod.updatePriceDisplay = function(unit, qty, total, period){
+          orig(unit, qty, total, period);
+          const planKey = document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
+          render(unit, qty, total, planKey, period);
+          ensureCTA();
+        };
+        mod.__patchedBar = true;
+      }
+    }catch(e){ console.error(e); }
+    const planKey = document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
+    const count = parseInt(document.getElementById('groupCount')?.value) || 1;
+    const unit = (window.SubscriptionPage && SubscriptionPage.prices && SubscriptionPage.prices[planKey]?.price) || 199;
+    const period = (window.SubscriptionPage && SubscriptionPage.prices && SubscriptionPage.prices[planKey]?.period) || '月';
+    render(unit, count, unit*count, planKey, period);
+  });
+})();
