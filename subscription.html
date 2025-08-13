@@ -25,7 +25,7 @@
     </nav>
 
     <!-- 主要內容 -->
-    <main class="page-main">
+    <main style="padding: 120px 0 60px;">
         <div class="subscription-container">
             <!-- 頁面標題 -->
             <div class="subscription-header">
@@ -101,7 +101,7 @@
                                 <span>小計：</span>
                                 <span class="price-amount" id="subtotal">NT$ 199</span>
                             </div>
-                            <div class="price-line" id="summaryTaxRow">
+                            <div class="price-line" id="summaryTaxRow" style="display: none;">
   <span>稅金 5%</span>
   <span class="price-amount" id="summaryTax">NT$ 0</span>
 </div>
@@ -183,29 +183,29 @@
                                 </select>
                             </div>
                             <!-- 個人發票：共通載具號碼 -->
-                            <div class="form-group personal-field">
+                            <div class="form-group personal-field" style="display: none;">
                                 <label for="carrierNumber" class="form-label">共通載具號碼</label>
                                 <input type="text" id="carrierNumber" name="carrierNumber" class="form-input" placeholder="請輸入共通載具號碼">
                                 <div class="input-hint">若無共通載具，可留空或填寫寄送地址</div>
                             </div>
                             <!-- 個人發票：寄送地址 -->
-                            <div class="form-group personal-field full-width">
+                            <div class="form-group personal-field full-width" style="display: none;">
                                 <label for="address" class="form-label">寄送地址</label>
                                 <input type="text" id="address" name="address" class="form-input" placeholder="發票寄送地址（選填）">
                                 <div class="input-hint">如需紙本發票寄送請填寫</div>
                             </div>
                             <!-- 公司發票相關欄位 -->
-                            <div class="form-group company-field">
+                            <div class="form-group company-field" style="display: none;">
                                 <label for="companyName" class="form-label">公司名稱</label>
                                 <input type="text" id="companyName" name="companyName" class="form-input">
                                 <div class="input-hint">請輸入完整的公司名稱</div>
                             </div>
-                            <div class="form-group company-field">
+                            <div class="form-group company-field" style="display: none;">
                                 <label for="taxId" class="form-label">統一編號</label>
                                 <input type="text" id="taxId" name="taxId" class="form-input" pattern="[0-9]{8}" maxlength="8">
                                 <div class="input-hint">8位數字，系統會自動驗證格式</div>
                             </div>
-                            <div class="form-group company-field full-width">
+                            <div class="form-group company-field full-width" style="display: none;">
                                 <label for="companyAddress" class="form-label">公司地址</label>
                                 <input type="text" id="companyAddress" name="companyAddress" class="form-input" placeholder="請輸入公司地址">
                                 <div class="input-hint">公司發票寄送地址</div>
@@ -293,7 +293,42 @@
   </div>
 </div>
 
-
+<style>
+.floating-total {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: white;
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.05);
+  z-index: 9999;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+.floating-total-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+.floating-total-details {
+  display: none;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 12px 20px;
+  font-size: 15px;
+  color: var(--text-secondary);
+}
+.detail-line {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+</style>
 
 <script>
 function toggleFloatingDetails() {

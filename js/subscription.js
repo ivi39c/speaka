@@ -1267,61 +1267,22 @@ window.debugSubscription = {
     }
 };
 
-/* === injected by fixer: sync floating summary & plan aliases === */
-(function() {
-  function patch() {
-    try {
-      var mod = window.SubscriptionPage || (window.SubscriptionSpeaka && window.SubscriptionSpeaka.SubscriptionPage) || SubscriptionPage;
-      if (!mod || !mod.updatePriceDisplay || mod.__patchedFloating) return;
-      var orig = mod.updatePriceDisplay.bind(mod);
-      mod.updatePriceDisplay = function(unitPrice, groupCount, total, period) {
-        orig(unitPrice, groupCount, total, period);
-        if (typeof updateFloatingSummary === 'function') {
-          updateFloatingSummary(unitPrice, groupCount, total, period);
-        } else {
-          var priceEl = document.getElementById('floatingTotalPrice');
-          if (priceEl) priceEl.textContent = 'NT$ ' + Number(total||0).toLocaleString();
-        }
-      };
-      mod.__patchedFloating = true;
-    } catch (e) { console.error(e); }
-  }
-
-  function normalizePlanAlias() {
-    var map = { monthly:'monthly', month:'monthly', m:'monthly',
-      halfyear:'halfyearly', 'half-year':'halfyearly', halfyearly:'halfyearly',
-      semiannual:'halfyearly', sixmonths:'halfyearly', sixmonth:'halfyearly', '6m':'halfyearly',
-      yearly:'yearly', year:'yearly', annual:'yearly', '12m':'yearly' };
-    var q = new URLSearchParams(location.search).get('plan') || '';
-    var alias = map[String(q).toLowerCase()];
-    if (alias) {
-      var r = document.querySelector('input[name="billingPeriod"][value="'+alias+'"]');
-      if (r) { r.checked = true; r.dispatchEvent(new Event('change', { bubbles: true })); }
-    }
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function(){ normalizePlanAlias(); patch(); });
-  } else { normalizePlanAlias(); patch(); }
-})();
-
-
-/* === injected by fixer: set CTA text & improve toggle aria state === */
+/* injected: ensure aria-expanded toggles correctly on floating toggle */
 (function(){
   function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
   ready(function(){
-    var btn = document.getElementById('floatingCtaBtn');
-    if(btn) btn.textContent = '確認訂閱';
     var tbtn = document.getElementById('floatingToggleBtn');
     var details = document.getElementById('floatingTotalDetails');
     if (tbtn && details) {
-      // ensure initial state
       tbtn.setAttribute('aria-expanded', details.hasAttribute('hidden') ? 'false' : 'true');
-      tbtn.addEventListener('click', function(){
-        var hidden = details.hasAttribute('hidden') || details.style.display==='none';
-        if(hidden){ details.removeAttribute('hidden'); details.style.display='block'; tbtn.setAttribute('aria-expanded','true'); }
-        else { details.setAttribute('hidden',''); details.style.display='none'; tbtn.setAttribute('aria-expanded','false'); }
-      }, { once:false });
+      if (!tbtn.__ariaWired) {
+        tbtn.addEventListener('click', function(){
+          var hidden = details.hasAttribute('hidden') || details.style.display==='none';
+          if(hidden){ details.removeAttribute('hidden'); details.style.display='block'; tbtn.setAttribute('aria-expanded','true'); }
+          else { details.setAttribute('hidden',''); details.style.display='none'; tbtn.setAttribute('aria-expanded','false'); }
+        });
+        tbtn.__ariaWired = true;
+      }
     }
   });
 })();
