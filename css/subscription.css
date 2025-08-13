@@ -170,14 +170,14 @@
     box-shadow: var(--shadow);
 }
 
-.billing-radio:checked + .billing-label {
+.billing-radio:checked ~ .billing-label {
     border-color: var(--primary);
     background: var(--primary-light);
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
     transform: translateY(-2px);
 }
 
-.billing-radio:checked + .billing-label.selected {
+.billing-radio:checked ~ .billing-label.selected {
     border-color: var(--primary);
     background: var(--primary-light);
 }
@@ -198,6 +198,7 @@
 
 /* 調高 z-index 讓優惠標籤永遠在最上層顯示 */
 .billing-discount {
+    pointer-events: none;
     position: absolute;
     /* 已調整至下方，負值偏移取消 */
     /* 使用更飽和的紅色漸層並加上 !important，避免被其他樣式覆蓋 */
@@ -978,48 +979,66 @@
     }
 }
 
-/* === Floating Total - frosted & elevated (distinct from background) === */
+
+/* === Floating Total: flush, no border, no shadow, unified look === */
+.floating-total{
+  background: var(--surface);
+  border: none;
+  box-shadow: none;
+}
+.floating-total-inner,
+.floating-toggle,
+.floating-total-header{
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.floating-total-details{
+  background: transparent !important;
+  border: none !important;
+}
+
+/* CTA with lighter label weight */
+.floating-cta-btn{
+  font-weight: 500 !important;
+}
+
+/* Price typography: only digits bold/bigger */
+#floatingTotalPrice{ font-weight: 400; font-size: 16px; }
+#floatingTotalPrice .price-number{ font-weight: 900; font-size: 24px; letter-spacing: 0.3px; }
+
+/* Optional: tighten the arrow */
+#floatingToggleIcon{ color: var(--text-secondary); opacity: .8; }
+
+
+/* === Floating Total - simple, high-contrast, formula + CTA === */
 .floating-total{
   position:fixed; left:0; right:0; bottom:0; width:100%;
-  background:rgba(255,255,255,.85);
-  -webkit-backdrop-filter:saturate(180%) blur(12px);
-  backdrop-filter:saturate(180%) blur(12px);
-  border-top:1px solid rgba(15,23,42,.06);
-  box-shadow:0 -6px 24px rgba(15,23,42,.08);
-  padding-bottom:max(0px, env(safe-area-inset-bottom));
+  background:#fff;
+  border-top:1px solid var(--border, #e2e8f0);
   z-index:99999;
 }
-.floating-total-inner,.floating-total-header{
+.floating-total-inner{
   max-width:1000px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px;
-  padding:14px 24px;
+  padding:12px 16px;
 }
-.floating-toggle,.floating-total-header .floating-toggle{
-  display:flex; align-items:center; justify-content:space-between; gap:12px; flex:1;
-  background:rgba(255,255,255,.6); border:1px solid rgba(2,6,23,.06); padding:10px 14px; border-radius:14px;
-  color:var(--text-primary, #0f172a);
-}
-.floating-total-label{ font-size:16px; font-weight:500; letter-spacing:.2px; }
-#floatingTotalPrice{ font-weight:400; font-size:16px; }
-#floatingTotalPrice .price-number{ font-weight:800; font-size:28px; letter-spacing:.3px; }
-.floating-toggle-icon{ color:var(--text-secondary, #64748b); opacity:.9; transition:transform .18s ease; }
-.floating-toggle[aria-expanded="true"] .floating-toggle-icon{ transform:rotate(180deg); }
-
+/* make the left block show formula on two lines */
+.floating-toggle{ all:unset; display:flex; flex:1; flex-direction:column; gap:4px; cursor:default; }
+.floating-toggle-icon{ display:none !important; }
+.floating-total-label{ font-size:15px; color:var(--text-primary, #0f172a); }
+.floating-total-label .amount{ font-weight:700; font-size:20px; color:var(--primary, #2563eb); }
+.floating-total-label .price-number{ font-weight:800; font-size:24px; letter-spacing:.2px; }
+/* the subline (unit price) */
+#floatingUnitPrice{ font-size:13px; color:var(--text-secondary, #475569); }
+/* CTA */
 .floating-cta-btn{
-  background:linear-gradient(135deg, var(--primary, #2563eb), #1d4ed8);
-  color:#fff; border:1px solid rgba(255,255,255,.65);
-  padding:12px 26px; border-radius:16px; font-size:16px; font-weight:700;
-  cursor:pointer; transition:transform .12s ease, box-shadow .12s ease;
-  box-shadow:0 10px 24px rgba(37,99,235,.25);
+  background:var(--primary, #2563eb); color:#fff; border:0;
+  padding:12px 20px; border-radius:12px; font-size:16px; font-weight:600; cursor:pointer;
 }
-.floating-cta-btn:hover{ transform:translateY(-1px); box-shadow:0 14px 32px rgba(37,99,235,.28); }
-.floating-cta-btn:focus{ outline:none; box-shadow:0 0 0 4px rgba(37,99,235,.25); }
-.floating-cta-btn:active{ transform:translateY(0); box-shadow:0 8px 18px rgba(37,99,235,.22); }
-
-.floating-total-details{ max-width:1000px; margin:0 auto; padding:0 24px 14px; }
-.floating-total-details[hidden]{ display:none !important; }
-.detail-line{ display:flex; justify-content:space-between; margin-top:8px; color:var(--text-secondary, #64748b); font-size:14px; }
-
+.floating-cta-btn:focus{ outline:none; box-shadow:0 0 0 3px rgba(37,99,235,.25); }
 @media (max-width:768px){
-  .floating-total-inner,.floating-total-header{ flex-direction:column; align-items:stretch; gap:12px; }
+  .floating-total-inner{ flex-direction:column; align-items:stretch; gap:10px; }
   .floating-cta-btn{ width:100%; }
 }
+/* Hide the original in-form submit button to avoid duplicate CTAs */
+form button[type="submit"], form .submit-btn, form .btn-primary, form .primary{ display:none !important; }

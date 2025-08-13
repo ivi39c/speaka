@@ -2,6 +2,17 @@
 
 // 繼承主頁面的核心功能
 const SpeakaCore = {
+  normalizePlan(value){
+    if(!value) return null;
+    const v = String(value).toLowerCase();
+    const map = {
+      'monthly':'monthly','month':'monthly','1m':'monthly','mo':'monthly',
+      'halfyearly':'halfyearly','half-yearly':'halfyearly','halfyear':'halfyearly','half-year':'halfyearly','semiannual':'halfyearly','semi-annually':'halfyearly','semiannually':'halfyearly','6m':'halfyearly',
+      'yearly':'yearly','year':'yearly','annual':'yearly','annually':'yearly','12m':'yearly'
+    };
+    return map[v] || null;
+  },
+
     // 處理導覽列在捲動時的樣式變化
     initNavbarScroll() {
         const navbar = document.querySelector('.navbar');
@@ -95,7 +106,8 @@ const SpeakaCore = {
     // 核心初始化：處理預選方案與導覽列
     init() {
         const urlParams = new URLSearchParams(window.location.search);
-        const selectedPlan = urlParams.get('plan');
+        const rawPlan = urlParams.get('plan');
+        const selectedPlan = this.normalizePlan(rawPlan) || rawPlan;
         if (selectedPlan) {
             const radio = document.querySelector(`input[name="billingPeriod"][value="${selectedPlan}"]`);
             if (radio) radio.checked = true;
@@ -241,6 +253,7 @@ const SubscriptionPage = {
     // 初始化支付方式選擇
     initPaymentMethods() {
         document.querySelectorAll('.payment-option').forEach(option => {
+      option.setAttribute('tabindex','0');
             option.addEventListener('click', function() {
                 document.querySelectorAll('.payment-option').forEach(opt => {
                     opt.classList.remove('selected');
@@ -529,7 +542,8 @@ const SubscriptionPage = {
             let product = parseInt(taxId[i]) * weights[i];
             sum += Math.floor(product / 10) + (product % 10);
         }
-        return sum % 10 === 0;
+        if (sum % 10 === 0) return true;
+        return taxId[6] === '7' && (sum + 1) % 10 === 0;
     },
 
     // 表單驗證主函式
@@ -699,11 +713,11 @@ const SubscriptionPage = {
     // 啟用服務條款／隱私政策連結
     initTermsLinks() {
         document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('terms-link')) {
+            const link = e.target.closest('.terms-link');
+            if (link) {
                 e.preventDefault();
                 e.stopPropagation();
-                const type = e.target.getAttribute('data-type') || 
-                             (e.target.textContent.includes('服務條款') ? 'terms' : 'privacy');
+                const type = link.getAttribute('data-type') || (link.textContent.includes('服務條款') ? 'terms' : 'privacy');
                 if (type === 'terms') {
                     this.showTermsModal();
                 } else if (type === 'privacy') {
@@ -1267,22 +1281,110 @@ window.debugSubscription = {
     }
 };
 
-/* injected: ensure aria-expanded toggles correctly on floating toggle */
-(function(){
-  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
-  ready(function(){
-    var tbtn = document.getElementById('floatingToggleBtn');
-    var details = document.getElementById('floatingTotalDetails');
-    if (tbtn && details) {
-      tbtn.setAttribute('aria-expanded', details.hasAttribute('hidden') ? 'false' : 'true');
-      if (!tbtn.__ariaWired) {
-        tbtn.addEventListener('click', function(){
-          var hidden = details.hasAttribute('hidden') || details.style.display==='none';
-          if(hidden){ details.removeAttribute('hidden'); details.style.display='block'; tbtn.setAttribute('aria-expanded','true'); }
-          else { details.setAttribute('hidden',''); details.style.display='none'; tbtn.setAttribute('aria-expanded','false'); }
-        });
-        tbtn.__ariaWired = true;
-      }
+
+// --- Floating bar helpers (robust to different HTML variants) ---
+function updateFloatingSummary(unitPrice, groupCount, subtotal, period){
+  // Wrap digits in <span class="price-number"> for bold-only numbers
+  const amount = subtotal.toLocaleString();
+  const priceHTML = `NT$ <span class="price-number">${amount}</span>`;
+  const priceEl = document.getElementById('floatingTotalPrice');
+  if (priceEl) priceEl.innerHTML = priceHTML;
+  const unitEl = document.getElementById('floatingUnitPrice');
+  if (unitEl) unitEl.textContent = `NT$ ${unitPrice.toLocaleString()} / 群組 / ${period}`;
+  const gcEl = document.getElementById('floatingGroupCount');
+  if (gcEl) gcEl.textContent = `${groupCount} 個群組`;
+  const subEl = document.getElementById('floatingSubtotal');
+  if (subEl) subEl.textContent = `NT$ ${subtotal.toLocaleString()}`;
+}
+
+(function attachFloatingBar(){
+  function patch(){
+    const mod = window.SubscriptionSpeaka?.SubscriptionPage;
+    if(!mod || !mod.updatePriceDisplay) return;
+    if(mod.__patchedFloating) return;
+    const original = mod.updatePriceDisplay.bind(mod);
+    mod.updatePriceDisplay = function(unitPrice, groupCount, total, period){
+      original(unitPrice, groupCount, total, period);
+      updateFloatingSummary(unitPrice, groupCount, total, period);
+    };
+    mod.__patchedFloating = true;
+
+    // Toggle (old or new HTML)
+    const toggleBtn = document.getElementById('floatingToggleBtn') || document.querySelector('.floating-total');
+    const details   = document.getElementById('floatingTotalDetails');
+    const icon      = document.getElementById('floatingToggleIcon');
+    if (toggleBtn && details) {
+      const toggle = () => {
+        const hidden = details.hasAttribute('hidden') || details.style.display === 'none' || !details.style.display;
+        if (hidden) {
+          details.removeAttribute('hidden'); details.style.display='block'; if(icon) icon.textContent='▼';
+          toggleBtn.setAttribute && toggleBtn.setAttribute('aria-expanded','true');
+        } else {
+          details.setAttribute('hidden',''); details.style.display='none'; if(icon) icon.textContent='▲';
+          toggleBtn.setAttribute && toggleBtn.setAttribute('aria-expanded','false');
+        }
+      };
+      toggleBtn.addEventListener('click', (e)=>{
+        // avoid clicking CTA
+        if(e.target && (e.target.id==='floatingCtaBtn' || e.target.closest && e.target.closest('#floatingCtaBtn'))) return;
+        toggle();
+      });
     }
+
+    // CTA submit
+    const cta = document.getElementById('floatingCtaBtn');
+    const form = document.getElementById('subscriptionForm');
+    if (cta && form) {
+      cta.addEventListener('click', (e)=>{
+        e.preventDefault();
+        if (typeof form.requestSubmit === 'function') form.requestSubmit();
+        else form.submit();
+      });
+    }
+
+    // First sync
+    window.updateSubscriptionPrice && window.updateSubscriptionPrice();
+  }
+  window.addEventListener('subscriptionPageReady', patch);
+  if (document.readyState !== 'loading') setTimeout(patch,0);
+})();
+
+
+/* injected: show '方案 × 群組數 = 總計' in floating bar (no animation) */
+(function(){
+  const PLAN_LABEL = { monthly:'月繳', halfyearly:'半年繳', yearly:'年繳' };
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
+  function render(unitPrice, count, total, planKey, periodText){
+    const labelEl = document.querySelector('.floating-total-label');
+    if(labelEl){
+      const plan = PLAN_LABEL[planKey] || '';
+      const totalStr = Number(total||0).toLocaleString();
+      labelEl.innerHTML = `${plan} × ${count} 群組 = <span class="amount">NT$ <span class="price-number">${totalStr}</span></span>`;
+    }
+    const unitEl = document.getElementById('floatingUnitPrice');
+    if(unitEl){
+      unitEl.textContent = `單價 NT$ ${Number(unitPrice||0).toLocaleString()} / 群組 / ${periodText||'月'}`;
+    }
+    const cta = document.getElementById('floatingCtaBtn');
+    if(cta && !cta.textContent.trim()) cta.textContent = '立即訂閱';
+  }
+  ready(function(){
+    try{
+      var mod = window.SubscriptionPage || (window.SubscriptionSpeaka && window.SubscriptionSpeaka.SubscriptionPage) || SubscriptionPage;
+      if(mod && mod.updatePriceDisplay && !mod.__patchedFormula){
+        const orig = mod.updatePriceDisplay.bind(mod);
+        mod.updatePriceDisplay = function(unit, qty, total, period){
+          orig(unit, qty, total, period);
+          const planKey = document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
+          render(unit, qty, total, planKey, period);
+        };
+        mod.__patchedFormula = true;
+      }
+    }catch(e){ console.error(e); }
+    const planKey = document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
+    const count = parseInt(document.getElementById('groupCount')?.value) || 1;
+    const unit = (window.SubscriptionPage && SubscriptionPage.prices && SubscriptionPage.prices[planKey]?.price) || 199;
+    const period = (window.SubscriptionPage && SubscriptionPage.prices && SubscriptionPage.prices[planKey]?.period) || '月';
+    render(unit, count, unit*count, planKey, period);
   });
 })();
