@@ -1009,3 +1009,35 @@
 
 /* Optional: tighten the arrow */
 #floatingToggleIcon{ color: var(--text-secondary); opacity: .8; }
+
+
+
+/* === Floating Total (flush, unified, no border/shadow) — reinforced === */
+.floating-total{
+  background: var(--surface) !important;
+  border: none !important;
+  border-top: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+.floating-total-header,
+.floating-toggle{
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+.floating-total-details{
+  background: transparent !important;
+  border: 0 !important;
+}
+
+/* CTA label weight softer */
+.floating-cta-btn{ font-weight: 500 !important; }
+
+/* Price typography: only the number is bold/bigger */
+#floatingTotalPrice{ font-weight: 400; font-size: 16px; }
+#floatingTotalPrice .price-number{ font-weight: 900; font-size: 24px; letter-spacing: .3px; }
+
+/* Arrow tone */
+#floatingToggleIcon{ color: var(--text-secondary); opacity: .8; }
