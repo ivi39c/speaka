@@ -1304,3 +1304,24 @@ window.debugSubscription = {
     document.addEventListener('DOMContentLoaded', function(){ normalizePlanAlias(); patch(); });
   } else { normalizePlanAlias(); patch(); }
 })();
+
+
+/* === injected by fixer: set CTA text & improve toggle aria state === */
+(function(){
+  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
+  ready(function(){
+    var btn = document.getElementById('floatingCtaBtn');
+    if(btn) btn.textContent = '確認訂閱';
+    var tbtn = document.getElementById('floatingToggleBtn');
+    var details = document.getElementById('floatingTotalDetails');
+    if (tbtn && details) {
+      // ensure initial state
+      tbtn.setAttribute('aria-expanded', details.hasAttribute('hidden') ? 'false' : 'true');
+      tbtn.addEventListener('click', function(){
+        var hidden = details.hasAttribute('hidden') || details.style.display==='none';
+        if(hidden){ details.removeAttribute('hidden'); details.style.display='block'; tbtn.setAttribute('aria-expanded','true'); }
+        else { details.setAttribute('hidden',''); details.style.display='none'; tbtn.setAttribute('aria-expanded','false'); }
+      }, { once:false });
+    }
+  });
+})();

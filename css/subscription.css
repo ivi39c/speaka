@@ -995,3 +995,48 @@
         transform: none;
     }
 }
+
+/* === Floating Total - refreshed style (clean, unified, nice look) === */
+.floating-total{
+  position:fixed; left:0; right:0; bottom:0; width:100%;
+  background:var(--surface, #f8fafc);
+  padding-bottom: max(0px, env(safe-area-inset-bottom));
+  z-index:9999; border:none; box-shadow:none;
+}
+/* support both old(.floating-total-header) and new(.floating-total-inner) wrappers */
+.floating-total-inner, .floating-total-header{
+  max-width:1000px; margin:0 auto;
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  padding:14px 20px;
+}
+.floating-toggle, .floating-total-header .floating-toggle{
+  display:flex; align-items:center; justify-content:space-between; gap:12px; flex:1;
+  background:transparent; border:0; padding:0; cursor:pointer; color:var(--text-primary, #0f172a);
+}
+.floating-total-label{ font-size:16px; font-weight:500; letter-spacing:.2px; }
+#floatingTotalPrice{ font-weight:400; font-size:16px; }
+#floatingTotalPrice .price-number{ font-weight:900; font-size:28px; letter-spacing:.3px; }
+.floating-toggle-icon{ color:var(--text-secondary, #64748b); opacity:.85; transition:transform .18s ease; }
+.floating-toggle[aria-expanded="true"] .floating-toggle-icon{ transform:rotate(180deg); }
+
+/* CTA button lives on the floating bar */
+.floating-cta-btn{
+  background:linear-gradient(135deg, var(--primary, #2563eb), #3b82f6);
+  color:#fff; border:none; padding:12px 28px; border-radius:16px;
+  font-size:16px; font-weight:600; cursor:pointer; transition:transform .15s ease, box-shadow .15s ease;
+}
+.floating-cta-btn:hover{ transform:translateY(-1px); box-shadow:0 10px 20px rgba(37,99,235,.18); }
+.floating-cta-btn:active{ transform:translateY(0); box-shadow:none; }
+
+/* Collapsible details */
+.floating-total-details{ max-width:1000px; margin:0 auto; padding:0 20px 14px; }
+.floating-total-details[hidden]{ display:none !important; }
+.detail-line{ display:flex; justify-content:space-between; margin-top:8px; color:var(--text-secondary, #64748b); font-size:14px; }
+
+/* Hide any old in-form submit buttons */
+.submit-btn, .form-submit, form button[type="submit"]{ display:none !important; }
+
+@media (max-width:768px){
+  .floating-total-inner, .floating-total-header{ flex-direction:column; align-items:stretch; gap:12px; }
+  .floating-cta-btn{ width:100%; }
+}
