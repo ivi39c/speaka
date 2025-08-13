@@ -1267,94 +1267,40 @@ window.debugSubscription = {
     }
 };
 
-/* PATCH: robust floating bar wiring */
-
-// === Floating bar wiring (robust for old/new markup) ===
-(function setupFloatingBar(){
-  function toggleDetails(){
-    var details = document.getElementById('floatingTotalDetails');
-    var icon = document.getElementById('floatingToggleIcon');
-    if(!details) return;
-    var isHidden = details.hasAttribute('hidden') || details.style.display === 'none' || !details.offsetParent && details.style.display !== 'block';
-    if(isHidden){
-      details.removeAttribute('hidden');
-      details.style.display = 'block';
-      if(icon) icon.textContent = '▼';
-    }else{
-      details.setAttribute('hidden','');
-      details.style.display = 'none';
-      if(icon) icon.textContent = '▲';
-    }
+/* === injected by fixer: sync floating summary & plan aliases === */
+(function() {
+  function patch() {
+    try {
+      var mod = window.SubscriptionPage || (window.SubscriptionSpeaka && window.SubscriptionSpeaka.SubscriptionPage) || SubscriptionPage;
+      if (!mod || !mod.updatePriceDisplay || mod.__patchedFloating) return;
+      var orig = mod.updatePriceDisplay.bind(mod);
+      mod.updatePriceDisplay = function(unitPrice, groupCount, total, period) {
+        orig(unitPrice, groupCount, total, period);
+        if (typeof updateFloatingSummary === 'function') {
+          updateFloatingSummary(unitPrice, groupCount, total, period);
+        } else {
+          var priceEl = document.getElementById('floatingTotalPrice');
+          if (priceEl) priceEl.textContent = 'NT$ ' + Number(total||0).toLocaleString();
+        }
+      };
+      mod.__patchedFloating = true;
+    } catch (e) { console.error(e); }
   }
-  function bind(){
-    var toggleBtn = document.getElementById('floatingToggleBtn');
-    var header = document.getElementById('floatingTotal')?.querySelector('.floating-total-header');
-    var cta = document.getElementById('floatingCtaBtn') || document.querySelector('.floating-cta-btn');
-    var form = document.getElementById('subscriptionForm');
-    if(toggleBtn){ toggleBtn.addEventListener('click', toggleDetails); }
-    if(header){ header.addEventListener('click', toggleDetails); }
-    if(cta && form){
-      cta.addEventListener('click', function(e){
-        e.preventDefault();
-        if(typeof form.requestSubmit === 'function'){ form.requestSubmit(); }
-        else{ form.submit(); }
-      });
-    }
-  }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bind); else bind();
-})();
 
-// Ensure floating price renders with bold number only
-function updateFloatingSummary(unitPrice, groupCount, subtotal, period){
-  var amount = Number(subtotal || 0).toLocaleString();
-  var priceEl = document.getElementById('floatingTotalPrice');
-  if(priceEl){ priceEl.innerHTML = 'NT$ <span class="price-number">'+amount+'</span>'; }
-  var unitEl = document.getElementById('floatingUnitPrice');
-  if(unitEl){ unitEl.textContent = 'NT$ '+Number(unitPrice||0).toLocaleString()+' / 群組 / '+(period||'月'); }
-  var gcEl = document.getElementById('floatingGroupCount');
-  if(gcEl){ gcEl.textContent = (groupCount||1)+' 個群組'; }
-  var subEl = document.getElementById('floatingSubtotal');
-  if(subEl){ subEl.textContent = 'NT$ '+Number(subtotal||0).toLocaleString(); }
-}
-
-// Patch into SubscriptionPage.updatePriceDisplay once ready
-(function attachFloatingPatch(){
-  function patch(){
-    var mod = window.SubscriptionSpeaka && window.SubscriptionSpeaka.SubscriptionPage;
-    if(!mod || !mod.updatePriceDisplay || mod.__patchedFloating) return;
-    var original = mod.updatePriceDisplay.bind(mod);
-    mod.updatePriceDisplay = function(unitPrice, groupCount, total, period){
-      original(unitPrice, groupCount, total, period);
-      updateFloatingSummary(unitPrice, groupCount, total, period);
-    };
-    mod.__patchedFloating = true;
-    window.updateSubscriptionPrice && window.updateSubscriptionPrice();
-  }
-  window.addEventListener('subscriptionPageReady', patch);
-  if(document.readyState !== 'loading') setTimeout(patch,0);
-})();
-
-// Normalize plan aliases (halfyear => halfyearly, etc.) and preselect on load
-(function normalizeAndPreselect(){
-  function normalizePlan(v){
-    if(!v) return '';
-    v = String(v).toLowerCase().replace(/[^a-z0-9]/g,'');
+  function normalizePlanAlias() {
     var map = { monthly:'monthly', month:'monthly', m:'monthly',
-      halfyear:'halfyearly', halfyearly:'halfyearly', semiannual:'halfyearly', sixmonths:'halfyearly', sixmonth:'halfyearly', '6m':'halfyearly',
-      yearly:'yearly', annual:'yearly', year:'yearly', y:'yearly', '12m':'yearly' };
-    return map[v] || v;
-  }
-  function run(){
-    var params = new URLSearchParams(window.location.search);
-    var plan = normalizePlan(params.get('plan'));
-    if(!plan) return;
-    var radio = document.querySelector('input[name="billingPeriod"][value="'+plan+'"]');
-    if(radio){
-      radio.checked = true;
-      // ensure highlight
-      var ev = new Event('change', { bubbles: true });
-      radio.dispatchEvent(ev);
+      halfyear:'halfyearly', 'half-year':'halfyearly', halfyearly:'halfyearly',
+      semiannual:'halfyearly', sixmonths:'halfyearly', sixmonth:'halfyearly', '6m':'halfyearly',
+      yearly:'yearly', year:'yearly', annual:'yearly', '12m':'yearly' };
+    var q = new URLSearchParams(location.search).get('plan') || '';
+    var alias = map[String(q).toLowerCase()];
+    if (alias) {
+      var r = document.querySelector('input[name="billingPeriod"][value="'+alias+'"]');
+      if (r) { r.checked = true; r.dispatchEvent(new Event('change', { bubbles: true })); }
     }
   }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function(){ normalizePlanAlias(); patch(); });
+  } else { normalizePlanAlias(); patch(); }
 })();
