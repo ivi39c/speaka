@@ -1475,3 +1475,99 @@ function updateFloatingSummary(unitPrice, groupCount, subtotal, period){
     render(unit, count, unit*count, planKey, period);
   });
 })();
+
+
+/* injected: hardened floating bar (state class, observer, self-healing CTA) */
+(function(){
+  const PLAN_TEXT = { monthly:'月繳', halfyearly:'半年繳', yearly:'年繳' };
+  function ready(cb){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', cb); else cb(); }
+
+  function ensureChevron(iconEl){
+    if (!iconEl) return;
+    iconEl.innerHTML = '<svg class="floating-chevron" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.7 9.3a1 1 0 0 1 1.4 0L12 13.2l3.9-3.9a1 1 0 1 1 1.4 1.4l-4.6 4.6a1 1 0 0 1-1.4 0L6.7 10.7a1 1 0 0 1 0-1.4z"/></svg>';
+  }
+
+  function ensureStructure(){
+    const root = document.querySelector('.floating-total');
+    if (!root) return null;
+    const wrap = root.querySelector('.floating-total-inner, .floating-total-header') || root;
+    // Toggle button
+    let tbtn = document.getElementById('floatingToggleBtn');
+    if (!tbtn){
+      tbtn = document.createElement('button');
+      tbtn.id='floatingToggleBtn'; tbtn.type='button'; tbtn.className='floating-toggle-btn';
+      tbtn.innerHTML = '<span id="floatingToggleIcon" aria-hidden="true"></span>';
+      wrap.appendChild(tbtn);
+    }
+    ensureChevron(document.getElementById('floatingToggleIcon'));
+    // CTA
+    let cta = document.getElementById('floatingCtaBtn');
+    if (!cta){
+      cta = document.createElement('button');
+      cta.id='floatingCtaBtn'; cta.className='floating-cta-btn'; cta.type='button'; cta.textContent='立即訂閱';
+      wrap.insertBefore(cta, tbtn);
+    }
+    if (!cta.textContent.trim()) cta.textContent = '立即訂閱';
+    // Clicks
+    const details = document.getElementById('floatingTotalDetails');
+    tbtn.addEventListener('click', function(ev){
+      ev.preventDefault(); ev.stopPropagation();
+      const open = root.classList.toggle('is-open');
+      tbtn.setAttribute('aria-expanded', open ? 'true':'false');
+      if (details){ details.style.display = open ? 'block':'none'; }
+    });
+    cta.addEventListener('click', function(){
+      const form = document.querySelector('form#subscriptionForm') || document.querySelector('form');
+      if (form && form.requestSubmit) form.requestSubmit(); else if (form) form.submit();
+    });
+    return {root,wrap,cta,tbtn};
+  }
+
+  function renderFormula(unitPrice, count, total, planKey, periodText){
+    const labelEl = document.querySelector('.floating-total-label');
+    if(labelEl){
+      labelEl.innerHTML = `${PLAN_TEXT[planKey]||''} × ${count} 群組 = <span class="amount">NT$ <span class="price-number">${Number(total||0).toLocaleString()}</span></span>`;
+    }
+    const unitEl = document.getElementById('floatingUnitPrice');
+    if(unitEl){ unitEl.textContent = `單價 NT$ ${Number(unitPrice||0).toLocaleString()} / 群組 / ${periodText||'月'}`; }
+  }
+
+  function hookPriceUpdates(){
+    try{
+      var mod = window.SubscriptionPage || (window.SubscriptionSpeaka && window.SubscriptionSpeaka.SubscriptionPage) || window.SubscriptionPage;
+      if(mod && mod.updatePriceDisplay && !mod.__hardenedHook){
+        const orig = mod.updatePriceDisplay.bind(mod);
+        mod.updatePriceDisplay = function(unit, qty, total, period){
+          orig(unit, qty, total, period);
+          const plan = document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
+          renderFormula(unit, qty, total, plan, period);
+          ensureStructure(); // keep CTA present
+        };
+        mod.__hardenedHook = true;
+      }
+    }catch(e){ /* no-op */ }
+  }
+
+  function initialRender(){
+    const plan = document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
+    const count = parseInt(document.getElementById('groupCount')?.value) || 1;
+    let unit = 199, period = '月';
+    if (window.SubscriptionPage && SubscriptionPage.prices && SubscriptionPage.prices[plan]){
+      unit = SubscriptionPage.prices[plan].price;
+      period = SubscriptionPage.prices[plan].period || period;
+    }
+    renderFormula(unit, count, unit*count, plan, period);
+  }
+
+  function observeFloatingBar(){
+    const mo = new MutationObserver(()=>ensureStructure());
+    mo.observe(document.body, {childList:true,subtree:true});
+  }
+
+  ready(function(){
+    ensureStructure();
+    hookPriceUpdates();
+    initialRender();
+    observeFloatingBar();
+  });
+})();

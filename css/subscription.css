@@ -1095,3 +1095,29 @@ form button[type="submit"], form .submit-btn, form .btn-primary, form .primary{ 
 }
 /* Hide in-form submit only */
 form button[type="submit"], form .submit-btn, form .btn-primary, form .primary{ display:none !important; }
+
+
+/* === Floating Total - hardened (state class, higher specificity) === */
+.floating-total{position:fixed;left:0;right:0;bottom:0;width:100%;background:#fff;border-top:1px solid #e2e8f0;box-shadow:0 -8px 24px rgba(2,6,23,.06);z-index:100000;}
+.floating-total .floating-total-inner{max-width:1000px;margin:0 auto;display:flex;align-items:center;gap:12px;justify-content:space-between;padding:12px 16px;}
+.floating-total .floating-toggle{all:unset;display:flex;flex:1;flex-direction:column;gap:4px;cursor:default;}
+.floating-total .floating-total-label{font-size:15px;color:#0f172a;}
+.floating-total .floating-total-label .amount{font-weight:700;font-size:20px;color:#2563eb;}
+.floating-total .floating-total-label .price-number{font-weight:800;font-size:24px;letter-spacing:.2px;}
+.floating-total #floatingUnitPrice{font-size:13px;color:#475569;}
+.floating-total .floating-cta-btn{background:#2563eb;color:#fff;border:0;padding:12px 18px;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.floating-total .floating-cta-btn:focus{outline:none;box-shadow:0 0 0 3px rgba(37,99,235,.25);}
+.floating-total .floating-toggle-btn{appearance:none;border:1px solid #e2e8f0;background:#fff;color:#475569;width:36px;height:36px;border-radius:999px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.floating-total .floating-toggle-btn:focus{outline:none;box-shadow:0 0 0 3px rgba(2,132,199,.25);}
+.floating-total .floating-chevron{width:18px;height:18px;transition:transform .15s ease;}
+.floating-total.is-open .floating-chevron{transform:rotate(180deg);}
+.floating-total .floating-total-details{max-width:1000px;margin:0 auto;padding:0 16px 12px;display:none;}
+.floating-total.is-open .floating-total-details{display:block;}
+.floating-total .detail-line{display:flex;justify-content:space-between;margin-top:8px;color:#475569;font-size:14px;}
+@media (max-width:768px){
+  .floating-total .floating-total-inner{flex-wrap:wrap;}
+  .floating-total .floating-cta-btn{flex:0 0 100%;order:2;}
+  .floating-total .floating-toggle-btn{order:3;}
+}
+/* Hide only in-form submit (keep CTA) */
+form button[type="submit"],form .submit-btn,form .btn-primary,form .primary{display:none!important;}
