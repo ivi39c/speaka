@@ -170,14 +170,14 @@
     box-shadow: var(--shadow);
 }
 
-.billing-radio:checked ~ .billing-label {
+.billing-radio:checked + .billing-label {
     border-color: var(--primary);
     background: var(--primary-light);
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
     transform: translateY(-2px);
 }
 
-.billing-radio:checked ~ .billing-label.selected {
+.billing-radio:checked + .billing-label.selected {
     border-color: var(--primary);
     background: var(--primary-light);
 }
@@ -198,7 +198,6 @@
 
 /* 調高 z-index 讓優惠標籤永遠在最上層顯示 */
 .billing-discount {
-    pointer-events: none;
     position: absolute;
     /* 已調整至下方，負值偏移取消 */
     /* 使用更飽和的紅色漸層並加上 !important，避免被其他樣式覆蓋 */
@@ -980,64 +979,84 @@
 }
 
 
-/* === Floating Total: flush, no border, no shadow, unified look === */
+/* === Floating Total (robust, unified with page, no border/shadow) === */
 .floating-total{
-  background: var(--surface);
-  border: none;
-  box-shadow: none;
-}
-.floating-total-inner,
-.floating-toggle,
-.floating-total-header{
-  border: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
-}
-.floating-total-details{
-  background: transparent !important;
-  border: none !important;
-}
-
-/* CTA with lighter label weight */
-.floating-cta-btn{
-  font-weight: 500 !important;
-}
-
-/* Price typography: only digits bold/bigger */
-#floatingTotalPrice{ font-weight: 400; font-size: 16px; }
-#floatingTotalPrice .price-number{ font-weight: 900; font-size: 24px; letter-spacing: 0.3px; }
-
-/* Optional: tighten the arrow */
-#floatingToggleIcon{ color: var(--text-secondary); opacity: .8; }
-
-
-
-/* === Floating Total (flush, unified, no border/shadow) — reinforced === */
-.floating-total{
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
   background: var(--surface) !important;
   border: none !important;
   border-top: none !important;
   box-shadow: none !important;
-  border-radius: 0 !important;
+  z-index: 9999;
 }
-.floating-total-header,
+
+/* New markup wrapper */
+.floating-total-inner{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 12px 16px;
+}
+
+/* Fallback – old markup header acts like the toggle button */
+.floating-total-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+
+/* Toggle button (new markup) */
 .floating-toggle{
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
-  border-radius: 0 !important;
+  padding: 12px 16px;
+  text-align: left;
 }
+
+/* Details (works for both display:none; and [hidden]) */
 .floating-total-details{
   background: transparent !important;
   border: 0 !important;
+  padding: 12px 16px;
+  color: var(--text-secondary);
+  font-size: 14px;
 }
+.floating-total-details[hidden]{ display: none !important; }
 
-/* CTA label weight softer */
-.floating-cta-btn{ font-weight: 500 !important; }
+/* CTA button visuals */
+.floating-cta-btn{
+  background: linear-gradient(135deg, var(--primary), #3b82f6) !important;
+  color: #fff !important;
+  border: 0 !important;
+  padding: 12px 18px !important;
+  border-radius: 16px !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  cursor: pointer;
+}
 
 /* Price typography: only the number is bold/bigger */
 #floatingTotalPrice{ font-weight: 400; font-size: 16px; }
-#floatingTotalPrice .price-number{ font-weight: 900; font-size: 24px; letter-spacing: .3px; }
+#floatingTotalPrice .price-number{ font-weight: 900; font-size: 24px; letter-spacing: .2px; }
 
-/* Arrow tone */
-#floatingToggleIcon{ color: var(--text-secondary); opacity: .8; }
+/* Arrow */
+#floatingToggleIcon{ color: var(--text-secondary); opacity: .75; }
+
+@media (max-width: 640px){
+  .floating-total-inner{ flex-direction: column; align-items: stretch; }
+  .floating-cta-btn{ width: 100%; }
+}
