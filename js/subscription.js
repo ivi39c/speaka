@@ -1350,7 +1350,7 @@ function updateFloatingSummary(unitPrice, groupCount, subtotal, period){
 })();
 
 
-/* injected: show '方案 × 群組數 = 總計' in floating bar (no animation) */
+/* injected v2: robust chevron toggle + guaranteed CTA + formula render */
 (function(){
   const PLAN_LABEL = { monthly:'月繳', halfyearly:'半年繳', yearly:'年繳' };
   function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
@@ -1362,23 +1362,36 @@ function updateFloatingSummary(unitPrice, groupCount, subtotal, period){
       labelEl.innerHTML = `${plan} × ${count} 群組 = <span class="amount">NT$ <span class="price-number">${totalStr}</span></span>`;
     }
     const unitEl = document.getElementById('floatingUnitPrice');
-    if(unitEl){
-      unitEl.textContent = `單價 NT$ ${Number(unitPrice||0).toLocaleString()} / 群組 / ${periodText||'月'}`;
-    }
+    if(unitEl){ unitEl.textContent = `單價 NT$ ${Number(unitPrice||0).toLocaleString()} / 群組 / ${periodText||'月'}`; }
     const cta = document.getElementById('floatingCtaBtn');
     if(cta && !cta.textContent.trim()) cta.textContent = '立即訂閱';
   }
   ready(function(){
+    var tbtn = document.getElementById('floatingToggleBtn');
+    var details = document.getElementById('floatingTotalDetails');
+    var icon = document.getElementById('floatingToggleIcon');
+    var cta = document.getElementById('floatingCtaBtn');
+    if (cta && !cta.textContent.trim()) cta.textContent = '立即訂閱';
+    if (icon){ icon.innerHTML = '<svg class="floating-chevron" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.7 9.3a1 1 0 0 1 1.4 0L12 13.2l3.9-3.9a1 1 0 1 1 1.4 1.4l-4.6 4.6a1 1 0 0 1-1.4 0L6.7 10.7a1 1 0 0 1 0-1.4z"/></svg>'; }
+    if (tbtn) tbtn.classList.add('floating-toggle-btn');
+    if (tbtn && details){
+      tbtn.setAttribute('aria-expanded', details.hasAttribute('hidden') ? 'false' : 'true');
+      tbtn.addEventListener('click', function(){
+        var hidden = details.hasAttribute('hidden') || details.style.display==='none';
+        if (hidden){ details.removeAttribute('hidden'); details.style.display='block'; tbtn.setAttribute('aria-expanded','true'); }
+        else { details.setAttribute('hidden',''); details.style.display='none'; tbtn.setAttribute('aria-expanded','false'); }
+      });
+    }
     try{
       var mod = window.SubscriptionPage || (window.SubscriptionSpeaka && window.SubscriptionSpeaka.SubscriptionPage) || SubscriptionPage;
-      if(mod && mod.updatePriceDisplay && !mod.__patchedFormula){
-        const orig = mod.updatePriceDisplay.bind(mod);
+      if(mod && mod.updatePriceDisplay && !mod.__patchedSleekFormula){
+        var orig = mod.updatePriceDisplay.bind(mod);
         mod.updatePriceDisplay = function(unit, qty, total, period){
           orig(unit, qty, total, period);
           const planKey = document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
           render(unit, qty, total, planKey, period);
         };
-        mod.__patchedFormula = true;
+        mod.__patchedSleekFormula = true;
       }
     }catch(e){ console.error(e); }
     const planKey = document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
