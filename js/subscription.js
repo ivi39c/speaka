@@ -580,6 +580,77 @@ const SubscriptionPage = {
         errorMessages.forEach(msg => msg.remove());
     },
 
+    // 清除所有錯誤狀態
+    clearAllErrors() {
+        // 清除欄位錯誤
+        document.querySelectorAll('.form-input.error, .form-select.error').forEach(field => {
+            this.clearFieldError(field);
+        });
+        
+        // 清除區段錯誤
+        document.querySelectorAll('.section-error').forEach(error => {
+            error.remove();
+        });
+        
+        // 清除區段高亮
+        document.querySelectorAll('.error-section').forEach(section => {
+            section.classList.remove('error-section');
+        });
+    },
+
+    // 顯示區段錯誤
+    showSectionError(section, message) {
+        section.classList.add('error-section');
+        
+        // 移除舊的錯誤訊息
+        const oldError = section.querySelector('.section-error');
+        if (oldError) oldError.remove();
+        
+        // 添加錯誤訊息
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'section-error';
+        errorDiv.style.cssText = `
+            color: var(--error, #dc2626);
+            font-size: 14px;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: rgba(239, 68, 68, 0.1);
+            border-radius: 6px;
+            border-left: 3px solid var(--error, #dc2626);
+        `;
+        errorDiv.textContent = message;
+        
+        const title = section.querySelector('.section-title');
+        if (title) {
+            title.insertAdjacentElement('afterend', errorDiv);
+        } else {
+            section.insertBefore(errorDiv, section.firstChild);
+        }
+    },
+
+    // 滾動到錯誤欄位並聚焦
+    scrollToAndFocusField(field) {
+        // 滾動到欄位
+        field.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'nearest'
+        });
+        
+        // 延遲聚焦和高亮
+        setTimeout(() => {
+            field.focus();
+            
+            // 添加呼吸動畫效果
+            field.style.animation = 'fieldHighlight 2s ease-out';
+            
+            // 清除動畫
+            setTimeout(() => {
+                field.style.animation = '';
+            }, 2000);
+        }, 500);
+    },
+
     // 台灣統一編號合法性檢查
     isValidTaxId(taxId) {
         if (!/^\d{8}$/.test(taxId)) return false;
@@ -593,75 +664,94 @@ const SubscriptionPage = {
         return taxId[6] === '7' && (sum + 1) % 10 === 0;
     },
 
-    // 表單驗證主函式
+    // 表單驗證主函式（改善版）
     validateForm() {
+        // 先清除所有之前的錯誤狀態
+        this.clearAllErrors();
+        
         let isValid = true;
-        const errors = [];
+        let firstErrorField = null;
+        
         const requiredFields = [
-            { id: 'contactName', name: '聯絡人姓名' },
-            { id: 'email',      name: '電子郵件'   },
-            { id: 'phone',      name: '聯絡電話'   },
-            { id: 'invoiceType',name: '發票類型'   }
+            { id: 'contactName', name: '聯絡人姓名', section: 'billing-info' },
+            { id: 'lineId', name: 'LINE ID', section: 'billing-info' },
+            { id: 'email', name: '電子郵件', section: 'billing-info' },
+            { id: 'phone', name: '聯絡電話', section: 'billing-info' },
+            { id: 'invoiceType', name: '發票類型', section: 'billing-info' }
         ];
+        
+        // 檢查基本必填欄位
         requiredFields.forEach(field => {
             const input = document.getElementById(field.id);
             if (input && !input.value.trim()) {
-                errors.push(`${field.name}為必填欄位`);
-                this.showFieldError(input, `${field.name}為必填欄位`);
+                this.showFieldError(input, `請填寫${field.name}`);
+                if (!firstErrorField) firstErrorField = input;
                 isValid = false;
             }
         });
+        
+        // 檢查發票相關欄位
         const invoiceType = document.getElementById('invoiceType')?.value;
         if (invoiceType === 'company') {
             const companyName = document.getElementById('companyName');
-            const taxId       = document.getElementById('taxId');
+            const taxId = document.getElementById('taxId');
+            
             if (!companyName?.value.trim()) {
-                errors.push('公司名稱為必填欄位');
-                this.showFieldError(companyName, '公司名稱為必填欄位');
+                this.showFieldError(companyName, '請填寫公司名稱');
+                if (!firstErrorField) firstErrorField = companyName;
                 isValid = false;
             }
             if (!taxId?.value.trim()) {
-                errors.push('統一編號為必填欄位');
-                this.showFieldError(taxId, '統一編號為必填欄位');
+                this.showFieldError(taxId, '請填寫統一編號');
+                if (!firstErrorField) firstErrorField = taxId;
                 isValid = false;
             } else if (taxId.validator && !taxId.validator.validate(taxId)) {
+                if (!firstErrorField) firstErrorField = taxId;
                 isValid = false;
             }
         }
+        
+        // 驗證欄位格式
         ['email', 'phone', 'contactName'].forEach(fieldId => {
             const field = document.getElementById(fieldId);
             if (field && field.value && field.validator) {
                 if (!field.validator.validate(field)) {
+                    if (!firstErrorField) firstErrorField = field;
                     isValid = false;
                 }
             }
         });
+        
+        // 檢查支付方式
         const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
         if (!paymentMethod) {
-            errors.push('請選擇支付方式');
+            const paymentSection = document.querySelector('.payment-section');
+            if (paymentSection) {
+                this.showSectionError(paymentSection, '請選擇支付方式');
+                if (!firstErrorField) firstErrorField = document.querySelector('.payment-option');
+            }
             isValid = false;
         }
+        
+        // 檢查條款同意
         const agreeTerms = document.getElementById('agreeTerms');
         if (agreeTerms && !agreeTerms.checked) {
-            errors.push('請同意服務條款和隱私政策');
+            const termsSection = document.querySelector('.terms-section');
+            if (termsSection) {
+                this.showSectionError(termsSection, '請同意服務條款和隱私政策');
+                if (!firstErrorField) firstErrorField = agreeTerms;
+            }
             isValid = false;
         }
-        if (!isValid && errors.length > 0) {
-            this.showValidationErrors(errors);
+        
+        // 如果有錯誤，引導用戶到第一個錯誤欄位
+        if (!isValid && firstErrorField) {
+            this.scrollToAndFocusField(firstErrorField);
         }
+        
         return isValid;
     },
 
-    // 顯示驗證錯誤彈窗
-    showValidationErrors(errors) {
-        const errorMessage = '請修正以下錯誤：\n\n' + errors.join('\n');
-        this.showErrorModal('表單驗證錯誤', errorMessage);
-        const firstError = document.querySelector('.form-input.error');
-        if (firstError) {
-            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            setTimeout(() => firstError.focus(), 500);
-        }
-    },
 
     // 通用錯誤訊息彈窗
     showErrorModal(title, message) {
@@ -1311,6 +1401,88 @@ window.SubscriptionSpeaka = {
     Effects: InteractiveEffects,
     init: initializeSubscriptionPage
 };
+
+// 注入增強驗證動畫樣式
+if (!document.getElementById('enhanced-validation-styles')) {
+    const enhancedStyles = document.createElement('style');
+    enhancedStyles.id = 'enhanced-validation-styles';
+    enhancedStyles.textContent = `
+        @keyframes fieldHighlight {
+            0% { 
+                box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3);
+                border-color: #dc2626;
+            }
+            50% { 
+                box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.2);
+                border-color: #dc2626;
+            }
+            100% { 
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+                border-color: var(--border);
+            }
+        }
+        
+        .error-section {
+            position: relative;
+        }
+        
+        .error-section::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            pointer-events: none;
+            animation: sectionError 1s ease-out;
+        }
+        
+        @keyframes sectionError {
+            0% { 
+                border-color: rgba(239, 68, 68, 0.6);
+                box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+            }
+            100% { 
+                border-color: rgba(239, 68, 68, 0.3);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+        
+        /* 改善錯誤訊息樣式 */
+        .error-message {
+            color: #dc2626 !important;
+            font-size: 13px !important;
+            margin-top: 6px !important;
+            animation: errorSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes errorSlideIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(-10px); 
+            }
+            to   { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        /* 錯誤欄位樣式增強 */
+        .form-input.error,
+        .form-select.error {
+            border-color: #dc2626 !important;
+            background-color: rgba(239, 68, 68, 0.05) !important;
+        }
+        
+        .form-input.error:focus,
+        .form-select.error:focus {
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+        }
+    `;
+    document.head.appendChild(enhancedStyles);
+}
 
 // 全域函式：手動更新價格
 window.updateSubscriptionPrice = function() {
