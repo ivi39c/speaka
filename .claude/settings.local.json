@@ -1,9 +1,16 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git config:*)",
+      "Bash(git push:*)",
+      "Bash(node:*)",
+      "Bash(grep:*)",
+      "Bash(awk:*)"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "defaultMode": "acceptEdits"
   }
 }
