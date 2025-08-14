@@ -2,17 +2,6 @@
 
 // 繼承主頁面的核心功能
 const SpeakaCore = {
-  normalizePlan(value){
-    if(!value) return null;
-    const v = String(value).toLowerCase();
-    const map = {
-      'monthly':'monthly','month':'monthly','1m':'monthly','mo':'monthly',
-      'halfyearly':'halfyearly','half-yearly':'halfyearly','halfyear':'halfyearly','half-year':'halfyearly','semiannual':'halfyearly','semi-annually':'halfyearly','semiannually':'halfyearly','6m':'halfyearly',
-      'yearly':'yearly','year':'yearly','annual':'yearly','annually':'yearly','12m':'yearly'
-    };
-    return map[v] || null;
-  },
-
     // 處理導覽列在捲動時的樣式變化
     initNavbarScroll() {
         const navbar = document.querySelector('.navbar');
@@ -106,8 +95,7 @@ const SpeakaCore = {
     // 核心初始化：處理預選方案與導覽列
     init() {
         const urlParams = new URLSearchParams(window.location.search);
-        const rawPlan = urlParams.get('plan');
-        const selectedPlan = this.normalizePlan(rawPlan) || rawPlan;
+        const selectedPlan = urlParams.get('plan');
         if (selectedPlan) {
             const radio = document.querySelector(`input[name="billingPeriod"][value="${selectedPlan}"]`);
             if (radio) radio.checked = true;
@@ -253,7 +241,6 @@ const SubscriptionPage = {
     // 初始化支付方式選擇
     initPaymentMethods() {
         document.querySelectorAll('.payment-option').forEach(option => {
-      option.setAttribute('tabindex','0');
             option.addEventListener('click', function() {
                 document.querySelectorAll('.payment-option').forEach(opt => {
                     opt.classList.remove('selected');
@@ -542,8 +529,7 @@ const SubscriptionPage = {
             let product = parseInt(taxId[i]) * weights[i];
             sum += Math.floor(product / 10) + (product % 10);
         }
-        if (sum % 10 === 0) return true;
-        return taxId[6] === '7' && (sum + 1) % 10 === 0;
+        return sum % 10 === 0;
     },
 
     // 表單驗證主函式
@@ -713,11 +699,11 @@ const SubscriptionPage = {
     // 啟用服務條款／隱私政策連結
     initTermsLinks() {
         document.addEventListener('click', (e) => {
-            const link = e.target.closest('.terms-link');
-            if (link) {
+            if (e.target.classList.contains('terms-link')) {
                 e.preventDefault();
                 e.stopPropagation();
-                const type = link.getAttribute('data-type') || (link.textContent.includes('服務條款') ? 'terms' : 'privacy');
+                const type = e.target.getAttribute('data-type') || 
+                             (e.target.textContent.includes('服務條款') ? 'terms' : 'privacy');
                 if (type === 'terms') {
                     this.showTermsModal();
                 } else if (type === 'privacy') {
@@ -1281,293 +1267,20 @@ window.debugSubscription = {
     }
 };
 
-
-// --- Floating bar helpers (robust to different HTML variants) ---
-function updateFloatingSummary(unitPrice, groupCount, subtotal, period){
-  // Wrap digits in <span class="price-number"> for bold-only numbers
-  const amount = subtotal.toLocaleString();
-  const priceHTML = `NT$ <span class="price-number">${amount}</span>`;
-  const priceEl = document.getElementById('floatingTotalPrice');
-  if (priceEl) priceEl.innerHTML = priceHTML;
-  const unitEl = document.getElementById('floatingUnitPrice');
-  if (unitEl) unitEl.textContent = `NT$ ${unitPrice.toLocaleString()} / 群組 / ${period}`;
-  const gcEl = document.getElementById('floatingGroupCount');
-  if (gcEl) gcEl.textContent = `${groupCount} 個群組`;
-  const subEl = document.getElementById('floatingSubtotal');
-  if (subEl) subEl.textContent = `NT$ ${subtotal.toLocaleString()}`;
+/* perf: limit observer scope and throttle */
+function observeFloatingBar(){
+  let rafId = null;
+  const schedule = () => {
+    if (rafId) return;
+    rafId = requestAnimationFrame(() => { rafId = null; if (typeof ensureStructure === 'function') ensureStructure(); });
+  };
+  const mo = new MutationObserver(() => schedule());
+  if (!document.querySelector('.floating-total')){
+    mo.observe(document.documentElement, { childList:true, subtree:true });
+  }
+  (function stopIfReady(){
+    if (document.querySelector('.floating-total') && document.getElementById('floatingCtaBtn')) mo.disconnect();
+    else setTimeout(stopIfReady, 300);
+  })();
 }
-
-(function attachFloatingBar(){
-  function patch(){
-    const mod = window.SubscriptionSpeaka?.SubscriptionPage;
-    if(!mod || !mod.updatePriceDisplay) return;
-    if(mod.__patchedFloating) return;
-    const original = mod.updatePriceDisplay.bind(mod);
-    mod.updatePriceDisplay = function(unitPrice, groupCount, total, period){
-      original(unitPrice, groupCount, total, period);
-      updateFloatingSummary(unitPrice, groupCount, total, period);
-    };
-    mod.__patchedFloating = true;
-
-    // Toggle (old or new HTML)
-    const toggleBtn = document.getElementById('floatingToggleBtn') || document.querySelector('.floating-total');
-    const details   = document.getElementById('floatingTotalDetails');
-    const icon      = document.getElementById('floatingToggleIcon');
-    if (toggleBtn && details) {
-      const toggle = () => {
-        const hidden = details.hasAttribute('hidden') || details.style.display === 'none' || !details.style.display;
-        if (hidden) {
-          details.removeAttribute('hidden'); details.style.display='block'; if(icon) icon.textContent='▼';
-          toggleBtn.setAttribute && toggleBtn.setAttribute('aria-expanded','true');
-        } else {
-          details.setAttribute('hidden',''); details.style.display='none'; if(icon) icon.textContent='▲';
-          toggleBtn.setAttribute && toggleBtn.setAttribute('aria-expanded','false');
-        }
-      };
-      toggleBtn.addEventListener('click', (e)=>{
-        // avoid clicking CTA
-        if(e.target && (e.target.id==='floatingCtaBtn' || e.target.closest && e.target.closest('#floatingCtaBtn'))) return;
-        toggle();
-      });
-    }
-
-    // CTA submit
-    const cta = document.getElementById('floatingCtaBtn');
-    const form = document.getElementById('subscriptionForm');
-    if (cta && form) {
-      cta.addEventListener('click', (e)=>{
-        e.preventDefault();
-        if (typeof form.requestSubmit === 'function') form.requestSubmit();
-        else form.submit();
-      });
-    }
-
-    // First sync
-    window.updateSubscriptionPrice && window.updateSubscriptionPrice();
-  }
-  window.addEventListener('subscriptionPageReady', patch);
-  if (document.readyState !== 'loading') setTimeout(patch,0);
-})();
-
-
-/* injected v2: robust chevron toggle + guaranteed CTA + formula render */
-(function(){
-  const PLAN_LABEL = { monthly:'月繳', halfyearly:'半年繳', yearly:'年繳' };
-  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
-  function render(unitPrice, count, total, planKey, periodText){
-    const labelEl = document.querySelector('.floating-total-label');
-    if(labelEl){
-      const plan = PLAN_LABEL[planKey] || '';
-      const totalStr = Number(total||0).toLocaleString();
-      labelEl.innerHTML = `${plan} × ${count} 群組 = <span class="amount">NT$ <span class="price-number">${totalStr}</span></span>`;
-    }
-    const unitEl = document.getElementById('floatingUnitPrice');
-    if(unitEl){ unitEl.textContent = `單價 NT$ ${Number(unitPrice||0).toLocaleString()} / 群組 / ${periodText||'月'}`; }
-    const cta = document.getElementById('floatingCtaBtn');
-    if(cta && !cta.textContent.trim()) cta.textContent = '立即訂閱';
-  }
-  ready(function(){
-    var tbtn = document.getElementById('floatingToggleBtn');
-    var details = document.getElementById('floatingTotalDetails');
-    var icon = document.getElementById('floatingToggleIcon');
-    var cta = document.getElementById('floatingCtaBtn');
-    if (cta && !cta.textContent.trim()) cta.textContent = '立即訂閱';
-    if (icon){ icon.innerHTML = '<svg class="floating-chevron" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.7 9.3a1 1 0 0 1 1.4 0L12 13.2l3.9-3.9a1 1 0 1 1 1.4 1.4l-4.6 4.6a1 1 0 0 1-1.4 0L6.7 10.7a1 1 0 0 1 0-1.4z"/></svg>'; }
-    if (tbtn) tbtn.classList.add('floating-toggle-btn');
-    if (tbtn && details){
-      tbtn.setAttribute('aria-expanded', details.hasAttribute('hidden') ? 'false' : 'true');
-      tbtn.addEventListener('click', function(){
-        var hidden = details.hasAttribute('hidden') || details.style.display==='none';
-        if (hidden){ details.removeAttribute('hidden'); details.style.display='block'; tbtn.setAttribute('aria-expanded','true'); }
-        else { details.setAttribute('hidden',''); details.style.display='none'; tbtn.setAttribute('aria-expanded','false'); }
-      });
-    }
-    try{
-      var mod = window.SubscriptionPage || (window.SubscriptionSpeaka && window.SubscriptionSpeaka.SubscriptionPage) || SubscriptionPage;
-      if(mod && mod.updatePriceDisplay && !mod.__patchedSleekFormula){
-        var orig = mod.updatePriceDisplay.bind(mod);
-        mod.updatePriceDisplay = function(unit, qty, total, period){
-          orig(unit, qty, total, period);
-          const planKey = document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
-          render(unit, qty, total, planKey, period);
-        };
-        mod.__patchedSleekFormula = true;
-      }
-    }catch(e){ console.error(e); }
-    const planKey = document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
-    const count = parseInt(document.getElementById('groupCount')?.value) || 1;
-    const unit = (window.SubscriptionPage && SubscriptionPage.prices && SubscriptionPage.prices[planKey]?.price) || 199;
-    const period = (window.SubscriptionPage && SubscriptionPage.prices && SubscriptionPage.prices[planKey]?.period) || '月';
-    render(unit, count, unit*count, planKey, period);
-  });
-})();
-
-
-/* injected: self-healing CTA + robust chevron + formula + submit */
-(function(){
-  const PLAN_LABEL = { monthly:'月繳', halfyearly:'半年繳', yearly:'年繳' };
-  function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', fn); else fn(); }
-  function ensureChevron(iconEl){
-    if (!iconEl) return;
-    iconEl.innerHTML = '<svg class="floating-chevron" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.7 9.3a1 1 0 0 1 1.4 0L12 13.2l3.9-3.9a1 1 0 1 1 1.4 1.4l-4.6 4.6a1 1 0 0 1-1.4 0L6.7 10.7a1 1 0 0 1 0-1.4z"/></svg>';
-  }
-  function ensureCTA(){
-    const wrap = document.querySelector('.floating-total-inner');
-    if (!wrap) return null;
-    let btn = document.getElementById('floatingCtaBtn');
-    if (!btn){
-      btn = document.createElement('button');
-      btn.id = 'floatingCtaBtn';
-      btn.className = 'floating-cta-btn';
-      btn.type = 'button';
-      btn.textContent = '立即訂閱';
-      const chevron = document.getElementById('floatingToggleBtn');
-      if (chevron) wrap.insertBefore(btn, chevron); else wrap.appendChild(btn);
-    }
-    if (!btn.textContent.trim()) btn.textContent = '立即訂閱';
-    btn.onclick = function(){
-      const form = document.querySelector('form#subscriptionForm') || document.querySelector('form');
-      if (form && form.requestSubmit) form.requestSubmit(); else if (form) form.submit();
-    };
-    return btn;
-  }
-  function wireToggle(){
-    const tbtn = document.getElementById('floatingToggleBtn');
-    const details = document.getElementById('floatingTotalDetails');
-    if (!tbtn || !details) return;
-    tbtn.classList.add('floating-toggle-btn');
-    tbtn.setAttribute('aria-expanded', details.hasAttribute('hidden') ? 'false' : 'true');
-    tbtn.onclick = function(){
-      const hidden = details.hasAttribute('hidden') || details.style.display==='none';
-      if (hidden){ details.removeAttribute('hidden'); details.style.display='block'; tbtn.setAttribute('aria-expanded','true'); }
-      else { details.setAttribute('hidden',''); details.style.display='none'; tbtn.setAttribute('aria-expanded','false'); }
-    };
-  }
-  function render(unitPrice, count, total, planKey, periodText){
-    const labelEl = document.querySelector('.floating-total-label');
-    if(labelEl){
-      labelEl.innerHTML = `${({monthly:'月繳',halfyearly:'半年繳',yearly:'年繳'})[planKey]||''} × ${count} 群組 = <span class="amount">NT$ <span class="price-number">${Number(total||0).toLocaleString()}</span></span>`;
-    }
-    const unitEl = document.getElementById('floatingUnitPrice');
-    if(unitEl){ unitEl.textContent = `單價 NT$ ${Number(unitPrice||0).toLocaleString()} / 群組 / ${periodText||'月'}`; }
-  }
-  ready(function(){
-    ensureChevron(document.getElementById('floatingToggleIcon'));
-    ensureCTA();
-    wireToggle();
-    try{
-      var mod = window.SubscriptionPage || (window.SubscriptionSpeaka && window.SubscriptionSpeaka.SubscriptionPage) || SubscriptionPage;
-      if(mod && mod.updatePriceDisplay && !mod.__patchedBar){
-        const orig = mod.updatePriceDisplay.bind(mod);
-        mod.updatePriceDisplay = function(unit, qty, total, period){
-          orig(unit, qty, total, period);
-          const planKey = document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
-          render(unit, qty, total, planKey, period);
-          ensureCTA();
-        };
-        mod.__patchedBar = true;
-      }
-    }catch(e){ console.error(e); }
-    const planKey = document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
-    const count = parseInt(document.getElementById('groupCount')?.value) || 1;
-    const unit = (window.SubscriptionPage && SubscriptionPage.prices && SubscriptionPage.prices[planKey]?.price) || 199;
-    const period = (window.SubscriptionPage && SubscriptionPage.prices && SubscriptionPage.prices[planKey]?.period) || '月';
-    render(unit, count, unit*count, planKey, period);
-  });
-})();
-
-
-/* injected: hardened floating bar (state class, observer, self-healing CTA) */
-(function(){
-  const PLAN_TEXT = { monthly:'月繳', halfyearly:'半年繳', yearly:'年繳' };
-  function ready(cb){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', cb); else cb(); }
-
-  function ensureChevron(iconEl){
-    if (!iconEl) return;
-    iconEl.innerHTML = '<svg class="floating-chevron" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.7 9.3a1 1 0 0 1 1.4 0L12 13.2l3.9-3.9a1 1 0 1 1 1.4 1.4l-4.6 4.6a1 1 0 0 1-1.4 0L6.7 10.7a1 1 0 0 1 0-1.4z"/></svg>';
-  }
-
-  function ensureStructure(){
-    const root = document.querySelector('.floating-total');
-    if (!root) return null;
-    const wrap = root.querySelector('.floating-total-inner, .floating-total-header') || root;
-    // Toggle button
-    let tbtn = document.getElementById('floatingToggleBtn');
-    if (!tbtn){
-      tbtn = document.createElement('button');
-      tbtn.id='floatingToggleBtn'; tbtn.type='button'; tbtn.className='floating-toggle-btn';
-      tbtn.innerHTML = '<span id="floatingToggleIcon" aria-hidden="true"></span>';
-      wrap.appendChild(tbtn);
-    }
-    ensureChevron(document.getElementById('floatingToggleIcon'));
-    // CTA
-    let cta = document.getElementById('floatingCtaBtn');
-    if (!cta){
-      cta = document.createElement('button');
-      cta.id='floatingCtaBtn'; cta.className='floating-cta-btn'; cta.type='button'; cta.textContent='立即訂閱';
-      wrap.insertBefore(cta, tbtn);
-    }
-    if (!cta.textContent.trim()) cta.textContent = '立即訂閱';
-    // Clicks
-    const details = document.getElementById('floatingTotalDetails');
-    tbtn.addEventListener('click', function(ev){
-      ev.preventDefault(); ev.stopPropagation();
-      const open = root.classList.toggle('is-open');
-      tbtn.setAttribute('aria-expanded', open ? 'true':'false');
-      if (details){ details.style.display = open ? 'block':'none'; }
-    });
-    cta.addEventListener('click', function(){
-      const form = document.querySelector('form#subscriptionForm') || document.querySelector('form');
-      if (form && form.requestSubmit) form.requestSubmit(); else if (form) form.submit();
-    });
-    return {root,wrap,cta,tbtn};
-  }
-
-  function renderFormula(unitPrice, count, total, planKey, periodText){
-    const labelEl = document.querySelector('.floating-total-label');
-    if(labelEl){
-      labelEl.innerHTML = `${PLAN_TEXT[planKey]||''} × ${count} 群組 = <span class="amount">NT$ <span class="price-number">${Number(total||0).toLocaleString()}</span></span>`;
-    }
-    const unitEl = document.getElementById('floatingUnitPrice');
-    if(unitEl){ unitEl.textContent = `單價 NT$ ${Number(unitPrice||0).toLocaleString()} / 群組 / ${periodText||'月'}`; }
-  }
-
-  function hookPriceUpdates(){
-    try{
-      var mod = window.SubscriptionPage || (window.SubscriptionSpeaka && window.SubscriptionSpeaka.SubscriptionPage) || window.SubscriptionPage;
-      if(mod && mod.updatePriceDisplay && !mod.__hardenedHook){
-        const orig = mod.updatePriceDisplay.bind(mod);
-        mod.updatePriceDisplay = function(unit, qty, total, period){
-          orig(unit, qty, total, period);
-          const plan = document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
-          renderFormula(unit, qty, total, plan, period);
-          ensureStructure(); // keep CTA present
-        };
-        mod.__hardenedHook = true;
-      }
-    }catch(e){ /* no-op */ }
-  }
-
-  function initialRender(){
-    const plan = document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
-    const count = parseInt(document.getElementById('groupCount')?.value) || 1;
-    let unit = 199, period = '月';
-    if (window.SubscriptionPage && SubscriptionPage.prices && SubscriptionPage.prices[plan]){
-      unit = SubscriptionPage.prices[plan].price;
-      period = SubscriptionPage.prices[plan].period || period;
-    }
-    renderFormula(unit, count, unit*count, plan, period);
-  }
-
-  function observeFloatingBar(){
-    const mo = new MutationObserver(()=>ensureStructure());
-    mo.observe(document.body, {childList:true,subtree:true});
-  }
-
-  ready(function(){
-    ensureStructure();
-    hookPriceUpdates();
-    initialRender();
-    observeFloatingBar();
-  });
-})();
+try{ observeFloatingBar(); }catch(e){}
