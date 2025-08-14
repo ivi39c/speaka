@@ -449,18 +449,28 @@ const SubscriptionPage = {
             taxId: this.createTaxIdValidator(),
             phone: this.createPhoneValidator(),
             email: this.createEmailValidator(),
-            contactName: this.createNameValidator()
+            contactName: this.createNameValidator(),
+            lineId: this.createLineIdValidator()
         };
         Object.entries(validators).forEach(([fieldId, validator]) => {
             const field = document.getElementById(fieldId);
             if (field) {
                 field.validator = validator;
+                
+                // 失焦時驗證
                 field.addEventListener('blur', function() {
                     this.validator.validate(this);
                 });
+                
+                // 輸入時的即時反饋
                 field.addEventListener('input', function() {
+                    // 如果目前有錯誤狀態，在用戶輸入時即時重新驗證
                     if (this.classList.contains('error')) {
-                        this.validator.clearError(this);
+                        // 延遲驗證，避免用戶還在輸入時就顯示錯誤
+                        clearTimeout(this.validateTimeout);
+                        this.validateTimeout = setTimeout(() => {
+                            this.validator.validate(this);
+                        }, 500);
                     }
                 });
             }
@@ -556,6 +566,56 @@ const SubscriptionPage = {
                     this.showFieldError(field, '姓名長度應為2-20個字符');
                     return false;
                 }
+            },
+            clearError: (field) => this.clearFieldError(field)
+        };
+    },
+
+    // LINE ID 欄位驗證規則
+    createLineIdValidator() {
+        return {
+            validate: (field) => {
+                const value = field.value.trim();
+                
+                // 如果是空值，由必填驗證處理
+                if (value.length === 0) {
+                    this.clearFieldError(field);
+                    return true;
+                }
+                
+                // 檢查長度 (4-20 字元)
+                if (value.length < 4) {
+                    this.showFieldError(field, 'LINE ID 至少需要4個字元');
+                    return false;
+                }
+                
+                if (value.length > 20) {
+                    this.showFieldError(field, 'LINE ID 最多20個字元');
+                    return false;
+                }
+                
+                // 檢查字元格式 (只能包含英文、數字、點、連字符、底線)
+                const validPattern = /^[a-zA-Z0-9._-]+$/;
+                if (!validPattern.test(value)) {
+                    this.showFieldError(field, 'LINE ID 只能包含英文、數字、點(.)、連字符(-)、底線(_)');
+                    return false;
+                }
+                
+                // 不能以點開頭或結尾
+                if (value.startsWith('.') || value.endsWith('.')) {
+                    this.showFieldError(field, 'LINE ID 不能以點(.)開頭或結尾');
+                    return false;
+                }
+                
+                // 不能有連續的點
+                if (value.includes('..')) {
+                    this.showFieldError(field, 'LINE ID 不能包含連續的點(..)');
+                    return false;
+                }
+                
+                // 全部檢查通過
+                this.clearFieldError(field);
+                return true;
             },
             clearError: (field) => this.clearFieldError(field)
         };
@@ -712,7 +772,7 @@ const SubscriptionPage = {
         }
         
         // 驗證欄位格式
-        ['email', 'phone', 'contactName'].forEach(fieldId => {
+        ['email', 'phone', 'contactName', 'lineId'].forEach(fieldId => {
             const field = document.getElementById(fieldId);
             if (field && field.value && field.validator) {
                 if (!field.validator.validate(field)) {
