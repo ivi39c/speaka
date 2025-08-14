@@ -1,5 +1,56 @@
 /* ===== Speaka 訂閱頁面專用樣式 subscription.css ===== */
 
+/* ===== 返回首頁按鈕樣式 ===== */
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: rgba(248, 250, 252, 0.8);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: var(--transition);
+    backdrop-filter: blur(4px);
+}
+
+.back-btn:hover {
+    background: var(--surface);
+    color: var(--text-primary);
+    border-color: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.back-btn span:first-child {
+    font-size: 16px;
+    transition: var(--transition);
+}
+
+.back-btn:hover span:first-child {
+    transform: translateX(-2px);
+}
+
+/* 響應式調整 */
+@media (max-width: 768px) {
+    .back-btn {
+        padding: 8px 12px;
+        font-size: 13px;
+        gap: 6px;
+    }
+    
+    .back-btn span:last-child {
+        display: none;
+    }
+    
+    .back-btn span:first-child {
+        font-size: 18px;
+    }
+}
+
 /* ===== 訂閱頁面整體布局 ===== */
 .subscription-container {
     max-width: 1000px;
