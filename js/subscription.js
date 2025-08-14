@@ -142,6 +142,7 @@ const SubscriptionPage = {
         this.initFormValidation();
         this.initFormSubmission();
         this.initAccessibilityFeatures();
+        this.initFloatingButton();
         this.updatePrice();
         console.log('✅ 訂閱頁面初始化完成');
     },
@@ -155,7 +156,9 @@ const SubscriptionPage = {
             subtotal: document.getElementById('subtotal'),
             totalPrice: document.getElementById('totalPrice'),
             floatingTotalPrice: document.getElementById('floatingTotalPrice'),
-            titleElement: document.querySelector('.subscription-header h1 .price-highlight')
+            titleElement: document.querySelector('.subscription-header h1 .price-highlight'),
+            floatingCtaBtn: document.getElementById('floatingCtaBtn'),
+            form: document.getElementById('subscriptionForm')
         };
     },
 
@@ -1044,6 +1047,26 @@ const SubscriptionPage = {
                 if (input) input.focus();
             });
         });
+    },
+
+    // 初始化浮動按鈕
+    initFloatingButton() {
+        const floatingBtn = this.domElements.floatingCtaBtn;
+        if (!floatingBtn) return;
+        
+        floatingBtn.addEventListener('click', () => {
+            const form = this.domElements.form;
+            if (form) {
+                // 觸發表單提交
+                if (form.requestSubmit) {
+                    form.requestSubmit();
+                } else {
+                    form.submit();
+                }
+            }
+        });
+        
+        console.log('🎯 浮動按鈕已初始化');
     }
 };
 
