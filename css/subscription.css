@@ -43,11 +43,11 @@
     }
     
     .back-btn span:last-child {
-        display: none;
+        display: inline; /* 保持顯示 */
     }
     
     .back-btn span:first-child {
-        font-size: 18px;
+        font-size: 16px; /* 稍微調小箭頭 */
     }
 }
 
