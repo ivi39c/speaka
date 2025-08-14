@@ -143,6 +143,7 @@ const SubscriptionPage = {
         this.initFormSubmission();
         this.initAccessibilityFeatures();
         this.initFloatingButton();
+        this.initTermsCheckbox();
         this.updatePrice();
         console.log('✅ 訂閱頁面初始化完成');
     },
@@ -285,6 +286,10 @@ const SubscriptionPage = {
         }
         if (this.domElements.floatingTotalPrice) {
             this.domElements.floatingTotalPrice.textContent = `NT$ ${total.toLocaleString()}`;
+            // 讓懸浮總計更醒目
+            this.domElements.floatingTotalPrice.style.fontWeight = '900';
+            this.domElements.floatingTotalPrice.style.fontSize = '24px';
+            this.domElements.floatingTotalPrice.style.letterSpacing = '0.5px';
         }
     },
 
@@ -462,17 +467,28 @@ const SubscriptionPage = {
                     this.validator.validate(this);
                 });
                 
-                // 輸入時的即時反饋
-                field.addEventListener('input', function() {
+                // 輸入/變更時的即時反饋
+                const handleInput = function() {
                     // 如果目前有錯誤狀態，在用戶輸入時即時重新驗證
                     if (this.classList.contains('error')) {
                         // 延遲驗證，避免用戶還在輸入時就顯示錯誤
                         clearTimeout(this.validateTimeout);
                         this.validateTimeout = setTimeout(() => {
                             this.validator.validate(this);
-                        }, 500);
+                        }, 300);
                     }
-                });
+                };
+                
+                field.addEventListener('input', handleInput);
+                
+                // 為下拉選單添加 change 事件
+                if (field.tagName.toLowerCase() === 'select') {
+                    field.addEventListener('change', function() {
+                        if (this.classList.contains('error')) {
+                            this.validator.validate(this);
+                        }
+                    });
+                }
             }
         });
     },
@@ -574,13 +590,18 @@ const SubscriptionPage = {
     // LINE ID 欄位驗證規則
     createLineIdValidator() {
         return {
-            validate: (field) => {
+            validate: (field, skipRequiredCheck = false) => {
                 const value = field.value.trim();
                 
-                // 如果是空值，由必填驗證處理
+                // 如果是空值且這是必填欄位
                 if (value.length === 0) {
-                    this.clearFieldError(field);
-                    return true;
+                    if (!skipRequiredCheck) {
+                        this.showFieldError(field, '請填寫 LINE ID');
+                        return false;
+                    } else {
+                        this.clearFieldError(field);
+                        return true;
+                    }
                 }
                 
                 // 檢查長度 (4-20 字元)
@@ -796,12 +817,11 @@ const SubscriptionPage = {
         // 檢查條款同意
         const agreeTerms = document.getElementById('agreeTerms');
         if (agreeTerms && !agreeTerms.checked) {
-            const termsSection = document.querySelector('.terms-section');
-            if (termsSection) {
-                this.showSectionError(termsSection, '請同意服務條款和隱私政策');
-                if (!firstErrorField) firstErrorField = agreeTerms;
-            }
+            this.showFieldError(agreeTerms, '請同意服務條款和隱私政策');
+            if (!firstErrorField) firstErrorField = agreeTerms;
             isValid = false;
+        } else if (agreeTerms && agreeTerms.checked) {
+            this.clearFieldError(agreeTerms);
         }
         
         // 如果有錯誤，引導用戶到第一個錯誤欄位
@@ -1223,6 +1243,21 @@ const SubscriptionPage = {
                 floatingBtn.style.opacity = '1';
             }
         }, 1000);
+    },
+
+    // 初始化條款同意checkbox
+    initTermsCheckbox() {
+        const agreeTerms = document.getElementById('agreeTerms');
+        if (!agreeTerms) return;
+        
+        agreeTerms.addEventListener('change', function() {
+            if (this.classList.contains('error') && this.checked) {
+                // 清除錯誤狀態
+                SubscriptionPage.clearFieldError(this);
+            }
+        });
+        
+        console.log('📋 條款同意checkbox已初始化');
     }
 };
 
