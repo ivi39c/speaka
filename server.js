@@ -12,8 +12,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // LINE Channel 設定
-const LINE_CHANNEL_ID = '2007868177';
-const LINE_CHANNEL_SECRET = '9539b630c5b3e6b73f979557e52cfa0f';
+const LINE_CHANNEL_ID = '';
+const LINE_CHANNEL_SECRET = '';
 
 // 中介軟體設定
 app.use(express.json());
