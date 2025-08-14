@@ -730,30 +730,9 @@ const SubscriptionPage = {
         });
     },
 
-    // 表單送出處理
+    // 表單送出處理（保留用於其他可能的觸發）
     initFormSubmission() {
-        const form = document.getElementById('subscriptionForm');
-        if (!form) return;
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const submitBtn   = form.querySelector('.submit-btn');
-            const originalText= submitBtn.textContent;
-            submitBtn.textContent = '處理中...';
-            submitBtn.disabled   = true;
-            setTimeout(() => {
-                if (this.validateForm()) {
-                    const formData = new FormData(form);
-                    const data     = Object.fromEntries(formData);
-                    // 將群組數量和總金額加入資料中
-                    data.groupCount  = document.getElementById('groupCount')?.value || '1';
-                    data.totalAmount = document.getElementById('totalPrice')?.textContent || 'NT$ 199';
-                    // 送使用者至對應的金流頁面
-                    this.redirectToPayment(data);
-                }
-                submitBtn.textContent = originalText;
-                submitBtn.disabled   = false;
-            }, 1000);
-        });
+        // 只初始化條款連結，實際提交由浮動按鈕處理
         this.initTermsLinks();
     },
 
@@ -1049,24 +1028,51 @@ const SubscriptionPage = {
         });
     },
 
-    // 初始化浮動按鈕
+    // 初始化浮動按鈕（完整功能）
     initFloatingButton() {
         const floatingBtn = this.domElements.floatingCtaBtn;
         if (!floatingBtn) return;
         
         floatingBtn.addEventListener('click', () => {
-            const form = this.domElements.form;
-            if (form) {
-                // 觸發表單提交
-                if (form.requestSubmit) {
-                    form.requestSubmit();
-                } else {
-                    form.submit();
-                }
-            }
+            this.handleSubscriptionSubmit();
         });
         
         console.log('🎯 浮動按鈕已初始化');
+    },
+
+    // 處理訂閱提交（完整邏輯）
+    handleSubscriptionSubmit() {
+        const floatingBtn = this.domElements.floatingCtaBtn;
+        const form = this.domElements.form;
+        
+        if (!floatingBtn || !form) return;
+        
+        // 按鈕狀態變更
+        const originalText = floatingBtn.textContent;
+        floatingBtn.textContent = '處理中...';
+        floatingBtn.disabled = true;
+        
+        // 添加視覺反饋
+        floatingBtn.style.opacity = '0.7';
+        
+        setTimeout(() => {
+            if (this.validateForm()) {
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData);
+                
+                // 將群組數量和總金額加入資料中
+                data.groupCount = document.getElementById('groupCount')?.value || '1';
+                data.totalAmount = document.getElementById('totalPrice')?.textContent || 'NT$ 199';
+                
+                // 送使用者至對應的金流頁面
+                this.redirectToPayment(data);
+            } else {
+                // 驗證失敗時恢復按鈕狀態
+                floatingBtn.textContent = originalText;
+                floatingBtn.disabled = false;
+                floatingBtn.style.opacity = '1';
+            }
+        }, 1000);
     }
 };
 
