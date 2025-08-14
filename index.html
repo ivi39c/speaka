@@ -27,6 +27,14 @@
                     <li><a href="#comparison">翻譯精準度</a></li>
                     <li><a href="#roadmap">發展規劃</a></li>
                     <li><a href="#pricing">訂閱方案</a></li>
+                    <li><button id="lineLoginBtn" class="line-login-btn" style="display: none;">
+                        <img src="https://developers.line.biz/media/line-login/line-login-btn.png" alt="LINE Login">
+                    </button></li>
+                    <li><div id="userProfile" class="user-profile" style="display: none;">
+                        <img id="userAvatar" class="user-avatar" src="" alt="用戶頭像">
+                        <span id="userName"></span>
+                        <button id="logoutBtn" class="logout-btn">登出</button>
+                    </div></li>
                     <li><a href="#contact" class="nav-cta">立即開始</a></li>
                 </ul>
             </div>
@@ -415,6 +423,127 @@
         </div>
     </section>
  
+    <!-- LINE Login SDK -->
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    
+    <!-- LINE Login 邏輯 -->
+    <script>
+        class LineLoginManager {
+            constructor() {
+                this.channelId = 'YOUR_CHANNEL_ID'; // 替換為你的 Channel ID
+                this.redirectUri = window.location.origin + '/line-callback.html';
+                this.init();
+            }
+
+            async init() {
+                // 檢查是否已登入
+                const storedProfile = localStorage.getItem('lineProfile');
+                if (storedProfile) {
+                    this.showUserProfile(JSON.parse(storedProfile));
+                } else {
+                    this.showLoginButton();
+                }
+
+                // 綁定事件
+                this.bindEvents();
+            }
+
+            bindEvents() {
+                const loginBtn = document.getElementById('lineLoginBtn');
+                const logoutBtn = document.getElementById('logoutBtn');
+
+                if (loginBtn) {
+                    loginBtn.addEventListener('click', () => this.login());
+                }
+
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', () => this.logout());
+                }
+            }
+
+            login() {
+                const state = Math.random().toString(36).substring(2, 15);
+                localStorage.setItem('lineLoginState', state);
+                
+                const params = new URLSearchParams({
+                    response_type: 'code',
+                    client_id: this.channelId,
+                    redirect_uri: this.redirectUri,
+                    state: state,
+                    scope: 'profile openid'
+                });
+
+                window.location.href = `https://access.line.me/oauth2/v2.1/authorize?${params.toString()}`;
+            }
+
+            logout() {
+                localStorage.removeItem('lineProfile');
+                localStorage.removeItem('lineAccessToken');
+                this.showLoginButton();
+                
+                // 可選：通知服務器登出
+                console.log('用戶已登出');
+            }
+
+            showLoginButton() {
+                document.getElementById('lineLoginBtn').style.display = 'block';
+                document.getElementById('userProfile').style.display = 'none';
+            }
+
+            showUserProfile(profile) {
+                document.getElementById('lineLoginBtn').style.display = 'none';
+                document.getElementById('userProfile').style.display = 'flex';
+                
+                document.getElementById('userAvatar').src = profile.pictureUrl || 'https://via.placeholder.com/28';
+                document.getElementById('userName').textContent = profile.displayName || 'LINE用戶';
+            }
+
+            // 處理登入回調 (這個會在 line-callback.html 中使用)
+            async handleCallback(code, state) {
+                try {
+                    // 驗證 state
+                    const storedState = localStorage.getItem('lineLoginState');
+                    if (state !== storedState) {
+                        throw new Error('Invalid state parameter');
+                    }
+
+                    // 交換 access token (需要後端 API)
+                    const tokenResponse = await fetch('/api/line-token', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ code, redirectUri: this.redirectUri })
+                    });
+
+                    const tokenData = await tokenResponse.json();
+                    
+                    if (tokenData.access_token) {
+                        // 獲取用戶資料
+                        const profileResponse = await fetch('https://api.line.me/v2/profile', {
+                            headers: { 'Authorization': `Bearer ${tokenData.access_token}` }
+                        });
+                        
+                        const profile = await profileResponse.json();
+                        
+                        // 儲存用戶資料
+                        localStorage.setItem('lineProfile', JSON.stringify(profile));
+                        localStorage.setItem('lineAccessToken', tokenData.access_token);
+                        
+                        // 返回首頁
+                        window.location.href = '/';
+                    }
+                } catch (error) {
+                    console.error('LINE Login error:', error);
+                    alert('登入失敗，請重試');
+                }
+            }
+        }
+
+        // 當頁面載入完成後初始化 LINE Login
+        document.addEventListener('DOMContentLoaded', () => {
+            window.lineLoginManager = new LineLoginManager();
+        });
+    </script>
+    
     <!-- 添加這段來修復透明度問題 -->
     <script src="js/main.js"></script>
 </body>
