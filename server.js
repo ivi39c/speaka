@@ -11,9 +11,9 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// LINE Channel 設定
-const LINE_CHANNEL_ID = '';
-const LINE_CHANNEL_SECRET = '';
+// LINE Channel 設定 (模擬版本 - 不含真實憑證)
+const LINE_CHANNEL_ID = 'DEMO_CHANNEL_ID';
+const LINE_CHANNEL_SECRET = 'DEMO_CHANNEL_SECRET';
 
 // 中介軟體設定
 app.use(express.json());
@@ -35,7 +35,7 @@ app.post('/api/line-token', async (req, res) => {
     try {
         const { code, redirectUri } = req.body;
 
-        console.log('🔐 處理 LINE Login token 交換...');
+        console.log('🔐 處理 LINE Login token 交換 (模擬模式)...');
         console.log('Code:', code ? 'received' : 'missing');
         console.log('Redirect URI:', redirectUri);
 
@@ -46,40 +46,24 @@ app.post('/api/line-token', async (req, res) => {
             });
         }
 
-        // 向 LINE API 交換 access token
-        const tokenResponse = await axios.post(
-            'https://api.line.me/oauth2/v2.1/token',
-            new URLSearchParams({
-                grant_type: 'authorization_code',
-                code: code,
-                redirect_uri: redirectUri,
-                client_id: LINE_CHANNEL_ID,
-                client_secret: LINE_CHANNEL_SECRET
-            }),
-            {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            }
-        );
-
-        console.log('✅ 成功取得 LINE access token');
+        // 模擬 LINE API 響應 - 不會真正調用 LINE API
+        console.log('✅ 模擬成功取得 LINE access token');
         
-        // 回傳 token 資料給前端
+        // 回傳模擬的 token 資料給前端
         res.json({
-            access_token: tokenResponse.data.access_token,
-            token_type: tokenResponse.data.token_type,
-            expires_in: tokenResponse.data.expires_in,
-            scope: tokenResponse.data.scope
+            access_token: 'mock_access_token_123456789',
+            token_type: 'Bearer',
+            expires_in: 3600,
+            scope: 'profile openid'
         });
 
     } catch (error) {
-        console.error('❌ LINE token 交換失敗:', error.response?.data || error.message);
+        console.error('❌ 模擬 LINE token 交換失敗:', error.message);
         
         res.status(500).json({
             error: 'token_exchange_failed',
             message: 'LINE token 交換失敗',
-            details: error.response?.data || error.message
+            details: error.message
         });
     }
 });
@@ -112,20 +96,26 @@ app.post('/api/line-verify', async (req, res) => {
             });
         }
 
-        // 向 LINE API 驗證 token 並獲取用戶資料
-        const profileResponse = await axios.get('https://api.line.me/v2/profile', {
-            headers: {
-                'Authorization': `Bearer ${access_token}`
-            }
-        });
-
-        res.json({
-            valid: true,
-            profile: profileResponse.data
-        });
+        // 模擬 LINE API 驗證 - 不會真正調用 LINE API
+        if (access_token === 'mock_access_token_123456789') {
+            res.json({
+                valid: true,
+                profile: {
+                    userId: 'mock_user_123',
+                    displayName: '測試用戶',
+                    pictureUrl: 'https://via.placeholder.com/28'
+                }
+            });
+        } else {
+            res.status(401).json({
+                valid: false,
+                error: 'invalid_token',
+                message: 'LINE token 無效或已過期'
+            });
+        }
 
     } catch (error) {
-        console.error('❌ LINE token 驗證失敗:', error.response?.data || error.message);
+        console.error('❌ 模擬 LINE token 驗證失敗:', error.message);
         
         res.status(401).json({
             valid: false,

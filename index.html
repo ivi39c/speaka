@@ -51,6 +51,9 @@
                 
                 <div class="hero-buttons">
                     <a href="subscription.html" class="btn btn-primary">🚀 立即開始使用</a>
+                    <button id="heroLineLoginBtn" class="btn btn-primary" style="background: #00B900; margin-left: 16px;">
+                        <img src="https://developers.line.biz/media/line-login/line-login-btn.png" alt="LINE Login" style="height: 20px; vertical-align: middle;">
+                    </button>
                     <a href="#comparison" class="btn btn-secondary">📊 查看精準度</a>
                 </div>
             </div>
@@ -364,9 +367,9 @@
                         <span>📧</span>
                         <span>talkeasenow@gmail.com</span>
                     </a>
-                    <a href="https://line.me/ti/p/@537etdoz" class="contact-item" target="_blank">
+                    <a href="https://line.me/ti/p/@181bmdeuclaude" class="contact-item" target="_blank">
                         <span>💬</span>
-                        <span>LINE: @537etdoz</span>
+                        <span>LINE: @181bmdeuclaude</span>
                     </a>
                 </div>
             </div>
@@ -380,7 +383,7 @@
     <script>
         class LineLoginManager {
             constructor() {
-                this.channelId = '2007868177'; // Speaka LINE Login Channel ID
+                this.channelId = 'DEMO_CHANNEL_ID'; // 模擬用的 Channel ID
                 this.redirectUri = window.location.origin + '/line-callback.html';
                 this.init();
             }
@@ -400,10 +403,15 @@
 
             bindEvents() {
                 const loginBtn = document.getElementById('lineLoginBtn');
+                const heroLoginBtn = document.getElementById('heroLineLoginBtn');
                 const logoutBtn = document.getElementById('logoutBtn');
 
                 if (loginBtn) {
                     loginBtn.addEventListener('click', () => this.login());
+                }
+
+                if (heroLoginBtn) {
+                    heroLoginBtn.addEventListener('click', () => this.login());
                 }
 
                 if (logoutBtn) {
@@ -412,18 +420,18 @@
             }
 
             login() {
-                const state = Math.random().toString(36).substring(2, 15);
-                localStorage.setItem('lineLoginState', state);
+                // 模擬 LINE Login 流程 - 不會真正跳轉到 LINE
+                alert('這是 LINE Login 的模擬版本\n\n在正式環境中，這裡會跳轉到 LINE 進行登入驗證。\n\n模擬登入成功！');
                 
-                const params = new URLSearchParams({
-                    response_type: 'code',
-                    client_id: this.channelId,
-                    redirect_uri: this.redirectUri,
-                    state: state,
-                    scope: 'profile openid'
-                });
-
-                window.location.href = `https://access.line.me/oauth2/v2.1/authorize?${params.toString()}`;
+                // 模擬登入成功，儲存假的用戶資料
+                const mockProfile = {
+                    userId: 'mock_user_123',
+                    displayName: '測試用戶',
+                    pictureUrl: 'https://via.placeholder.com/28'
+                };
+                
+                localStorage.setItem('lineProfile', JSON.stringify(mockProfile));
+                this.showUserProfile(mockProfile);
             }
 
             logout() {

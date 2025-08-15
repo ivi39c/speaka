@@ -950,7 +950,7 @@ const SubscriptionPage = {
                 <p>本服務按現況提供，對於使用本服務造成的任何損失，我們不承擔責任。</p>
                 
                 <h4>8. 聯絡方式</h4>
-                <p>如有疑問，請聯絡：talkeasenow@gmail.com 或 LINE: @537etdoz</p>
+                <p>如有疑問，請聯絡：talkeasenow@gmail.com 或 LINE: @181bmdeuclaude</p>
             </div>
         `;
         this.showModal('服務條款', content);
@@ -1002,7 +1002,7 @@ const SubscriptionPage = {
                 
                 <h4>6. 聯絡我們</h4>
                 <p>如有隱私相關問題，請聯絡：</p>
-                <p>Email: talkeasenow@gmail.com<br>LINE: @537etdoz</p>
+                <p>Email: talkeasenow@gmail.com<br>LINE: @181bmdeuclaude</p>
                 
                 <p style="margin-top: 20px; color: #64748b; font-size: 14px;">
                     最後更新日期：2025年1月
@@ -1173,7 +1173,7 @@ const SubscriptionPage = {
             if (lineId) {
                 message += `您的 LINE ID：${lineId}\n`;
             }
-            message      += `請加入官方 LINE 完成服務開通（官方 LINE：@537etdoz）。\n如有任何問題，請聯絡客服。`;
+            message      += `請加入官方 LINE 完成服務開通（官方 LINE：@181bmdeuclaude）。\n如有任何問題，請聯絡客服。`;
             alert(message);
             // 移除 URL 參數以避免重複提示
             history.replaceState(null, '', window.location.pathname);
