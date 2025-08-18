@@ -2,7 +2,12 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="version" content="v1.0.0-20250815">
+    <meta name="theme-color" content="#2563eb">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>Speaka - 專業多語系翻譯機器人 | LINE 群組即時翻譯解決方案</title>
     <meta name="description" content="Speaka 是專業的多語系翻譯機器人，提供 LINE 群組即時翻譯服務。支援中文、越南語等多種語言，適合跨國企業、人力仲介、製造業使用。">
     <meta name="keywords" content="翻譯機器人,LINE翻譯,多語系翻譯,越南語翻譯,即時翻譯,群組翻譯">
@@ -13,8 +18,30 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://speaka.tw">
     
-    <!-- 載入共用樣式 -->    
-    <link rel="stylesheet" href="css/styles.css">
+    <!-- DNS 預解析 -->
+    <link rel="dns-prefetch" href="//static.line-scdn.net">
+    <link rel="dns-prefetch" href="//images.unsplash.com">
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    
+    <!-- Google Material Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+    
+    <!-- 關鍵 CSS 內聯載入 -->
+    <link rel="stylesheet" href="css/critical.css">
+    
+    <!-- 非關鍵 CSS 延遲載入 -->
+    <link rel="preload" href="css/styles.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/sidebar.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="css/mobile-enhancements.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="css/sidebar.css">
+        <link rel="stylesheet" href="css/mobile-enhancements.css">
+    </noscript>
+    
+    <!-- Index頁面專用樣式和腳本 -->
+    <link rel="stylesheet" href="css/index-inline.css">
+    <script src="js/index-inline.js"></script>
 </head>
 <body>
     <!-- 導航列 -->
@@ -22,17 +49,20 @@
         <div class="container">
             <div class="nav-content">
                 <a href="#" class="logo">Speaka</a>
+                <button id="hamburgerMenu" class="hamburger-menu" aria-label="開啟選單">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
                 <ul class="nav-links">
                     <li><a href="#features">功能特色</a></li>
                     <li><a href="#comparison">翻譯精準度</a></li>
                     <li><a href="#pricing">訂閱方案</a></li>
-                    <li><button id="lineLoginBtn" class="line-login-btn">
-                        <img src="https://developers.line.biz/media/line-login/line-login-btn.png" alt="LINE Login">
+                    <li><button id="lineLoginBtn" class="line-login-btn" aria-label="使用 LINE 帳號登入">
+                        LINE 登入
                     </button></li>
-                    <li><div id="userProfile" class="user-profile" style="display: none;">
-                        <img id="userAvatar" class="user-avatar" src="" alt="用戶頭像">
-                        <span id="userName"></span>
-                        <button id="logoutBtn" class="logout-btn">登出</button>
+                    <li><div id="userProfile" class="user-profile">
+                        <div id="userAvatarBtn" class="user-avatar-btn">
+                            <span id="userAvatar" class="material-symbols-outlined user-avatar-icon">account_circle</span>
+                        </div>
                     </div></li>
                     <li><a href="#contact" class="nav-cta">立即開始</a></li>
                 </ul>
@@ -50,10 +80,12 @@
                 一鍵安裝、自動啟用，適合跨國企業、多語團隊、國際業務溝通需求</p>
                 
                 <div class="hero-buttons">
-                    <a href="subscription.html" class="btn btn-primary">🚀 立即開始使用</a>
-                    <button id="heroLineLoginBtn" class="btn btn-primary" style="background: #00B900; margin-left: 16px;">
-                        <img src="https://developers.line.biz/media/line-login/line-login-btn.png" alt="LINE Login" style="height: 20px; vertical-align: middle;">
-                    </button>
+                    <div class="primary-buttons">
+                        <a href="subscription.html" class="btn btn-primary">🚀 立即開始使用</a>
+                        <button id="heroLineLoginBtn" class="btn btn-line-login" aria-label="使用 LINE 帳號快速登入">
+                            LINE 登入
+                        </button>
+                    </div>
                     <a href="#comparison" class="btn btn-secondary">📊 查看精準度</a>
                 </div>
             </div>
@@ -133,10 +165,10 @@
                 </table>
             </div>
             
-            <div style="margin-top: 40px; text-align: center;">
-                <div style="background: #eff6ff; padding: 25px; border-radius: 15px; border-left: 4px solid #2563eb; max-width: 800px; margin: 0 auto;">
-                    <h3 style="color: #1e293b; margin-bottom: 15px;">🎯 多種翻譯引擎，智能選擇最佳結果</h3>
-                    <p style="color: #64748b; line-height: 1.6;">
+            <div class="translation-engines-info">
+                <div class="engines-highlight-box">
+                    <h3>🎯 多種翻譯引擎，智能選擇最佳結果</h3>
+                    <p>
                         Speaka 持續優化翻譯品質，未來版本將整合 Google 翻譯與 GPT AI 翻譯雙引擎，
                         自動選擇最適合的翻譯技術，並支援更多語言對，滿足不同應用情境的翻譯需求。
                     </p>
@@ -289,10 +321,10 @@
                 </div>
             </div>
             
-            <div style="text-align: center; margin-top: 40px; padding: 25px; background: white; border-radius: 15px; border: 2px solid #2563eb;">
-                <h3 style="color: #2563eb; margin-bottom: 10px;">🏢 企業大量方案</h3>
-                <p style="color: #64748b; margin-bottom: 15px;">500+ 群組享有專案合約優惠價格</p>
-                <a href="#contact" class="btn btn-primary" style="display: inline-block;">洽詢企業方案</a>
+            <div class="enterprise-plan">
+                <h3>🏢 企業大量方案</h3>
+                <p>500+ 群組享有專案合約優惠價格</p>
+                <a href="#contact" class="btn btn-primary">洽詢企業方案</a>
             </div>
         </div>
     </section>
@@ -325,29 +357,29 @@
     </section>
 
     <!-- 支付方式與服務保障 -->
-    <section class="features" style="background: white;">
+    <section class="features features-white-bg">
         <div class="container">
             <div class="section-title fade-in">
                 <h2>支付方式與服務保障</h2>
             </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
-                <div style="background: #f8fafc; padding: 30px; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); border: 1px solid #e2e8f0;">
-                    <h3 style="color: #2563eb; margin-bottom: 20px;">💳 多元支付方式</h3>
-                    <ul style="list-style: none; color: #64748b;">
-                        <li style="padding: 8px 0;">• LINE Pay 快速付款</li>
-                        <li style="padding: 8px 0;">• 信用卡安全交易</li>
-                        <li style="padding: 8px 0;">• 銀行轉帳</li>
-                        <li style="padding: 8px 0;">• 企業發票開立</li>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>💳 多元支付方式</h3>
+                    <ul>
+                        <li>• LINE Pay 快速付款</li>
+                        <li>• 信用卡安全交易</li>
+                        <li>• 銀行轉帳</li>
+                        <li>• 企業發票開立</li>
                     </ul>
                 </div>
-                <div style="background: #f8fafc; padding: 30px; border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.08); border: 1px solid #e2e8f0;">
-                    <h3 style="color: #2563eb; margin-bottom: 20px;">🛡️ 服務保障</h3>
-                    <ul style="list-style: none; color: #64748b;">
-                        <li style="padding: 8px 0;">• 24小時技術支援</li>
-                        <li style="padding: 8px 0;">• 服務穩定性保證</li>
-                        <li style="padding: 8px 0;">• 不滿意比例退費</li>
-                        <li style="padding: 8px 0;">• 合法合規運營</li>
-                        <li style="padding: 8px 0;">• 資料隱私保護</li>
+                <div class="feature-card">
+                    <h3>🛡️ 服務保障</h3>
+                    <ul>
+                        <li>• 24小時技術支援</li>
+                        <li>• 服務穩定性保證</li>
+                        <li>• 不滿意比例退費</li>
+                        <li>• 合法合規運營</li>
+                        <li>• 資料隱私保護</li>
                     </ul>
                 </div>
             </div>
@@ -376,133 +408,16 @@
         </div>
     </section>
  
-    <!-- LINE Login SDK -->
-    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <!-- LINE Login SDK (非同步載入) -->
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js" async></script>
     
-    <!-- LINE Login 邏輯 -->
-    <script>
-        class LineLoginManager {
-            constructor() {
-                this.channelId = 'DEMO_CHANNEL_ID'; // 模擬用的 Channel ID
-                this.redirectUri = window.location.origin + '/line-callback.html';
-                this.init();
-            }
-
-            async init() {
-                // 檢查是否已登入
-                const storedProfile = localStorage.getItem('lineProfile');
-                if (storedProfile) {
-                    this.showUserProfile(JSON.parse(storedProfile));
-                } else {
-                    this.showLoginButton();
-                }
-
-                // 綁定事件
-                this.bindEvents();
-            }
-
-            bindEvents() {
-                const loginBtn = document.getElementById('lineLoginBtn');
-                const heroLoginBtn = document.getElementById('heroLineLoginBtn');
-                const logoutBtn = document.getElementById('logoutBtn');
-
-                if (loginBtn) {
-                    loginBtn.addEventListener('click', () => this.login());
-                }
-
-                if (heroLoginBtn) {
-                    heroLoginBtn.addEventListener('click', () => this.login());
-                }
-
-                if (logoutBtn) {
-                    logoutBtn.addEventListener('click', () => this.logout());
-                }
-            }
-
-            login() {
-                // 模擬 LINE Login 流程 - 不會真正跳轉到 LINE
-                alert('這是 LINE Login 的模擬版本\n\n在正式環境中，這裡會跳轉到 LINE 進行登入驗證。\n\n模擬登入成功！');
-                
-                // 模擬登入成功，儲存假的用戶資料
-                const mockProfile = {
-                    userId: 'mock_user_123',
-                    displayName: '測試用戶',
-                    pictureUrl: 'https://via.placeholder.com/28'
-                };
-                
-                localStorage.setItem('lineProfile', JSON.stringify(mockProfile));
-                this.showUserProfile(mockProfile);
-            }
-
-            logout() {
-                localStorage.removeItem('lineProfile');
-                localStorage.removeItem('lineAccessToken');
-                this.showLoginButton();
-                
-                // 可選：通知服務器登出
-                console.log('用戶已登出');
-            }
-
-            showLoginButton() {
-                document.getElementById('lineLoginBtn').style.display = 'block';
-                document.getElementById('userProfile').style.display = 'none';
-            }
-
-            showUserProfile(profile) {
-                document.getElementById('lineLoginBtn').style.display = 'none';
-                document.getElementById('userProfile').style.display = 'flex';
-                
-                document.getElementById('userAvatar').src = profile.pictureUrl || 'https://via.placeholder.com/28';
-                document.getElementById('userName').textContent = profile.displayName || 'LINE用戶';
-            }
-
-            // 處理登入回調 (這個會在 line-callback.html 中使用)
-            async handleCallback(code, state) {
-                try {
-                    // 驗證 state
-                    const storedState = localStorage.getItem('lineLoginState');
-                    if (state !== storedState) {
-                        throw new Error('Invalid state parameter');
-                    }
-
-                    // 交換 access token (需要後端 API)
-                    const tokenResponse = await fetch('/api/line-token', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ code, redirectUri: this.redirectUri })
-                    });
-
-                    const tokenData = await tokenResponse.json();
-                    
-                    if (tokenData.access_token) {
-                        // 獲取用戶資料
-                        const profileResponse = await fetch('https://api.line.me/v2/profile', {
-                            headers: { 'Authorization': `Bearer ${tokenData.access_token}` }
-                        });
-                        
-                        const profile = await profileResponse.json();
-                        
-                        // 儲存用戶資料
-                        localStorage.setItem('lineProfile', JSON.stringify(profile));
-                        localStorage.setItem('lineAccessToken', tokenData.access_token);
-                        
-                        // 返回首頁
-                        window.location.href = '/';
-                    }
-                } catch (error) {
-                    console.error('LINE Login error:', error);
-                    alert('登入失敗，請重試');
-                }
-            }
-        }
-
-        // 當頁面載入完成後初始化 LINE Login
-        document.addEventListener('DOMContentLoaded', () => {
-            window.lineLoginManager = new LineLoginManager();
-        });
-    </script>
+    <!-- LINE Login 邏輯現在由共用的 navigation.js 處理 -->
     
-    <!-- 添加這段來修復透明度問題 -->
-    <script src="js/main.js"></script>
+    <!-- 側邊工具欄現在由 navigation.js 自動插入 -->
+
+    <!-- 共用導覽組件 -->
+    <script src="js/navigation.js"></script>
+    <!-- 優化的主腳本 -->
+    <script src="js/optimized-main.js" defer></script>
 </body>
 </html>

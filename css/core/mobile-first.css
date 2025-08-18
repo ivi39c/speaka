@@ -1,0 +1,349 @@
+/**
+ * Mobile First 設計系統
+ * 以手機體驗為核心的 CSS 架構
+ */
+
+/* ===== CSS 變數 - Mobile First ===== */
+:root {
+  /* 顏色系統 */
+  --primary: #2563eb;
+  --primary-light: #3b82f6;
+  --secondary: #64748b;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  
+  /* 文字顏色 */
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-light: #9ca3af;
+  
+  /* 背景顏色 */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f9fafb;
+  --bg-tertiary: #f3f4f6;
+  
+  /* 間距系統 - 適合手機觸控 */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  
+  /* 字體大小 - 手機可讀性優先 */
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 16px;
+  --text-lg: 18px;
+  --text-xl: 20px;
+  --text-2xl: 24px;
+  --text-3xl: 30px;
+  
+  /* 觸控目標尺寸 - 最小 44px */
+  --touch-target: 48px;
+  --touch-target-sm: 44px;
+  --touch-target-lg: 56px;
+  
+  /* 圓角 */
+  --radius-sm: 6px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  
+  /* 陰影 */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  
+  /* 動畫 */
+  --transition: all 0.2s ease;
+  --transition-slow: all 0.3s ease;
+}
+
+/* ===== 重置樣式 ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  /* 提升手機滾動體驗 */
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  
+  /* 防止縮放 */
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== 容器系統 ===== */
+.container {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 var(--space-md);
+  margin: 0 auto;
+}
+
+/* 平板以上 */
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+    padding: 0 var(--space-lg);
+  }
+}
+
+/* 桌面 */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+    padding: 0 var(--space-xl);
+  }
+}
+
+/* ===== 按鈕系統 - 手機優先 ===== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch-target);
+  padding: var(--space-sm) var(--space-lg);
+  border: none;
+  border-radius: var(--radius);
+  font-size: var(--text-base);
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  
+  /* 防止雙擊縮放 */
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--primary-light);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.btn-secondary:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-large {
+  min-height: var(--touch-target-lg);
+  padding: var(--space-md) var(--space-xl);
+  font-size: var(--text-lg);
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* ===== 輸入框系統 ===== */
+.input {
+  width: 100%;
+  min-height: var(--touch-target);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid #d1d5db;
+  border-radius: var(--radius);
+  font-size: var(--text-base);
+  background: var(--bg-primary);
+  transition: var(--transition);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* ===== 卡片系統 ===== */
+.card {
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.card-body {
+  padding: var(--space-lg);
+}
+
+/* ===== 導航系統 - 手機優先 ===== */
+.mobile-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-primary);
+  border-top: 1px solid #e5e7eb;
+  padding: var(--space-sm) 0;
+  z-index: 100;
+  
+  /* 安全區域支援 (iPhone X+) */
+  padding-bottom: calc(var(--space-sm) + env(safe-area-inset-bottom));
+}
+
+.mobile-nav-list {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  list-style: none;
+}
+
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: var(--touch-target);
+  padding: var(--space-xs);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: var(--transition);
+  touch-action: manipulation;
+}
+
+.mobile-nav-item.active {
+  color: var(--primary);
+}
+
+.mobile-nav-icon {
+  font-size: 20px;
+  margin-bottom: var(--space-xs);
+}
+
+.mobile-nav-text {
+  font-size: var(--text-xs);
+  font-weight: 500;
+}
+
+/* ===== 頂部導航 ===== */
+.top-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-primary);
+  border-bottom: 1px solid #e5e7eb;
+  padding: var(--space-sm) var(--space-md);
+  z-index: 100;
+  
+  /* 安全區域支援 */
+  padding-top: calc(var(--space-sm) + env(safe-area-inset-top));
+}
+
+.top-nav-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--touch-target);
+}
+
+.top-nav-title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.top-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* ===== 主內容區域 ===== */
+.main-content {
+  /* 為固定導航留出空間 */
+  padding-top: calc(var(--touch-target) + var(--space-md) + env(safe-area-inset-top));
+  padding-bottom: calc(var(--touch-target) + var(--space-md) + env(safe-area-inset-bottom));
+  min-height: 100vh;
+}
+
+/* ===== 手勢支援 ===== */
+.swipeable {
+  touch-action: pan-x pan-y;
+}
+
+.no-scroll {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+}
+
+/* ===== 載入動畫 ===== */
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--bg-tertiary);
+  border-top: 3px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ===== 響應式設計 ===== */
+/* 大手機 */
+@media (min-width: 414px) {
+  .container {
+    padding: 0 var(--space-lg);
+  }
+}
+
+/* 平板 */
+@media (min-width: 768px) {
+  .mobile-nav {
+    display: none;
+  }
+  
+  .main-content {
+    padding-bottom: var(--space-xl);
+  }
+  
+  .btn {
+    min-height: var(--touch-target-sm);
+  }
+}
+
+/* 桌面 */
+@media (min-width: 1024px) {
+  .top-nav {
+    position: static;
+    padding-top: var(--space-sm);
+  }
+  
+  .main-content {
+    padding-top: 0;
+  }
+}

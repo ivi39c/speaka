@@ -1,0 +1,88 @@
+/* ===== Index頁面內嵌樣式整合 v1.0.0 - 2025.08.15 ===== */
+
+/* 用戶資料顯示控制 */
+#userProfile {
+    display: none;
+}
+
+/* 多引擎翻譯說明區塊 */
+.translation-engines-info {
+    margin-top: 40px; 
+    text-align: center;
+}
+
+.engines-highlight-box {
+    background: #eff6ff; 
+    padding: 25px; 
+    border-radius: 15px; 
+    border-left: 4px solid #2563eb; 
+    max-width: 800px; 
+    margin: 0 auto;
+}
+
+.engines-highlight-box h3 {
+    color: #1e293b; 
+    margin-bottom: 15px;
+}
+
+.engines-highlight-box p {
+    color: #64748b; 
+    line-height: 1.6;
+}
+
+/* 企業方案區塊 */
+.enterprise-plan {
+    text-align: center; 
+    margin-top: 40px; 
+    padding: 25px; 
+    background: white; 
+    border-radius: 15px; 
+    border: 2px solid #2563eb;
+}
+
+.enterprise-plan h3 {
+    color: #2563eb; 
+    margin-bottom: 10px;
+}
+
+.enterprise-plan p {
+    color: #64748b; 
+    margin-bottom: 15px;
+}
+
+.enterprise-plan .btn {
+    display: inline-block;
+}
+
+/* 功能特色區塊 */
+.features-white-bg {
+    background: white;
+}
+
+.features-grid {
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 30px;
+}
+
+.feature-card {
+    background: #f8fafc; 
+    padding: 30px; 
+    border-radius: 15px; 
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08); 
+    border: 1px solid #e2e8f0;
+}
+
+.feature-card h3 {
+    color: #2563eb; 
+    margin-bottom: 20px;
+}
+
+.feature-card ul {
+    list-style: none; 
+    color: #64748b;
+}
+
+.feature-card li {
+    padding: 8px 0;
+}

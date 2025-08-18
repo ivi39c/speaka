@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="version" content="v1.0.0-20250815">
+    <title>Speaka - 專業多語系翻譯機器人</title>
+    
+    <!-- Mobile First CSS -->
+    <link rel="stylesheet" href="css/core/mobile-first.css">
+    <link rel="stylesheet" href="css/components/sidebar.css">
+    <link rel="stylesheet" href="css/index-new.css">
+</head>
+<body>
+    <!-- 主內容容器 -->
+    <main class="main-content" id="app-content">
+        <!-- 載入動畫 -->
+        <div class="loading-container">
+            <div>
+                <div class="loading-spinner"></div>
+                <p>載入 Speaka...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- 模組化 JavaScript -->
+    <script type="module">
+        import { SpeakaApp } from './js/core/app.js';
+        
+        // 啟動應用
+        document.addEventListener('DOMContentLoaded', async () => {
+            const app = new SpeakaApp();
+            await app.init();
+            
+            // 全局應用實例
+            window.speakaApp = app;
+        });
+    </script>
+</body>
+</html>

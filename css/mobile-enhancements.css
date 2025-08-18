@@ -1,0 +1,358 @@
+/* ===== 行動端觸控體驗增強 ===== */
+
+/* 觸控設備優化 */
+@media (hover: none) and (pointer: coarse) {
+    /* 移除懸停效果，改用觸控回饋 */
+    .feature-card:hover,
+    .audience-card:hover,
+    .pricing-card:hover {
+        transform: none;
+    }
+    
+    /* 觸控按鈕優化 */
+    .btn, .plan-button, .nav-cta, .line-login-btn {
+        min-height: 48px; /* iOS/Android 建議最小觸控目標 */
+        min-width: 48px;
+        padding: 14px 24px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        user-select: none;
+    }
+    
+    /* 觸控反饋 */
+    .btn:active, .plan-button:active, .nav-cta:active {
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
+        background-color: var(--primary-hover);
+    }
+    
+    .line-login-btn:active {
+        transform: scale(0.98);
+        background-color: #007a00;
+    }
+    
+    /* 卡片觸控回饋 */
+    .feature-card:active,
+    .audience-card:active,
+    .pricing-card:active {
+        transform: scale(0.98);
+        transition: transform 0.1s ease;
+    }
+}
+
+/* 手機橫屏優化 */
+@media (max-width: 896px) and (orientation: landscape) {
+    .hero {
+        padding: 80px 0 40px;
+    }
+    
+    .hero-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 60vh;
+    }
+    
+    .navbar {
+        padding: 12px 0;
+    }
+}
+
+/* 小螢幕手機優化 */
+@media (max-width: 480px) {
+    /* 導航優化 */
+    .navbar {
+        padding: 12px 0;
+    }
+    
+    .nav-links {
+        gap: 16px;
+    }
+    
+    .nav-links a {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+    
+    .logo {
+        font-size: 20px;
+    }
+    
+    /* 英雄區塊優化 */
+    .hero {
+        padding: 90px 0 50px;
+    }
+    
+    .hero h1 {
+        font-size: 1.8rem;
+        line-height: 1.3;
+        margin-bottom: 16px;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+        margin-bottom: 12px;
+    }
+    
+    .hero p {
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 24px;
+    }
+    
+    /* 按鈕組優化 */
+    .hero-buttons {
+        gap: 16px;
+    }
+    
+    .primary-buttons {
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+    }
+    
+    .btn {
+        width: 100%;
+        font-size: 16px;
+        padding: 16px 24px;
+        border-radius: 12px;
+    }
+    
+    /* 聊天演示優化 */
+    .chat-demo {
+        margin-top: 32px;
+        padding: 16px;
+        border-radius: 12px;
+    }
+    
+    .message-bubble {
+        font-size: 14px;
+        padding: 10px 14px;
+        border-radius: 16px;
+        max-width: 90%;
+    }
+    
+    /* 功能卡片網格優化 */
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .feature-card {
+        padding: 20px 16px;
+        border-radius: 12px;
+    }
+    
+    .feature-icon {
+        font-size: 1.5rem;
+        margin-bottom: 12px;
+    }
+    
+    /* 目標客群網格優化 */
+    .audience-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    
+    .audience-card {
+        padding: 20px 16px;
+    }
+    
+    .audience-icon {
+        font-size: 2rem;
+    }
+    
+    /* 價格卡片優化 */
+    .pricing-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .pricing-card {
+        padding: 24px 20px;
+        margin: 0;
+    }
+    
+    .plan-price {
+        font-size: 2rem;
+    }
+    
+    /* 比較表格響應式 */
+    .comparison-table {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 12px;
+    }
+    
+    .comparison-table table {
+        min-width: 600px;
+    }
+    
+    .comparison-table th,
+    .comparison-table td {
+        padding: 8px;
+        font-size: 12px;
+    }
+    
+    /* 步驟卡片優化 */
+    .steps-container {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .step-card {
+        padding: 20px;
+        border-radius: 12px;
+    }
+    
+    .step-number {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+    
+    /* 容器間距優化 */
+    .container {
+        padding: 0 16px;
+    }
+    
+    .section-title h2 {
+        font-size: 1.5rem;
+        line-height: 1.3;
+        margin-bottom: 12px;
+    }
+    
+    .section-title p {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    
+    /* 段落間距優化 */
+    section {
+        padding: 40px 0;
+    }
+    
+    .hero {
+        padding: 90px 0 40px;
+    }
+}
+
+/* 超小螢幕優化 (iPhone SE 等) */
+@media (max-width: 375px) {
+    .hero h1 {
+        font-size: 1.6rem;
+    }
+    
+    .btn {
+        padding: 14px 20px;
+        font-size: 15px;
+    }
+    
+    .feature-card,
+    .audience-card,
+    .pricing-card {
+        padding: 16px 12px;
+    }
+    
+    .container {
+        padding: 0 12px;
+    }
+}
+
+/* 觸控滑動增強 */
+.chat-demo,
+.comparison-table {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+
+.chat-message {
+    scroll-snap-align: start;
+}
+
+/* iOS Safari 優化 */
+@supports (-webkit-touch-callout: none) {
+    .btn, .plan-button {
+        -webkit-appearance: none;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+    }
+    
+    /* 修復 iOS viewport 問題 */
+    .hero {
+        min-height: calc(100vh - 120px);
+        min-height: calc(100dvh - 120px); /* 動態視窗高度 */
+    }
+}
+
+/* Android Chrome 優化 */
+@media screen and (-webkit-min-device-pixel-ratio: 1) {
+    .btn:focus,
+    .plan-button:focus {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+}
+
+/* 可訪問性增強 */
+@media (prefers-reduced-motion: reduce) {
+    .chat-message,
+    .fade-in,
+    .slide-in-left,
+    .slide-in-right {
+        transition: none;
+        animation: none;
+    }
+    
+    .btn:active,
+    .feature-card:active {
+        transform: none;
+    }
+}
+
+/* 高對比模式支援 */
+@media (prefers-contrast: high) {
+    .btn,
+    .plan-button {
+        border: 2px solid currentColor;
+        font-weight: 700;
+    }
+    
+    .line-login-btn {
+        border: 2px solid #fff;
+    }
+    
+    .feature-card,
+    .audience-card,
+    .pricing-card {
+        border: 2px solid var(--text-primary);
+    }
+}
+
+/* 暗色模式支援 (預留) */
+@media (prefers-color-scheme: dark) {
+    /* 未來可以擴展暗色模式支援 */
+}
+
+/* 手勢操作改善 */
+.side-panel {
+    touch-action: pan-y;
+}
+
+.side-panel-content {
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* 虛擬鍵盤適應 */
+@media (max-height: 500px) {
+    .dialog-content {
+        max-height: 95vh;
+        top: 2.5vh;
+        transform: translateX(-50%);
+    }
+    
+    .hero {
+        padding: 60px 0 30px;
+    }
+}

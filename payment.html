@@ -3,41 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="version" content="v1.0.0-20250815">
     <title>模擬付款頁面</title>
-    <style>
-        body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; text-align: center; }
-        button { padding: 12px 24px; font-size: 16px; background: #4f46e5; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
-        button:hover { background: #4338ca; }
-    </style>
+    <link rel="stylesheet" href="css/payment.css">
 </head>
 <body>
     <h1>金流模擬頁面</h1>
     <p id="info">正在載入訂單資訊…</p>
     <!-- 顯示使用者的 LINE ID，用於付款確認 -->
-    <div id="lineInfo" style="margin: 16px 0; font-size:14px;"></div>
+    <div id="lineInfo"></div>
     <button id="finishBtn">完成付款</button>
-    <script>
-        // 讀取 URL 參數
-        const params     = new URLSearchParams(window.location.search);
-        const method     = params.get('method') || '';
-        const groupCount = params.get('groupCount') || '1';
-        const total      = params.get('total') || '';
-        const period     = params.get('period') || '';
-        // 顯示訂單資訊
-        const infoEl       = document.getElementById('info');
-        const lineInfoEl   = document.getElementById('lineInfo');
-        const decodedMethod= decodeURIComponent(method);
-        const decodedLineId= params.get('lineId') ? decodeURIComponent(params.get('lineId')) : '';
-        infoEl.textContent = `付款方式：${decodedMethod}，群組數量：${groupCount}，總金額：${total}`;
-        // 如果有傳入 LINE ID，顯示於付款頁讓使用者確認
-        if (decodedLineId) {
-            lineInfoEl.textContent = `您的 LINE ID：${decodedLineId}`;
-        }
-        // 完成付款後導回訂閱頁並帶上成功標記與 LINE ID
-        document.getElementById('finishBtn').addEventListener('click', () => {
-            const returnUrl = `subscription.html?status=success&groupCount=${encodeURIComponent(groupCount)}&total=${encodeURIComponent(total)}&period=${encodeURIComponent(period)}&lineId=${encodeURIComponent(decodedLineId)}`;
-            window.location.href = returnUrl;
-        });
-    </script>
+    <script src="js/payment.js"></script>
 </body>
 </html>

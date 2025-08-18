@@ -1,0 +1,31 @@
+/* ===== Payment頁面樣式 v1.0.0 - 2025.08.15 ===== */
+
+body { 
+    font-family: sans-serif; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    height: 100vh; 
+    padding: 20px; 
+    text-align: center; 
+}
+
+button { 
+    padding: 12px 24px; 
+    font-size: 16px; 
+    background: #4f46e5; 
+    color: #fff; 
+    border: none; 
+    border-radius: 6px; 
+    cursor: pointer; 
+}
+
+button:hover { 
+    background: #4338ca; 
+}
+
+#lineInfo {
+    margin: 16px 0; 
+    font-size: 14px;
+}

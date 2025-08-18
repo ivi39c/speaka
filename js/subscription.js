@@ -1,4 +1,6 @@
-/* ===== Speaka 訂閱頁面優化腳本 ===== */
+/* ===== Speaka 訂閱頁面優化腳本 v1.0.0 - 2025.08.15 ===== */
+
+console.log('%c💰 Subscription.js v1.0.0 載入完成', 'color: #10b981; font-weight: bold; font-size: 12px;');
 
 // 繼承主頁面的核心功能
 const SpeakaCore = {
@@ -145,7 +147,7 @@ const SubscriptionPage = {
         this.initFloatingButton();
         this.initTermsCheckbox();
         this.updatePrice();
-        console.log('✅ 訂閱頁面初始化完成');
+        console.log('%c✅ 訂閱頁面初始化完成 (v1.0.0)', 'color: #10b981; font-weight: bold;');
     },
 
     // 快取常用DOM元素
@@ -161,6 +163,16 @@ const SubscriptionPage = {
             floatingCtaBtn: document.getElementById('floatingCtaBtn'),
             form: document.getElementById('subscriptionForm')
         };
+        
+        // 確保所有必要元素都存在
+        console.log('DOM元素快取結果:', {
+            groupCountInput: !!this.domElements.groupCountInput,
+            unitPrice: !!this.domElements.unitPrice,
+            groupQuantity: !!this.domElements.groupQuantity,
+            subtotal: !!this.domElements.subtotal,
+            totalPrice: !!this.domElements.totalPrice,
+            floatingTotalPrice: !!this.domElements.floatingTotalPrice
+        });
     },
 
     // 判斷當前頁面是否存在訂閱表單
@@ -170,65 +182,27 @@ const SubscriptionPage = {
 
     // 價格計算相關初始設定
     initPriceCalculation() {
-        const groupCountInput = document.getElementById('groupCount');
-        const billingRadios   = document.querySelectorAll('input[name="billingPeriod"]');
-        if (groupCountInput) {
-            // 用於節流的變數
-            let updateTimeout = null;
-            
-            // 防止重複綁定事件
-            if (groupCountInput.hasAttribute('data-initialized')) {
-                return;
+        // 儲存當前群組數量
+        this.currentGroupCount = 1;
+        
+        // 監聽群組數量變化
+        document.addEventListener('input', (e) => {
+            if (e.target && e.target.id === 'groupCount') {
+                const value = parseInt(e.target.value) || 1;
+                this.currentGroupCount = value; // 儲存最新值
+                this.updatePriceWithValue(value);
             }
-            groupCountInput.setAttribute('data-initialized', 'true');
-            
-            // 限制輸入範圍並即時更新價格（加入節流控制）
-            groupCountInput.addEventListener('input', (e) => {
-                let value = parseInt(e.target.value) || 1;
-                if (value < 1) value = 1;
-                if (value > 999) value = 999;
-                e.target.value = value;
-                
-                // 清除之前的計時器
-                if (updateTimeout) {
-                    clearTimeout(updateTimeout);
-                }
-                
-                // 設置新的計時器，延遲更新價格
-                updateTimeout = setTimeout(() => {
-                    this.updatePrice();
-                }, 100); // 100ms 延遲
-            });
-            
-            // 失焦時立即更新（確保最終一致性）
-            groupCountInput.addEventListener('blur', (e) => {
-                if (updateTimeout) {
-                    clearTimeout(updateTimeout);
-                }
-                let value = parseInt(e.target.value) || 1;
-                if (value < 1) value = 1;
-                if (value > 999) value = 999;
-                e.target.value = value;
-                this.updatePrice();
-            });
-            
-            // 支援上下鍵調整數量
-            groupCountInput.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    this.adjustGroupCount(1);
-                } else if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    this.adjustGroupCount(-1);
-                }
-            });
-        }
-        billingRadios.forEach(radio => {
-            radio.addEventListener('change', () => {
-                this.updatePrice();
-                this.highlightSelectedPlan(radio);
-            });
         });
+        
+        // 監聽計費週期變化
+        document.addEventListener('change', (e) => {
+            if (e.target && e.target.name === 'billingPeriod') {
+                // 使用儲存的群組數量值
+                this.updatePriceWithValue(this.currentGroupCount);
+                this.highlightSelectedPlan(e.target);
+            }
+        });
+        
         const defaultRadio = document.querySelector('input[name="billingPeriod"]:checked');
         if (defaultRadio) {
             this.highlightSelectedPlan(defaultRadio);
@@ -259,30 +233,64 @@ const SubscriptionPage = {
 
     // 計算並更新價格顯示
     updatePrice() {
-        const groupCount    = parseInt(this.domElements.groupCountInput?.value) || 1;
+        const groupCountInput = document.getElementById('groupCount');
+        // 重新獲取最新的值，並添加更多調試
+        const rawValue = groupCountInput?.value;
+        const groupCount = parseInt(rawValue) || 1;
         const selectedPeriod= document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
         const priceInfo     = this.prices[selectedPeriod];
+        
+        console.log('🔢 更新價格計算:', {
+            rawValue,
+            groupCount,
+            selectedPeriod,
+            priceInfo: priceInfo ? `${priceInfo.price}/${priceInfo.period}` : 'null',
+            inputElement: groupCountInput
+        });
+        
         if (!priceInfo) return;
         const unitPrice = priceInfo.price;
         const total     = unitPrice * groupCount;
+        
+        console.log('💰 價格計算結果:', { unitPrice, groupCount, total });
+        
+        this.updatePriceDisplay(unitPrice, groupCount, total, priceInfo.period);
+        this.updatePageTitle(total);
+    },
+
+    // 使用指定值更新價格（避免DOM查詢問題）
+    updatePriceWithValue(groupCount) {
+        const selectedPeriod = document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
+        const priceInfo = this.prices[selectedPeriod];
+        
+        if (!priceInfo) return;
+        const unitPrice = priceInfo.price;
+        const total = unitPrice * groupCount;
+        
         this.updatePriceDisplay(unitPrice, groupCount, total, priceInfo.period);
         this.updatePageTitle(total);
     },
 
     // 依據計算結果更新各欄位文字
     updatePriceDisplay(unitPrice, groupCount, total, period) {
+        console.log('📝 更新價格顯示:', { unitPrice, groupCount, total, period });
+        
         // 使用快取的DOM元素
         if (this.domElements.unitPrice) {
             this.domElements.unitPrice.textContent = `NT$ ${unitPrice.toLocaleString()} / 群組 / ${period}`;
+            console.log('✅ 單價已更新:', this.domElements.unitPrice.textContent);
         }
         if (this.domElements.groupQuantity) {
             this.domElements.groupQuantity.textContent = `${groupCount} 個群組`;
+            console.log('✅ 群組數量已更新:', this.domElements.groupQuantity.textContent);
         }
         if (this.domElements.subtotal) {
             this.domElements.subtotal.textContent = `NT$ ${total.toLocaleString()}`;
+            console.log('✅ 小計已更新:', this.domElements.subtotal.textContent);
         }
         if (this.domElements.totalPrice) {
             this.domElements.totalPrice.textContent = `NT$ ${total.toLocaleString()}`;
+            console.log('✅ 總價已更新:', this.domElements.totalPrice.textContent);
         }
         if (this.domElements.floatingTotalPrice) {
             this.domElements.floatingTotalPrice.textContent = `NT$ ${total.toLocaleString()}`;
@@ -290,6 +298,7 @@ const SubscriptionPage = {
             this.domElements.floatingTotalPrice.style.fontWeight = '900';
             this.domElements.floatingTotalPrice.style.fontSize = '24px';
             this.domElements.floatingTotalPrice.style.letterSpacing = '0.5px';
+            console.log('✅ 浮動總價已更新:', this.domElements.floatingTotalPrice.textContent);
         }
     },
 

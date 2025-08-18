@@ -9,7 +9,7 @@ const cors = require('cors');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // LINE Channel 設定 (模擬版本 - 不含真實憑證)
 const LINE_CHANNEL_ID = 'DEMO_CHANNEL_ID';

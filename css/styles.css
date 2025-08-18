@@ -1,4 +1,4 @@
-/* ===== Speaka 現代簡約樣式 styles.css ===== */
+/* ===== Speaka 現代簡約樣式 v1.0.0 - 2025.08.15 ===== */
 
 /* ===== 基礎重置和字體 ===== */
 * {
@@ -164,11 +164,10 @@ body {
     border: 1px solid var(--border);
 }
 
-.user-avatar {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    object-fit: cover;
+.user-avatar-icon {
+    font-size: 28px;
+    color: var(--primary);
+    line-height: 1;
 }
 
 .user-profile span {
@@ -211,6 +210,29 @@ body {
 
 .nav-cta::after {
     display: none;
+}
+
+/* ===== 漢堡菜單樣式 ===== */
+.hamburger-menu {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: var(--transition);
+    color: var(--text-primary);
+    margin-left: auto;
+}
+
+.hamburger-menu:hover {
+    background: var(--surface);
+    color: var(--primary);
+}
+
+.hamburger-menu .material-symbols-outlined {
+    font-size: 24px;
+    line-height: 1;
 }
 
 /* ===== 按鈕系統 ===== */
@@ -1022,6 +1044,10 @@ body {
     
     .nav-links {
         display: none;
+    }
+    
+    .hamburger-menu {
+        display: block;
     }
     
     .hero {
