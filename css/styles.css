@@ -1,32 +1,8 @@
 /* ===== Speaka 現代簡約樣式 v1.0.0 - 2025.08.15 ===== */
 
-/* ===== 基礎重置和字體 ===== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* 基礎重置樣式已移至 css/core/mobile-first.css */
 
-:root {
-    --primary: #2563eb;
-    --primary-hover: #1d4ed8;
-    --primary-light: #eff6ff;
-    --secondary: #64748b;
-    --accent: #10b981;
-    --background: #ffffff;
-    --surface: #f8fafc;
-    --border: #e2e8f0;
-    --text-primary: #0f172a;
-    --text-secondary: #64748b;
-    --text-light: #94a3b8;
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
-    --radius: 12px;
-    --radius-lg: 16px;
-    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
+/* CSS 變數已移至 css/core/mobile-first.css 統一管理 */
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
