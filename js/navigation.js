@@ -1,9 +1,9 @@
 /**
- * Speaka Navigation and Sidebar Component v1.1.0 - 2025.08.18
+ * Speaka Navigation and Sidebar Component v1.2.0 - 2025.08.18
  * 共用導覽列和側邊欄組件
  */
 
-console.log('%c🚀 Navigation.js v1.1.0 載入完成', 'color: #3b82f6; font-weight: bold; font-size: 12px;');
+console.log('%c🚀 Navigation.js v1.2.0 載入完成', 'color: #3b82f6; font-weight: bold; font-size: 12px;');
 
 class NavigationManager {
     constructor() {

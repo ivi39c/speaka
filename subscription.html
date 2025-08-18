@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="version" content="v1.1.0-20250818">
+    <meta name="version" content="v1.2.0-20250818">
     <title>訂閱 Speaka | 專業多語系翻譯機器人</title>
     
     <!-- Google Material Icons -->
@@ -149,31 +149,31 @@
                             <!-- 姓名 -->
                             <div class="form-group">
                                 <label for="contactName" class="form-label required">聯絡人姓名</label>
-                                <input type="text" id="contactName" name="contactName" class="form-input" required>
+                                <input type="text" id="contactName" name="contactName" class="form-input-enhanced" required>
                                 <div class="input-hint">請輸入真實姓名，2-20個字符</div>
                             </div>
                             <!-- LINE ID -->
                             <div class="form-group">
                                 <label for="lineId" class="form-label required">LINE ID</label>
-                                <input type="text" id="lineId" name="lineId" class="form-input" placeholder="請輸入您的 LINE ID" required>
+                                <input type="text" id="lineId" name="lineId" class="form-input-enhanced" placeholder="請輸入您的 LINE ID" required>
                                 <div class="input-hint">請填寫您的 LINE ID，以協助後續開通服務</div>
                             </div>
                             <!-- 電話 -->
                             <div class="form-group">
                                 <label for="phone" class="form-label required">聯絡電話</label>
-                                <input type="tel" id="phone" name="phone" class="form-input" required>
+                                <input type="tel" id="phone" name="phone" class="form-input-enhanced" required>
                                 <div class="input-hint">格式：09xxxxxxxx 或 02-xxxxxxxx</div>
                             </div>
                             <!-- 電子郵件 -->
                             <div class="form-group">
                                 <label for="email" class="form-label required">電子郵件</label>
-                                <input type="email" id="email" name="email" class="form-input" required>
+                                <input type="email" id="email" name="email" class="form-input-enhanced" required>
                                 <div class="input-hint">用於接收訂閱確認和重要通知</div>
                             </div>
                             <!-- 發票類型 -->
                             <div class="form-group">
                                 <label for="invoiceType" class="form-label required">發票類型</label>
-                                <select id="invoiceType" name="invoiceType" class="form-select" required>
+                                <select id="invoiceType" name="invoiceType" class="form-input-enhanced" required>
                                     <option value="">請選擇發票類型</option>
                                     <option value="none">免開發票</option>
 <option value="personal">個人發票</option>
@@ -184,29 +184,29 @@
                             <!-- 個人發票：共通載具號碼 -->
                             <div class="form-group personal-field" style="display: none;">
                                 <label for="carrierNumber" class="form-label">共通載具號碼</label>
-                                <input type="text" id="carrierNumber" name="carrierNumber" class="form-input" placeholder="請輸入共通載具號碼">
+                                <input type="text" id="carrierNumber" name="carrierNumber" class="form-input-enhanced" placeholder="請輸入共通載具號碼">
                                 <div class="input-hint">若無共通載具，可留空或填寫寄送地址</div>
                             </div>
                             <!-- 個人發票：寄送地址 -->
                             <div class="form-group personal-field full-width" style="display: none;">
                                 <label for="address" class="form-label">寄送地址</label>
-                                <input type="text" id="address" name="address" class="form-input" placeholder="發票寄送地址（選填）">
+                                <input type="text" id="address" name="address" class="form-input-enhanced" placeholder="發票寄送地址（選填）">
                                 <div class="input-hint">如需紙本發票寄送請填寫</div>
                             </div>
                             <!-- 公司發票相關欄位 -->
                             <div class="form-group company-field" style="display: none;">
                                 <label for="companyName" class="form-label">公司名稱</label>
-                                <input type="text" id="companyName" name="companyName" class="form-input">
+                                <input type="text" id="companyName" name="companyName" class="form-input-enhanced">
                                 <div class="input-hint">請輸入完整的公司名稱</div>
                             </div>
                             <div class="form-group company-field" style="display: none;">
                                 <label for="taxId" class="form-label">統一編號</label>
-                                <input type="text" id="taxId" name="taxId" class="form-input" pattern="[0-9]{8}" maxlength="8">
+                                <input type="text" id="taxId" name="taxId" class="form-input-enhanced" pattern="[0-9]{8}" maxlength="8">
                                 <div class="input-hint">8位數字，系統會自動驗證格式</div>
                             </div>
                             <div class="form-group company-field full-width" style="display: none;">
                                 <label for="companyAddress" class="form-label">公司地址</label>
-                                <input type="text" id="companyAddress" name="companyAddress" class="form-input" placeholder="請輸入公司地址">
+                                <input type="text" id="companyAddress" name="companyAddress" class="form-input-enhanced" placeholder="請輸入公司地址">
                                 <div class="input-hint">公司發票寄送地址</div>
                             </div>
                         </div>
@@ -221,10 +221,11 @@
                             </label>
                         </div>
                     </div>
-
+                    
                     <!-- 安全提示 -->
-                    <div class="security-note" style="text-align: center; margin-top: 32px;">
+                    <div class="security-note" style="text-align: center; margin-top: 16px;">
                         <p>🔒 您的個人資訊將會被安全加密處理</p>
+                        <p style="font-size: 14px; color: #6b7280; margin-top: 8px;">請同意服務條款和隱私政策後，才能進行訂閱</p>
                     </div>
                 </form>
             </div>

@@ -146,9 +146,9 @@
     white-space: nowrap;
 }
 
+/* 統一的加強版輸入框樣式 */
+.form-input-enhanced,
 .groups-input {
-    flex: 1;
-    min-width: 200px;
     padding: 14px 16px;
     border: 2px solid var(--border);
     border-radius: var(--radius);
@@ -156,21 +156,32 @@
     font-weight: 500;
     transition: var(--transition);
     background: white;
+    box-sizing: border-box;
+}
+
+.groups-input {
+    flex: 1;
+    min-width: 200px;
     text-align: center;
 }
 
+.form-input-enhanced:focus,
 .groups-input:focus {
     outline: none;
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
+/* 隱藏數字輸入的箭頭 */
+.form-input-enhanced[type="number"]::-webkit-outer-spin-button,
+.form-input-enhanced[type="number"]::-webkit-inner-spin-button,
 .groups-input::-webkit-outer-spin-button,
 .groups-input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
+.form-input-enhanced[type="number"],
 .groups-input[type=number] {
     -moz-appearance: textfield;
 }

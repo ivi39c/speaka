@@ -1,6 +1,6 @@
-/* ===== Payment頁面腳本 v1.1.0 - 2025.08.18 ===== */
+/* ===== Payment頁面腳本 v1.2.0 - 2025.08.18 ===== */
 
-console.log('%c💳 Payment.js v1.1.0 載入完成', 'color: #f59e0b; font-weight: bold; font-size: 12px;');
+console.log('%c💳 Payment.js v1.2.0 載入完成', 'color: #f59e0b; font-weight: bold; font-size: 12px;');
 
 // 讀取 URL 參數
 const params     = new URLSearchParams(window.location.search);
