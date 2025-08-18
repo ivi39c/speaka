@@ -424,10 +424,12 @@ class NavigationManager {
             }
         ];
 
-        // 創建簡化的訂閱記錄HTML
+        // 創建訂閱記錄HTML (包含PC版表格和手機版卡片)
         const historyHTML = `
             <div class="subscription-history">
                 <h3>我的訂閱記錄</h3>
+                
+                <!-- PC版表格佈局 -->
                 <div class="subscription-table">
                     <div class="table-header">
                         <div class="col-order">訂單編號</div>
@@ -456,6 +458,42 @@ class NavigationManager {
                         `).join('')}
                     </div>
                 </div>
+                
+                <!-- 手機版卡片佈局 -->
+                <div class="subscription-cards">
+                    ${mockSubscriptions.map(sub => `
+                        <div class="subscription-card">
+                            <h4>${sub.orderNo}</h4>
+                            <div class="card-detail">
+                                <span class="label">方案:</span>
+                                <span class="value">${sub.plan}</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="label">群組數:</span>
+                                <span class="value">${sub.groups} 個</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="label">總計:</span>
+                                <span class="value">${sub.amount}</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="label">訂閱時間:</span>
+                                <span class="value">${sub.startDate}</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="label">到期時間:</span>
+                                <span class="value">${sub.endDate}</span>
+                            </div>
+                            <div class="card-detail">
+                                <span class="label">狀態:</span>
+                                <span class="value ${sub.status === '使用中' ? 'status-active' : 'status-expired'}">
+                                    ${sub.status}
+                                </span>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
                 <div class="subscription-actions">
                     <button class="btn-subscribe" onclick="window.location.href='subscription.html'">
                         新增訂閱

@@ -136,6 +136,8 @@ const SubscriptionPage = {
         if (!this.isSubscriptionPage()) return;
         // 快取DOM元素提升性能
         this.cacheDOM();
+        // 處理來自首頁的計費週期參數
+        this.handleURLParams();
         // 如果帶著付款結果回到訂閱頁，立即檢查並提示
         this.checkPaymentStatus();
         this.initPriceCalculation();
@@ -178,6 +180,29 @@ const SubscriptionPage = {
     // 判斷當前頁面是否存在訂閱表單
     isSubscriptionPage() {
         return document.getElementById('subscriptionForm') !== null;
+    },
+
+    // 處理來自首頁的URL參數
+    handleURLParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const period = urlParams.get('period');
+        
+        if (period && this.prices[period]) {
+            console.log('🔗 檢測到計費週期參數:', period);
+            
+            // 設定對應的計費週期選項
+            const radio = document.querySelector(`input[name="billingPeriod"][value="${period}"]`);
+            if (radio) {
+                radio.checked = true;
+                this.highlightSelectedPlan(radio);
+                console.log('✅ 已自動選擇計費週期:', period);
+                
+                // 清除URL參數避免重複處理
+                const newUrl = new URL(window.location);
+                newUrl.searchParams.delete('period');
+                window.history.replaceState({}, '', newUrl);
+            }
+        }
     },
 
     // 價格計算相關初始設定
