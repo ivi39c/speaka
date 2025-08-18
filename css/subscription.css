@@ -493,6 +493,10 @@
     animation: errorSlideIn 0.3s ease-out;
 }
 
+.terms-section .error-message {
+    text-align: center;
+}
+
 .input-hint {
     color: var(--text-light);
     font-size: 13px;

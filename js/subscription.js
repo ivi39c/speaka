@@ -684,15 +684,36 @@ const SubscriptionPage = {
         const errorDiv = document.createElement('div');
         errorDiv.className = 'error-message';
         errorDiv.textContent = message;
-        field.parentNode.appendChild(errorDiv);
+        
+        // 針對條款同意checkbox，將錯誤訊息放在terms-section下方
+        if (field.id === 'agreeTerms') {
+            const termsSection = field.closest('.terms-section');
+            if (termsSection) {
+                termsSection.appendChild(errorDiv);
+            } else {
+                field.parentNode.appendChild(errorDiv);
+            }
+        } else {
+            field.parentNode.appendChild(errorDiv);
+        }
     },
 
     // 清除欄位錯誤顯示
     clearFieldError(field) {
         field.classList.remove('error');
         field.style.borderColor = '';
-        const errorMessages = field.parentNode.querySelectorAll('.error-message');
-        errorMessages.forEach(msg => msg.remove());
+        
+        // 針對條款同意checkbox，需要從terms-section清除錯誤訊息
+        if (field.id === 'agreeTerms') {
+            const termsSection = field.closest('.terms-section');
+            if (termsSection) {
+                const errorMessages = termsSection.querySelectorAll('.error-message');
+                errorMessages.forEach(msg => msg.remove());
+            }
+        } else {
+            const errorMessages = field.parentNode.querySelectorAll('.error-message');
+            errorMessages.forEach(msg => msg.remove());
+        }
     },
 
     // 清除所有錯誤狀態
