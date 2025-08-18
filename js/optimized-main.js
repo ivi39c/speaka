@@ -1,6 +1,6 @@
-/* ===== Speaka 優化版主腳本 v1.0.0 - 2025.08.15 ===== */
+/* ===== Speaka 優化版主腳本 v1.1.0 - 2025.08.18 ===== */
 
-console.log('%c🏠 OptimizedMain.js v1.0.0 載入完成', 'color: #8b5cf6; font-weight: bold; font-size: 12px;');
+console.log('%c🏠 OptimizedMain.js v1.1.0 載入完成', 'color: #8b5cf6; font-weight: bold; font-size: 12px;');
 
 // ===== 核心工具函數 =====
 const Utils = {

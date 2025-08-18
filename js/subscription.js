@@ -1,6 +1,6 @@
-/* ===== Speaka 訂閱頁面優化腳本 v1.0.0 - 2025.08.15 ===== */
+/* ===== Speaka 訂閱頁面優化腳本 v1.1.0 - 2025.08.18 ===== */
 
-console.log('%c💰 Subscription.js v1.0.0 載入完成', 'color: #10b981; font-weight: bold; font-size: 12px;');
+console.log('%c💰 Subscription.js v1.1.0 載入完成', 'color: #10b981; font-weight: bold; font-size: 12px;');
 
 // 繼承主頁面的核心功能
 const SpeakaCore = {
@@ -149,7 +149,7 @@ const SubscriptionPage = {
         this.initFloatingButton();
         this.initTermsCheckbox();
         this.updatePrice();
-        console.log('%c✅ 訂閱頁面初始化完成 (v1.0.0)', 'color: #10b981; font-weight: bold;');
+        console.log('%c✅ 訂閱頁面初始化完成 (v1.1.0)', 'color: #10b981; font-weight: bold;');
     },
 
     // 快取常用DOM元素

@@ -1,6 +1,6 @@
-/* ===== Index頁面內嵌腳本整合 v1.0.0 - 2025.08.15 ===== */
+/* ===== Index頁面內嵌腳本整合 v1.1.0 - 2025.08.18 ===== */
 
-console.log('%c📄 IndexInline.js v1.0.0 載入完成', 'color: #f59e0b; font-weight: bold; font-size: 12px;');
+console.log('%c📄 IndexInline.js v1.1.0 載入完成', 'color: #f59e0b; font-weight: bold; font-size: 12px;');
 
 // 載入性能監控和資源預載入
 (function() {
