@@ -107,8 +107,7 @@ class LineLogin {
                 
                 <div class="dialog-body">
                     <div class="login-preview">
-                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=80&h=80&fit=crop&crop=face&auto=format&q=80" 
-                             alt="預覽頭像" style="width: 60px; height: 60px; border-radius: 50%; margin-bottom: 12px;">
+                        <div style="font-size: 48px; margin-bottom: 12px;">👤</div>
                         <p><strong>陳小美</strong></p>
                         <p style="color: var(--text-secondary); font-size: 14px;">將會使用此 LINE 帳號登入</p>
                     </div>

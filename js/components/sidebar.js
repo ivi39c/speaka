@@ -58,9 +58,9 @@ class Sidebar {
             <!-- 用戶資訊區域 -->
             <div class="sidebar-header">
                 <div class="user-info">
-                    <img src="${user.pictureUrl}" alt="用戶頭像" class="user-avatar">
+                    <div class="user-welcome-icon">👋</div>
                     <div class="user-details">
-                        <h3 class="user-name">${user.displayName}</h3>
+                        <h3 class="user-name">歡迎，${user.displayName}</h3>
                         <p class="user-id">@${user.userId}</p>
                     </div>
                 </div>

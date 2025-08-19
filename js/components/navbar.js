@@ -74,20 +74,17 @@ class Navbar {
     getTopNavActions(isLoggedIn, user) {
         if (isLoggedIn && user) {
             return `
-                <button class="user-avatar-btn" id="userAvatarBtn" style="
-                    width: 36px;
-                    height: 36px;
-                    border-radius: 50%;
+                <button class="user-welcome-btn" id="userWelcomeBtn" style="
                     border: none;
-                    overflow: hidden;
                     cursor: pointer;
-                    background: var(--bg-secondary);
+                    background: transparent;
+                    padding: 8px 12px;
+                    border-radius: var(--radius);
+                    color: var(--text-primary);
+                    font-size: 14px;
+                    font-weight: 500;
                 ">
-                    <img src="${user.pictureUrl}" alt="用戶頭像" style="
-                        width: 100%;
-                        height: 100%;
-                        object-fit: cover;
-                    ">
+                    歡迎，${user.displayName}
                 </button>
             `;
         } else {
@@ -149,10 +146,10 @@ class Navbar {
      * 頂部導航事件
      */
     bindTopNavEvents() {
-        // 用戶頭像點擊
-        const userAvatarBtn = document.getElementById('userAvatarBtn');
-        if (userAvatarBtn) {
-            userAvatarBtn.addEventListener('click', () => {
+        // 用戶歡迎文字點擊
+        const userWelcomeBtn = document.getElementById('userWelcomeBtn');
+        if (userWelcomeBtn) {
+            userWelcomeBtn.addEventListener('click', () => {
                 this.state.setState({ sidebarOpen: true });
             });
         }
