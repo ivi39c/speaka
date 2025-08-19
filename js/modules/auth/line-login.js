@@ -279,16 +279,18 @@ class LineLogin {
             // 更新應用狀態
             this.state.logout();
 
-            // 顯示成功訊息
-            this.showSuccessMessage('已成功登出');
-
             // 觸發登出事件
             window.dispatchEvent(new CustomEvent('line:logout:success'));
+
+            // 延遲一下讓狀態更新完成，然後強制重新整理並返回首頁
+            setTimeout(() => {
+                window.location.href = '/';
+                window.location.reload();
+            }, 500);
 
         } catch (error) {
             console.error('登出失敗:', error);
             this.showErrorMessage('登出失敗，請稍後再試');
-        } finally {
             this.state.setLoading(false);
         }
     }
