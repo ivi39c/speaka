@@ -1,6 +1,5 @@
 /* ===== Index頁面內嵌腳本整合 v1.2.0 - 2025.08.18 ===== */
 
-console.log('%c📄 IndexInline.js v1.2.0 載入完成', 'color: #f59e0b; font-weight: bold; font-size: 12px;');
 
 // 載入性能監控和資源預載入
 (function() {

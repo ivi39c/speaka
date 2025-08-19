@@ -22,7 +22,6 @@ class Navbar {
         this.createBottomNavigation();
         this.bindEvents();
         
-        console.log('📱 Mobile 導航組件已初始化');
     }
 
     /**

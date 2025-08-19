@@ -261,7 +261,6 @@ class LineLogin {
             localStorage.setItem('lineProfile', JSON.stringify(profile));
             localStorage.setItem('lineAccessToken', 'mock_token_' + Date.now());
             
-            console.log('✅ 用戶資料已儲存');
         } catch (error) {
             console.warn('儲存用戶資料失敗:', error);
         }

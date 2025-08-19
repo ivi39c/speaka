@@ -61,10 +61,6 @@ class AppState {
         // 通知訂閱者
         this.notifySubscribers(oldState, this.state);
         
-        // 開發模式下的狀態日誌
-        if (this.isDevelopment()) {
-            console.log('🔄 State Updated:', { oldState, newState: this.state, updates });
-        }
     }
 
     /**

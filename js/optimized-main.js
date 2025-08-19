@@ -1,6 +1,5 @@
 /* ===== Speaka 優化版主腳本 v1.2.0 - 2025.08.18 ===== */
 
-console.log('%c🏠 OptimizedMain.js v1.2.0 載入完成', 'color: #8b5cf6; font-weight: bold; font-size: 12px;');
 
 // ===== 核心工具函數 =====
 const Utils = {
@@ -555,7 +554,6 @@ class SpeakaOptimizedApp {
                 detail: { timestamp: Date.now() }
             }));
             
-            console.log('✅ Speaka 優化版初始化完成');
             
         } catch (error) {
             console.error('❌ 初始化失敗:', error);

@@ -1,6 +1,5 @@
 /* ===== LINE Callback處理腳本 v1.2.0 - 2025.08.18 ===== */
 
-console.log('%c🔗 LineCallback.js v1.2.0 載入完成', 'color: #06d6a0; font-weight: bold; font-size: 12px;');
 
 // 處理 LINE Login 回調
 (async function handleLineCallback() {

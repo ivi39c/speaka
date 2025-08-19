@@ -3,7 +3,6 @@
  * 共用導覽列和側邊欄組件
  */
 
-console.log('%c🚀 Navigation.js v1.2.0 載入完成', 'color: #3b82f6; font-weight: bold; font-size: 12px;');
 
 class NavigationManager {
     constructor() {
@@ -352,7 +351,6 @@ class NavigationManager {
     }
 
     openSidePanel() {
-        console.log('Opening side panel...');
         const sidePanel = document.getElementById('sidePanel');
         if (sidePanel) {
             // 記錄當前滾動位置
@@ -364,14 +362,12 @@ class NavigationManager {
             document.body.style.top = `-${this.scrollPosition}px`;
             
             sidePanel.classList.add('active');
-            console.log('Side panel opened');
         } else {
             console.error('Side panel not found!');
         }
     }
 
     closeSidePanel() {
-        console.log('Closing side panel...');
         const sidePanel = document.getElementById('sidePanel');
         if (sidePanel) {
             sidePanel.classList.remove('active');
@@ -385,8 +381,6 @@ class NavigationManager {
             if (this.scrollPosition !== undefined) {
                 window.scrollTo(0, this.scrollPosition);
             }
-            
-            console.log('Side panel closed');
         } else {
             console.error('Side panel not found!');
         }

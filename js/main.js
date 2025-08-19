@@ -1,5 +1,8 @@
 /* ===== Speaka 現代簡約腳本 main.js ===== */
 
+// 版本信息
+window.SPEAKA_VERSION = 'v1.2.0';
+
 // ===== 核心功能模組 =====
 const SpeakaCore = {
     // 滾動時導航列效果
@@ -120,7 +123,6 @@ const SpeakaCore = {
         this.initSmoothScroll();
         this.initScrollAnimations();
         this.initPageLoad();
-        console.log('✅ Speaka Core 初始化完成');
     }
 };
 
@@ -272,7 +274,6 @@ const InteractiveEffects = {
         this.initButtonEffects();
         this.initNavLinkEffects();
         this.initChatAnimation();
-        console.log('✅ 互動效果初始化完成');
     }
 };
 
@@ -284,7 +285,6 @@ const ContactHandlers = {
             link.addEventListener('click', function(e) {
                 // 添加點擊追蹤
                 const contactType = this.href.includes('mailto') ? 'Email' : 'LINE';
-                console.log(`聯絡方式點擊: ${contactType}`);
                 
                 // 可以在這裡添加 GA 追蹤
                 if (typeof gtag !== 'undefined') {
@@ -320,7 +320,6 @@ const ContactHandlers = {
                 }, 300);
 
                 // 追蹤方案選擇
-                console.log(`方案選擇: ${planName}`);
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'plan_select', {
                         'plan_type': planParam
@@ -335,7 +334,6 @@ const ContactHandlers = {
         document.querySelectorAll('.btn-primary, .btn-secondary').forEach(button => {
             button.addEventListener('click', function(e) {
                 const buttonText = this.textContent.trim();
-                console.log(`CTA 按鈕點擊: ${buttonText}`);
                 
                 // 如果是外部連結，添加載入效果
                 if (this.href && !this.href.includes('#')) {
@@ -370,7 +368,6 @@ const ContactHandlers = {
         this.initPlanSelection();
         this.initCTAButtons();
         this.initBackButton();
-        console.log('✅ 聯絡功能初始化完成');
     }
 };
 
@@ -443,7 +440,6 @@ const PerformanceOptimizer = {
     init() {
         this.initLazyLoading();
         this.preloadCriticalResources();
-        console.log('✅ 性能優化初始化完成');
     }
 };
 
@@ -542,7 +538,6 @@ const UXEnhancer = {
         this.initFocusIndicators();
         this.initScrollProgress();
         this.initErrorHandling();
-        console.log('✅ 用戶體驗增強初始化完成');
     }
 };
 
@@ -553,7 +548,6 @@ const Analytics = {
         const pageTitle = document.title;
         const pagePath = window.location.pathname;
         
-        console.log(`頁面瀏覽: ${pageTitle} (${pagePath})`);
         
         if (typeof gtag !== 'undefined') {
             gtag('config', 'GA_MEASUREMENT_ID', {
@@ -580,7 +574,6 @@ const Analytics = {
                 milestones.forEach(milestone => {
                     if (scrollPercent >= milestone && !trackedMilestones.has(milestone)) {
                         trackedMilestones.add(milestone);
-                        console.log(`滾動深度: ${milestone}%`);
                         
                         if (typeof gtag !== 'undefined') {
                             gtag('event', 'scroll_depth', {
@@ -602,7 +595,6 @@ const Analytics = {
             const button = e.target.closest('.btn, .plan-button, .contact-btn');
             if (button) {
                 const buttonText = button.textContent.trim();
-                console.log(`按鈕點擊: ${buttonText}`);
                 
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'button_click', {
@@ -617,7 +609,6 @@ const Analytics = {
         document.addEventListener('click', (e) => {
             const link = e.target.closest('a[href^="http"]');
             if (link && !link.href.includes(window.location.hostname)) {
-                console.log(`外部連結點擊: ${link.href}`);
                 
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'external_link_click', {
@@ -638,8 +629,6 @@ const Analytics = {
                 const loadTime = perfData.loadEventEnd - perfData.fetchStart;
                 const domContentLoaded = perfData.domContentLoadedEventEnd - perfData.fetchStart;
                 
-                console.log(`頁面載入時間: ${Math.round(loadTime)}ms`);
-                console.log(`DOM 載入時間: ${Math.round(domContentLoaded)}ms`);
                 
                 if (typeof gtag !== 'undefined') {
                     gtag('event', 'timing_complete', {
@@ -657,7 +646,6 @@ const Analytics = {
         this.trackScrollDepth();
         this.trackInteractions();
         this.trackPerformance();
-        console.log('✅ 分析追蹤初始化完成');
     }
 };
 
@@ -678,7 +666,6 @@ const initializeApp = () => {
         UXEnhancer.init();
         Analytics.init();
         
-        console.log('🎉 Speaka 應用程式初始化完成！');
         
         // 發送初始化完成事件
         window.dispatchEvent(new CustomEvent('speakaReady', {

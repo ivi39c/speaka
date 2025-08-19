@@ -22,7 +22,6 @@ class Sidebar {
     async init() {
         this.createElement();
         this.bindEvents();
-        console.log('📱 側邊欄組件已初始化');
     }
 
     /**

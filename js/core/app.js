@@ -23,7 +23,6 @@ class SpeakaApp {
      */
     async init() {
         try {
-            console.log('🚀 Speaka App 初始化中...');
             
             // 初始化核心系統
             await this.initializeCore();
@@ -38,7 +37,6 @@ class SpeakaApp {
             await this.start();
             
             this.isInitialized = true;
-            console.log('✅ Speaka App 初始化完成');
             
         } catch (error) {
             console.error('❌ App 初始化失敗:', error);

@@ -1,6 +1,5 @@
 /* ===== Speaka 訂閱頁面優化腳本 v1.2.0 - 2025.08.18 ===== */
 
-console.log('%c💰 Subscription.js v1.2.0 載入完成', 'color: #10b981; font-weight: bold; font-size: 12px;');
 
 // 繼承主頁面的核心功能
 const SpeakaCore = {
@@ -149,7 +148,6 @@ const SubscriptionPage = {
         this.initFloatingButton();
         this.initTermsCheckbox();
         this.updatePrice();
-        console.log('%c✅ 訂閱頁面初始化完成 (v1.2.0)', 'color: #10b981; font-weight: bold;');
     },
 
     // 快取常用DOM元素
@@ -167,14 +165,6 @@ const SubscriptionPage = {
         };
         
         // 確保所有必要元素都存在
-        console.log('DOM元素快取結果:', {
-            groupCountInput: !!this.domElements.groupCountInput,
-            unitPrice: !!this.domElements.unitPrice,
-            groupQuantity: !!this.domElements.groupQuantity,
-            subtotal: !!this.domElements.subtotal,
-            totalPrice: !!this.domElements.totalPrice,
-            floatingTotalPrice: !!this.domElements.floatingTotalPrice
-        });
     },
 
     // 判斷當前頁面是否存在訂閱表單
@@ -188,14 +178,12 @@ const SubscriptionPage = {
         const period = urlParams.get('period');
         
         if (period && this.prices[period]) {
-            console.log('🔗 檢測到計費週期參數:', period);
             
             // 設定對應的計費週期選項
             const radio = document.querySelector(`input[name="billingPeriod"][value="${period}"]`);
             if (radio) {
                 radio.checked = true;
                 this.highlightSelectedPlan(radio);
-                console.log('✅ 已自動選擇計費週期:', period);
                 
                 // 清除URL參數避免重複處理
                 const newUrl = new URL(window.location);
@@ -265,19 +253,11 @@ const SubscriptionPage = {
         const selectedPeriod= document.querySelector('input[name="billingPeriod"]:checked')?.value || 'monthly';
         const priceInfo     = this.prices[selectedPeriod];
         
-        console.log('🔢 更新價格計算:', {
-            rawValue,
-            groupCount,
-            selectedPeriod,
-            priceInfo: priceInfo ? `${priceInfo.price}/${priceInfo.period}` : 'null',
-            inputElement: groupCountInput
-        });
         
         if (!priceInfo) return;
         const unitPrice = priceInfo.price;
         const total     = unitPrice * groupCount;
         
-        console.log('💰 價格計算結果:', { unitPrice, groupCount, total });
         
         this.updatePriceDisplay(unitPrice, groupCount, total, priceInfo.period);
         this.updatePageTitle(total);
@@ -298,24 +278,19 @@ const SubscriptionPage = {
 
     // 依據計算結果更新各欄位文字
     updatePriceDisplay(unitPrice, groupCount, total, period) {
-        console.log('📝 更新價格顯示:', { unitPrice, groupCount, total, period });
         
         // 使用快取的DOM元素
         if (this.domElements.unitPrice) {
             this.domElements.unitPrice.textContent = `NT$ ${unitPrice.toLocaleString()} / 群組 / ${period}`;
-            console.log('✅ 單價已更新:', this.domElements.unitPrice.textContent);
         }
         if (this.domElements.groupQuantity) {
             this.domElements.groupQuantity.textContent = `${groupCount} 個群組`;
-            console.log('✅ 群組數量已更新:', this.domElements.groupQuantity.textContent);
         }
         if (this.domElements.subtotal) {
             this.domElements.subtotal.textContent = `NT$ ${total.toLocaleString()}`;
-            console.log('✅ 小計已更新:', this.domElements.subtotal.textContent);
         }
         if (this.domElements.totalPrice) {
             this.domElements.totalPrice.textContent = `NT$ ${total.toLocaleString()}`;
-            console.log('✅ 總價已更新:', this.domElements.totalPrice.textContent);
         }
         if (this.domElements.floatingTotalPrice) {
             this.domElements.floatingTotalPrice.textContent = `NT$ ${total.toLocaleString()}`;
@@ -323,7 +298,6 @@ const SubscriptionPage = {
             this.domElements.floatingTotalPrice.style.fontWeight = '900';
             this.domElements.floatingTotalPrice.style.fontSize = '24px';
             this.domElements.floatingTotalPrice.style.letterSpacing = '0.5px';
-            console.log('✅ 浮動總價已更新:', this.domElements.floatingTotalPrice.textContent);
         }
     },
 
@@ -1262,7 +1236,6 @@ const SubscriptionPage = {
             this.handleSubscriptionSubmit();
         });
         
-        console.log('🎯 浮動按鈕已初始化');
     },
 
     // 處理訂閱提交（完整邏輯）
@@ -1312,7 +1285,6 @@ const SubscriptionPage = {
             }
         });
         
-        console.log('📋 條款同意checkbox已初始化');
     }
 };
 
@@ -1394,7 +1366,6 @@ function initializeSubscriptionPage() {
         SpeakaCore.init();
         SubscriptionPage.init();
         InteractiveEffects.init();
-        console.log('🎉 訂閱頁面初始化完成！');
         window.dispatchEvent(new CustomEvent('subscriptionPageReady', { detail: { timestamp: Date.now() } }));
     } catch (error) {
         console.error('❌ 訂閱頁面初始化失敗:', error);
