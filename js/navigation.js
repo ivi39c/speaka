@@ -299,6 +299,12 @@ class NavigationManager {
         this.closeSidePanel();
         
         console.log('用戶已登出');
+        
+        // 延遲一下讓UI更新完成，然後強制重新整理並返回首頁
+        setTimeout(() => {
+            window.location.href = '/';
+            window.location.reload();
+        }, 500);
     }
 
     showLoginButton() {
