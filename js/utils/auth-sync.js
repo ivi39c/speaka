@@ -84,7 +84,12 @@ export class AuthStateSynchronizer {
      * 劫持舊系統方法
      */
     interceptLegacyMethods() {
-        if (!this.legacyNavigation) return;
+        if (!this.legacyNavigation) {
+            console.log('AuthStateSynchronizer: 沒有找到舊系統導航管理器');
+            return;
+        }
+
+        console.log('AuthStateSynchronizer: 開始劫持舊系統方法');
 
         // 劫持 showUserProfile 方法
         const originalShowUserProfile = this.legacyNavigation.showUserProfile;
@@ -101,13 +106,14 @@ export class AuthStateSynchronizer {
                 // 分發事件
                 AuthEventDispatcher.dispatch(AUTH_EVENTS.LOGIN, profile);
             };
+            console.log('AuthStateSynchronizer: 已劫持 showUserProfile 方法');
         }
 
         // 劫持 showLoginButton 方法
         const originalShowLoginButton = this.legacyNavigation.showLoginButton;
         if (originalShowLoginButton) {
             this.legacyNavigation.showLoginButton = () => {
-                console.log('AuthStateSynchronizer: 舊系統登出');
+                console.log('AuthStateSynchronizer: 舊系統顯示登入按鈕');
                 
                 // 執行原始方法
                 originalShowLoginButton.call(this.legacyNavigation);
@@ -118,26 +124,11 @@ export class AuthStateSynchronizer {
                 // 分發事件
                 AuthEventDispatcher.dispatch(AUTH_EVENTS.LOGOUT);
             };
+            console.log('AuthStateSynchronizer: 已劫持 showLoginButton 方法');
         }
 
-        // 劫持 logout 方法
-        const originalLogout = this.legacyNavigation.logout;
-        if (originalLogout) {
-            this.legacyNavigation.logout = () => {
-                console.log('AuthStateSynchronizer: 舊系統執行登出');
-                
-                // 執行原始方法（但移除重複的頁面刷新）
-                StorageManager.clearAuthData();
-                this.legacyNavigation.showLoginButton();
-                this.legacyNavigation.closeSidePanel();
-                
-                // 同步到新系統
-                this.syncToModernSystem({ isLoggedIn: false, user: null });
-                
-                // 統一的登出後處理
-                this.handleUnifiedLogout();
-            };
-        }
+        // 不劫持 logout 方法，讓它自然執行
+        console.log('AuthStateSynchronizer: 不劫持 logout 方法，保持原始行為');
     }
 
     /**
@@ -252,17 +243,11 @@ export class AuthStateSynchronizer {
     }
 
     /**
-     * 統一的登出處理
+     * 統一的登出處理 (已棄用，由各系統自行處理)
      */
     handleUnifiedLogout() {
-        console.log('AuthStateSynchronizer: 執行統一登出流程');
-        
-        // 延遲執行頁面跳轉，確保狀態同步完成
-        setTimeout(() => {
-            // 強制重新整理整個頁面，清除所有快取和狀態
-            // 使用時間戳強制重新載入，繞過瀏覽器快取
-            window.location.href = '/?t=' + Date.now();
-        }, 500);
+        console.log('AuthStateSynchronizer: 統一登出處理已棄用');
+        // 不再執行統一登出，讓各系統自行處理頁面刷新
     }
 
     /**

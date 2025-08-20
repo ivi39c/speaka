@@ -298,8 +298,10 @@ class NavigationManager {
         
         console.log('用戶已登出');
         
-        // 頁面跳轉邏輯現在由 AuthStateSynchronizer 統一處理
-        // 避免重複的刷新操作
+        // 強制重新整理頁面，清除所有狀態
+        setTimeout(() => {
+            window.location.href = '/?t=' + Date.now();
+        }, 300);
     }
 
     showLoginButton() {
