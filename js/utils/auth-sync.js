@@ -259,8 +259,9 @@ export class AuthStateSynchronizer {
         
         // 延遲執行頁面跳轉，確保狀態同步完成
         setTimeout(() => {
+            // 強制重新整理整個頁面，清除所有快取和狀態
             window.location.href = '/';
-            window.location.reload();
+            window.location.reload(true);
         }, 500);
     }
 

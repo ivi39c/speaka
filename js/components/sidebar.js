@@ -169,9 +169,9 @@ class Sidebar {
 
             <div class="sidebar-content">
                 <div class="login-section">
-                    <button class="login-btn" id="sidebarLoginBtn">
+                    <button class="btn-line-login" id="sidebarLoginBtn">
                         <span class="menu-icon">💬</span>
-                        <span>使用 LINE 登入</span>
+                        <span>LINE 登入</span>
                     </button>
                 </div>
 

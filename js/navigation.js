@@ -119,8 +119,8 @@ class NavigationManager {
                         <h4 class="section-title">會員登入</h4>
                         <div class="login-area">
                             <p class="login-description">登入後可管理訂閱、查看使用統計等功能</p>
-                            <button id="sidebarLineLoginBtn" class="sidebar-login-btn">
-                                <span class="menu-icon">🔑</span>
+                            <button id="sidebarLineLoginBtn" class="btn-line-login">
+                                <span class="menu-icon">💬</span>
                                 <span>LINE 登入</span>
                             </button>
                         </div>
@@ -212,8 +212,8 @@ class NavigationManager {
                             <h4 class="section-title">會員登入</h4>
                             <div class="login-area">
                                 <p class="login-description">登入後可管理訂閱、查看使用統計等功能</p>
-                                <button id="sidebarLineLoginBtn" class="sidebar-login-btn">
-                                    <span class="menu-icon">🔑</span>
+                                <button id="sidebarLineLoginBtn" class="btn-line-login">
+                                    <span class="menu-icon">💬</span>
                                     <span>LINE 登入</span>
                                 </button>
                             </div>
