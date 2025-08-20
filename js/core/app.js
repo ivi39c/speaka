@@ -6,6 +6,7 @@
 import { Router } from './router.js';
 import { AppState } from './state.js';
 import { API } from './api.js';
+import { initializeAuthSync } from '../utils/auth-sync.js';
 
 class SpeakaApp {
     constructor() {
@@ -51,11 +52,22 @@ class SpeakaApp {
         // 全局狀態管理
         this.state = new AppState();
         
+        // 將狀態管理器綁定到全域，供同步器使用
+        window.appState = this.state;
+        
         // API 管理
         this.api = new API();
         
         // 路由系統
         this.router = new Router(this.state);
+        
+        // 初始化認證同步器
+        try {
+            await initializeAuthSync();
+            console.log('✅ 認證同步器初始化成功');
+        } catch (error) {
+            console.warn('⚠️ 認證同步器初始化失敗:', error);
+        }
         
         // 綁定全局事件
         this.bindGlobalEvents();

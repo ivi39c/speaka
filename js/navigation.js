@@ -300,11 +300,8 @@ class NavigationManager {
         
         console.log('用戶已登出');
         
-        // 延遲一下讓UI更新完成，然後強制重新整理並返回首頁
-        setTimeout(() => {
-            window.location.href = '/';
-            window.location.reload();
-        }, 500);
+        // 頁面跳轉邏輯現在由 AuthStateSynchronizer 統一處理
+        // 避免重複的刷新操作
     }
 
     showLoginButton() {
