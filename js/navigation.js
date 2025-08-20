@@ -120,8 +120,7 @@ class NavigationManager {
                         <div class="login-area">
                             <p class="login-description">登入後可管理訂閱、查看使用統計等功能</p>
                             <button id="sidebarLineLoginBtn" class="btn-line-login">
-                                <span class="menu-icon">💬</span>
-                                <span>LINE 登入</span>
+                                LINE 登入
                             </button>
                         </div>
                     </div>
@@ -213,8 +212,7 @@ class NavigationManager {
                             <div class="login-area">
                                 <p class="login-description">登入後可管理訂閱、查看使用統計等功能</p>
                                 <button id="sidebarLineLoginBtn" class="btn-line-login">
-                                    <span class="menu-icon">💬</span>
-                                    <span>LINE 登入</span>
+                                    LINE 登入
                                 </button>
                             </div>
                         </div>

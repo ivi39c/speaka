@@ -170,8 +170,7 @@ class Sidebar {
             <div class="sidebar-content">
                 <div class="login-section">
                     <button class="btn-line-login" id="sidebarLoginBtn">
-                        <span class="menu-icon">💬</span>
-                        <span>LINE 登入</span>
+                        LINE 登入
                     </button>
                 </div>
 
