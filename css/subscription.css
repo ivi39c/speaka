@@ -466,7 +466,7 @@
     font-weight: bold;
 }
 
-/* 表單樣式已移至 css/components/forms.css */
+/* 表單樣式使用 styles.css 中的基礎樣式 */
 
 /* 訂閱頁面特有的表單樣式覆蓋 */
 .subscription-card .form-input,
