@@ -285,8 +285,8 @@ class LineLogin {
             // 延遲一下讓狀態更新完成，然後強制重新整理並返回首頁
             setTimeout(() => {
                 // 強制重新整理整個頁面，清除所有快取和狀態
-                window.location.href = '/';
-                window.location.reload(true);
+                // 使用時間戳強制重新載入，繞過瀏覽器快取
+                window.location.href = '/?t=' + Date.now();
             }, 500);
 
         } catch (error) {

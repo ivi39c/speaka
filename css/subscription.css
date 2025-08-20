@@ -55,7 +55,7 @@
 .subscription-container {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 40px 24px;
+    padding: 40px 24px 120px;
     min-height: 100vh;
 }
 
@@ -831,7 +831,7 @@
 
 @media (max-width: 768px) {
     .subscription-container {
-        padding: 20px 16px;
+        padding: 20px 16px 140px;
     }
     
     .subscription-header {

@@ -260,8 +260,8 @@ export class AuthStateSynchronizer {
         // 延遲執行頁面跳轉，確保狀態同步完成
         setTimeout(() => {
             // 強制重新整理整個頁面，清除所有快取和狀態
-            window.location.href = '/';
-            window.location.reload(true);
+            // 使用時間戳強制重新載入，繞過瀏覽器快取
+            window.location.href = '/?t=' + Date.now();
         }, 500);
     }
 

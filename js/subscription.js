@@ -1060,7 +1060,7 @@ const SubscriptionPage = {
                 left: 0;
                 width: 100%;
                 height: 100%;
-                z-index: 10000;
+                z-index: 110000;
             }
             .terms-modal-overlay {
                 width: 100%;
